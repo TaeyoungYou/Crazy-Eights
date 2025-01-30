@@ -20,15 +20,17 @@ public class StyleMenu {
                 "-fx-background-radius: 10px;" +
                 "-fx-font-size: 40px;" +
                 "-fx-font-family: 'Comic Sans MS';" +
-                "-fx-font-weight: bold;";
+                "-fx-font-weight: bold;" +
+                "-fx-alignment: center;" +
+                "-fx-text-alignment: center;";
     }
     public String loadingButtonLargeStyle() {
         return "-fx-pref-width: 800px;" +
-                "-fx-pref-height: 50px;";
+                "-fx-pref-height: 85px;";
     }
     public String loadingButtonSmallStyle() {
         return "-fx-pref-width: 395px;" +
-                "-fx-pref-height: 50px;";
+                "-fx-pref-height: 85px;";
     }
     public String loadingBoxStyle(){
         return "-fx-spacing: 10px;";

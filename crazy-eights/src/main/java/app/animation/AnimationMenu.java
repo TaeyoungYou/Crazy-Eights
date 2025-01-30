@@ -1,18 +1,12 @@
 package app.animation;
 
-import com.sun.javafx.fxml.ParseTraceElement;
 import javafx.animation.*;
-import javafx.geometry.Pos;
+import javafx.scene.Cursor;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 import javafx.util.Duration;
-
-import java.sql.SQLOutput;
 
 public class AnimationMenu {
 
@@ -32,7 +26,7 @@ public class AnimationMenu {
         TranslateTransition titleMoveUp = new TranslateTransition();
         titleMoveUp.setNode(centerPane.getChildren().get(0));
         titleMoveUp.setDuration(Duration.seconds(2));
-        titleMoveUp.setByY(-140);
+        titleMoveUp.setByY(-144);
         titleMoveUp.setOnFinished(event -> {
             centerPane.getChildren().addAll(nodes);
             centerPane.getChildren().get(0).setTranslateY(0);
@@ -43,7 +37,7 @@ public class AnimationMenu {
         ParallelTransition buttons_parallel = new ParallelTransition();
         for(int i=0; i<nodes.length; i++){
             Node node = nodes[i];
-            if(node instanceof Button) {
+            if(node instanceof Label) {
                 FadeTransition menuFadeIn = new FadeTransition(Duration.seconds(3), node);
                 menuFadeIn.setFromValue(0);
                 menuFadeIn.setToValue(1);
@@ -70,4 +64,46 @@ public class AnimationMenu {
 
         sequence.play();
     }
+
+    public void titleHover(Label title){
+        ScaleTransition scaleUp = new ScaleTransition(Duration.millis(200), title);
+        scaleUp.setToX(1.1);
+        scaleUp.setToY(1.1);
+        ScaleTransition scaleDown = new ScaleTransition(Duration.millis(200), title);
+        scaleDown.setToX(1.0);
+        scaleDown.setToY(1.0);
+        title.setOnMouseEntered(event -> scaleUp.playFromStart());
+        title.setOnMouseExited(event -> scaleDown.playFromStart());
+    }
+
+    public void menuHover(Node[] nodes) {
+        for (Node node : nodes) {
+            applyScaleAnimation(node);
+
+            if (node instanceof HBox) {
+                HBox hBox = (HBox)node;
+                for (Node child : hBox.getChildren()) {
+                    applyScaleAnimation(child);
+                }
+            }
+        }
+    }
+
+    private void applyScaleAnimation(Node node) {
+        if (node instanceof Label) {
+            Label button = (Label)node;
+            FadeTransition fadeOut = new FadeTransition(Duration.millis(200), button);
+            FadeTransition fadeIn = new FadeTransition(Duration.millis(200), button);
+
+            fadeOut.setToValue(0.7);
+            fadeIn.setToValue(1.0);
+
+            button.setOnMouseEntered(event -> {
+                fadeOut.playFromStart();
+                button.setCursor(Cursor.HAND);
+            });
+            button.setOnMouseExited(event -> fadeIn.playFromStart());
+        }
+    }
+
 }

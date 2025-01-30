@@ -5,47 +5,43 @@ import app.style.StyleMenu;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
-public class Menu {
-    private final Stage stage;
+public class MainMenu {
     private final BorderPane pane;
     private final StyleMenu style;
     private final AnimationMenu animation;
+    private final Scene scene;
 
-    public Menu(Stage _stage){
-        this.stage = _stage;
+    public MainMenu(Scene _scene) {
+        scene = _scene;
         pane = new BorderPane();
         style = new StyleMenu();
         animation = new AnimationMenu();
     }
 
     public void generate(){
-        loading();
-
-        Scene scene = new Scene(pane);
-        stage.setScene(scene);
-    }
-
-    private void loading(){
+        scene.setRoot(pane);
         // pane 스타일 지정
         pane.setStyle(style.loadingBorderPaneStyle());
 
         // title 생성 및 스타일 지정
         Label title = new Label();
-        configTitle(title);
+        title.setText("Crazy Eights");
+        title.setFont(Font.loadFont(style.getLilitaOneFont(), 180));
+        title.setStyle(style.loadingTitleStyle());
 
         // button 생성 및 스타일 지정
-        Button singlePlay = new Button();
-        Button multiPlay = new Button();
-        Button setting = new Button();
-        Button quit = new Button();
+        Label singlePlay = new Label();
+        Label multiPlay = new Label();
+        Label setting = new Label();
+        Label quit = new Label();
 
         singlePlay.setText("SinglePlayer");
         multiPlay.setText("MultiPlayer");
@@ -73,10 +69,19 @@ public class Menu {
 
         // 애니메이션 적용
         animation.menuAnimation(menuPane, nodes);
+        animation.menuHover(nodes);
+        animation.titleHover(title);
+
+        singlePlay.setOnMouseClicked(event -> {
+            SinglePlayGame game = new SinglePlayGame(scene);
+            game.generate();
+        });
     }
-    private void configTitle(Label title){
-        title.setText("Crazy Eights");
-        title.setFont(Font.loadFont(style.getLilitaOneFont(), 180));
-        title.setStyle(style.loadingTitleStyle());
+    private void configStage(Stage primaryStage) {
+        primaryStage.setTitle("Crazy Eights");
+        primaryStage.setResizable(false);
+        primaryStage.setFullScreen(true);
+        primaryStage.setFullScreenExitHint("");
+        primaryStage.setFullScreenExitKeyCombination(KeyCombination.NO_MATCH);
     }
 }
