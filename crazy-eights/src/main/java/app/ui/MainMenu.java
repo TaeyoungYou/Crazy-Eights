@@ -9,6 +9,7 @@ import javafx.scene.control.Label;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
@@ -58,6 +59,10 @@ public class MainMenu {
         menuPane.setAlignment(Pos.CENTER);
         HBox bottomPane = new HBox(setting, quit);
         bottomPane.setAlignment(Pos.CENTER);
+
+        Region space = new Region();
+        space.setPrefHeight(10);
+        menuPane.getChildren().add(space);
 
         menuPane.setStyle(style.loadingBoxStyle());
         bottomPane.setStyle(style.loadingBoxStyle());

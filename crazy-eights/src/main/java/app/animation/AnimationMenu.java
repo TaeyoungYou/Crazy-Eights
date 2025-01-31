@@ -38,7 +38,7 @@ public class AnimationMenu {
         for(int i=0; i<nodes.length; i++){
             Node node = nodes[i];
             if(node instanceof Label) {
-                FadeTransition menuFadeIn = new FadeTransition(Duration.seconds(3), node);
+                FadeTransition menuFadeIn = new FadeTransition(Duration.seconds(2), node);
                 menuFadeIn.setFromValue(0);
                 menuFadeIn.setToValue(1);
                 buttons_parallel.getChildren().add(menuFadeIn);
