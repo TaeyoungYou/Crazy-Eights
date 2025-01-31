@@ -2,12 +2,10 @@ package app;
 
 import app.ui.MainMenu;
 
-
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.BorderPane;
-import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 
@@ -15,9 +13,6 @@ import javafx.stage.Stage;
 public class App extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
-        final double screen_width = Screen.getPrimary().getVisualBounds().getWidth();
-        final double screen_height = Screen.getPrimary().getVisualBounds().getHeight();
-
         BorderPane root = new BorderPane();
         Scene scene = new Scene(root);
         configStage(primaryStage);

@@ -12,7 +12,9 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.text.Font;
+import javafx.stage.Screen;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 public class SinglePlayGame {
@@ -20,6 +22,11 @@ public class SinglePlayGame {
     private final StyleGame style;
     private final AnimationGame animation;
     private final Scene scene;
+
+    private final double screen_width = Screen.getPrimary().getVisualBounds().getWidth();
+    private final double screen_height = Screen.getPrimary().getVisualBounds().getHeight();
+
+    private final ArrayList<ImageView> cards = new ArrayList<>();
 
     public SinglePlayGame(Scene _scene){
         scene = _scene;
@@ -29,16 +36,22 @@ public class SinglePlayGame {
     }
 
     public void generate(){
+        // Scene default config
         scene.setRoot(pane);
 
         pane.setStyle(style.gameBorderPaneStyle());
 
+        // game ground and sidebar
         BorderPane gameGround = new BorderPane();
         VBox sidebar = new VBox();
+        sidebar.setPrefSize(350,1080);
 
+        // sidebar config
         sidebarConfig(sidebar);
 
+        // player status area
         VBox gamePlayerStatus = new VBox();
+        gamePlayerStatus.setPrefSize(450, 1080);
 
         HBox playerPlace01 = new HBox();
         HBox playerPlace02 = new HBox();
@@ -56,27 +69,23 @@ public class SinglePlayGame {
 
         gameGround.setLeft(gamePlayerStatus);
 
-        StackPane cardPlace = new StackPane();
-        cardPlace.setPrefHeight(500);
+        // my card place area
+        AnchorPane cardPlace = new AnchorPane();
+        cardPlace.setPrefSize(870,1080);
+        cardPlace.setPadding(new Insets(0,0,0,0));
 
-        Random random = new Random();
-        for(int i=0; i< 12; ++i){
-            int randomCard = random.nextInt(52) + 1;
-            String url = String.format("/card/Card-%d.png",randomCard);
-            ImageView card = new ImageView(new Image(getClass().getResource(url).toExternalForm()));
-            card.setFitWidth(220);
-            card.setPreserveRatio(true);
-            cardPlace.getChildren().add(card);
-            resettingPosCard(cardPlace);
-        }
+        createCard(cardPlace);
 
-        cardPlace.setAlignment(Pos.CENTER);
-        gameGround.setBottom(cardPlace);
+        createDeck(cardPlace);
 
-        HBox deckPlace = new HBox();
-        deckPlace.setAlignment(Pos.CENTER);
-        deckPlace.setSpacing(50);
+        gameGround.setCenter(cardPlace);
 
+        // set pane
+        pane.setCenter(gameGround);
+        pane.setRight(sidebar);
+    }
+
+    private void createDeck(AnchorPane deckPlace){
         ImageView deck = new ImageView(new Image(getClass().getResource("/card/Card-Deck.png").toExternalForm()));
         ImageView cardDummy = new ImageView(new Image(getClass().getResource("/card/Card-Empty.png").toExternalForm()));
         deck.setFitWidth(250);
@@ -84,18 +93,37 @@ public class SinglePlayGame {
         cardDummy.setFitWidth(220);
         cardDummy.setPreserveRatio(true);
 
-        deckPlace.getChildren().addAll(deck, cardDummy);
+        deck.setLayoutX(300);
+        deck.setLayoutY(200);
+        cardDummy.setLayoutX(600);
+        cardDummy.setLayoutY(220);
 
-        gameGround.setCenter(deckPlace);
-
-        pane.setCenter(gameGround);
-        pane.setRight(sidebar);
+        deckPlace.getChildren().add(deck);
+        deckPlace.getChildren().add(cardDummy);
     }
-    private void resettingPosCard(StackPane cardPlace){
+
+    private void createCard(AnchorPane cardPlace){
+        Random random = new Random();
+        for(int i=0; i<12; ++i){
+            int randomCard = random.nextInt(52) + 1;
+            String url = String.format("/card/Card-%d.png",randomCard);
+            ImageView card = new ImageView(new Image(getClass().getResource(url).toExternalForm()));
+            card.setFitWidth(220);
+            card.setPreserveRatio(true);
+            cards.add(card);
+
+            animation.cardAnimation(card, cardPlace);
+            cardPlace.getChildren().add(card);
+        }
+        resettingPosCard(cardPlace);
+    }
+
+    private void resettingPosCard(AnchorPane cardPlace){
         int total = cardPlace.getChildren().size();
-        int mid = total / 2;
-        for(int i=0; i< total; ++i){
-            cardPlace.getChildren().get(i).setTranslateX((i-mid) * 70);
+        for(int i=0; i<total; ++i){
+            ImageView card = (ImageView) cardPlace.getChildren().get(i);
+            card.setLayoutX( i * 75);
+            card.setLayoutY(1080-200);
         }
     }
 
