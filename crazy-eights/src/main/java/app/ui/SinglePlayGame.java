@@ -53,19 +53,7 @@ public class SinglePlayGame {
         VBox gamePlayerStatus = new VBox();
         gamePlayerStatus.setPrefSize(450, 1080);
 
-        HBox playerPlace01 = new HBox();
-        HBox playerPlace02 = new HBox();
-        HBox playerPlace03 = new HBox();
-
-        player01Config(playerPlace01);
-        player02Config(playerPlace02);
-        player03Config(playerPlace03);
-
-        gamePlayerStatus.getChildren().addAll(playerPlace01, playerPlace02, playerPlace03);
-
-        gamePlayerStatus.setAlignment(Pos.TOP_LEFT);
-        gamePlayerStatus.setSpacing(30);
-        gamePlayerStatus.setPadding(new Insets(30,30,30,30));
+        gamePlayerStatusConfig(gamePlayerStatus);
 
         gameGround.setLeft(gamePlayerStatus);
 
@@ -80,9 +68,23 @@ public class SinglePlayGame {
 
         gameGround.setCenter(cardPlace);
 
+        myTurnEffect(cardPlace);
         // set pane
         pane.setCenter(gameGround);
         pane.setRight(sidebar);
+    }
+    private void myTurnEffect(AnchorPane pane){
+        Region highlight = new Region();
+        highlight.setPrefHeight(10);
+
+        highlight.setStyle(style.myTurnEffectStyle());
+
+        AnchorPane.setBottomAnchor(highlight, 0.0);
+        AnchorPane.setLeftAnchor(highlight, 0.0);
+        AnchorPane.setRightAnchor(highlight, 0.0);
+        highlight.setPrefHeight(20);
+
+        pane.getChildren().add(highlight);
     }
 
     private void createDeck(AnchorPane deckPlace){
@@ -125,6 +127,123 @@ public class SinglePlayGame {
             card.setLayoutX( i * 75);
             card.setLayoutY(1080-200);
         }
+    }
+
+    private void gamePlayerStatusConfig(VBox gamePlayerStatus){
+        // Player area
+        HBox playerPlace01 = new HBox();
+        HBox playerPlace02 = new HBox();
+        HBox playerPlace03 = new HBox();
+
+        player01Config(playerPlace01);
+        player02Config(playerPlace02);
+        player03Config(playerPlace03);
+
+        Region spacer = new Region();
+        spacer.setPrefHeight(20);
+        HBox scoreTimeContainer = new HBox();
+
+        scoreTimeContainerConfig(scoreTimeContainer);
+
+        gamePlayerStatus.getChildren().addAll(playerPlace01, playerPlace02, playerPlace03, spacer, scoreTimeContainer);
+
+        gamePlayerStatus.setAlignment(Pos.TOP_LEFT);
+        gamePlayerStatus.setSpacing(30);
+        gamePlayerStatus.setPadding(new Insets(30,30,30,30));
+    }
+
+    private void scoreTimeContainerConfig(HBox scoreTimeContainer){
+        VBox scoreContainer = new VBox();
+        scoreContainer.setSpacing(10);
+        scoreContainer.setAlignment(Pos.CENTER);
+
+        Label score = new Label("Score");
+        score.setFont(Font.loadFont(style.getLilitaOneFont(), 40));
+        score.setStyle(style.sideLabelStyle());
+
+
+        VBox scoreBox = new VBox();
+        scoreBox.setStyle(style.statusScoreBoxStyle());
+        scoreBox.setPrefSize(250, 300);
+        scoreBox.setAlignment(Pos.CENTER);
+        scoreBox.setPadding(new Insets(10,10,10,10));
+        scoreBox.setSpacing(10);
+        HBox me = new HBox();
+        HBox player01 = new HBox();
+        HBox player02 = new HBox();
+        HBox player03 = new HBox();
+
+        scoreMine(me);
+        scorePlayer01(player01);
+        scorePlayer02(player02);
+        scorePlayer03(player03);
+
+        scoreBox.getChildren().addAll(player01, player03, me, player02);
+
+        scoreContainer.getChildren().addAll(score, scoreBox);
+
+
+        Label timer = new Label("10");
+        timer.setFont(Font.loadFont(style.getLilitaOneFont(), 80));
+        timer.setStyle(style.sideLabelStyle());
+
+        scoreTimeContainer.getChildren().addAll(scoreContainer, timer);
+        scoreTimeContainer.setAlignment(Pos.CENTER_LEFT);
+        scoreTimeContainer.setSpacing(55);
+        scoreTimeContainer.setPadding(new Insets(0,0,0,0));
+    }
+    private void scoreMine(HBox scoreBox){
+        ImageView player = new ImageView();
+        player.setImage(new Image(getClass().getResource("/avatar/User-02.png").toExternalForm()));
+        player.setFitWidth(70);
+        player.setFitHeight(70);
+
+        Label score = new Label("12");
+        score.setFont(Font.loadFont(style.getLilitaOneFont(), 40));
+        score.setStyle(style.sideLabelStyle());
+        scoreBox.getChildren().addAll(player, score);
+        scoreBox.setAlignment(Pos.CENTER_LEFT);
+        scoreBox.setSpacing(60);
+    }
+
+    private void scorePlayer01(HBox scoreBox){
+        ImageView player = new ImageView();
+        player.setImage(new Image(getClass().getResource("/avatar/User-01.png").toExternalForm()));
+        player.setFitWidth(70);
+        player.setFitHeight(70);
+
+        Label score = new Label("20");
+        score.setFont(Font.loadFont(style.getLilitaOneFont(), 40));
+        score.setStyle(style.sideLabelStyle());
+        scoreBox.getChildren().addAll(player, score);
+        scoreBox.setAlignment(Pos.CENTER_LEFT);
+        scoreBox.setSpacing(60);
+    }
+    private void scorePlayer02(HBox scoreBox){
+        ImageView player = new ImageView();
+        player.setImage(new Image(getClass().getResource("/avatar/User-03.png").toExternalForm()));
+        player.setFitWidth(70);
+        player.setFitHeight(70);
+
+        Label score = new Label("5");
+        score.setFont(Font.loadFont(style.getLilitaOneFont(), 40));
+        score.setStyle(style.sideLabelStyle());
+        scoreBox.getChildren().addAll(player, score);
+        scoreBox.setAlignment(Pos.CENTER_LEFT);
+        scoreBox.setSpacing(60);
+    }
+    private void scorePlayer03(HBox scoreBox){
+        ImageView player = new ImageView();
+        player.setImage(new Image(getClass().getResource("/avatar/User-05.png").toExternalForm()));
+        player.setFitWidth(70);
+        player.setFitHeight(70);
+
+        Label score = new Label("15");
+        score.setFont(Font.loadFont(style.getLilitaOneFont(), 40));
+        score.setStyle(style.sideLabelStyle());
+        scoreBox.getChildren().addAll(player, score);
+        scoreBox.setAlignment(Pos.CENTER_LEFT);
+        scoreBox.setSpacing(60);
     }
 
     private void player01Config(HBox playerPlace){
@@ -194,23 +313,24 @@ public class SinglePlayGame {
         playerPlace.getChildren().add(cardLeft);
     }
     private void sidebarConfig(VBox sidebar){
-        sidebar.setPadding(new Insets(80,20,20,20));
-        sidebar.setAlignment(Pos.TOP_CENTER);
+        sidebar.setPadding(new Insets(40,20,20,20));
+        sidebar.setAlignment(Pos.BOTTOM_CENTER);
         sidebar.setPrefWidth(384);
         sidebar.setSpacing(10);
         sidebar.setStyle(style.gameSidePaneStyle());
 
-        Label score = new Label("Score: 0");
-        Label timer = new Label("Time: 0");
-        score.setFont(Font.loadFont(style.getLilitaOneFont(), 40));
-        timer.setFont(Font.loadFont(style.getLilitaOneFont(), 40));
-        score.setStyle(style.sideLabelStyle());
-        timer.setStyle(style.sideLabelStyle());
+        HBox buttonBar = new HBox();
+        buttonBar.setSpacing(40);
+        buttonBar.setAlignment(Pos.CENTER);
+        ImageView volumeOn = new ImageView(new Image(getClass().getResource("/button/volume-on.png").toExternalForm()));
+        ImageView setting = new ImageView(new Image(getClass().getResource("/button/settings.png").toExternalForm()));
+        ImageView back = new ImageView(new Image(getClass().getResource("/button/back.png").toExternalForm()));
+        buttonBar.getChildren().addAll(volumeOn, setting, back);
 
-        sidebar.getChildren().addAll(score, timer);
+        sidebar.getChildren().add(buttonBar);
 
         Region spacer = new Region();
-        spacer.setPrefHeight(70);
+        spacer.setPrefHeight(40);
 
         sidebar.getChildren().add(spacer);
 
@@ -218,7 +338,7 @@ public class SinglePlayGame {
         scroll.setStyle(style.sideScrollPane());
         VBox chats = new VBox();
         chats.setPrefWidth(340);
-        chats.setPrefHeight(840);
+        chats.setPrefHeight(950);
         chats.setStyle(style.sideChatBox());
 
         scroll.setContent(chats);

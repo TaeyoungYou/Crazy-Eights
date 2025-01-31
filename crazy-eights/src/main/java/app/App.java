@@ -2,6 +2,7 @@ package app;
 
 import app.ui.MainMenu;
 
+import app.ui.SinglePlayGame;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCombination;
@@ -19,8 +20,10 @@ public class App extends Application {
         primaryStage.setScene(scene);
         primaryStage.show();
 
-        MainMenu menu = new MainMenu(scene);
-        menu.generate();
+        SinglePlayGame game = new SinglePlayGame(scene);
+        game.generate();
+//        MainMenu menu = new MainMenu(scene);
+//        menu.generate();
     }
 
     public static void main(String[] args) {

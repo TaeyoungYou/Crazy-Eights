@@ -42,4 +42,16 @@ public class StyleGame {
                 "-fx-focus-color: transparent;" +
                 "-fx-faint-focus-color: transparent;";
     }
+
+    public String myTurnEffectStyle(){
+        return "-fx-background-color: linear-gradient(to top, #dddddd, transparent);";
+    }
+
+    public String statusScoreBoxStyle(){
+        return "-fx-background-color: #1e1e1e;" +
+                "-fx-border-color: #dddddd;" +
+                "-fx-border-style: solid;" +
+                "-fx-border-width: 2px;" +
+                "-fx-border-radius: 20px;";
+    }
 }
