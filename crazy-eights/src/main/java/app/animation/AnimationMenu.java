@@ -10,7 +10,33 @@ import javafx.util.Duration;
 
 public class AnimationMenu {
 
-    public void menuAnimation(VBox centerPane, Node[] nodes, Label title){
+    public void menuAnimation(Label title, Label[] buttons) {
+        ScaleTransition scaleUpAndDown = new ScaleTransition(Duration.seconds(2), title);
+        scaleUpAndDown.setToX(1.1);
+        scaleUpAndDown.setToY(1.1);
+        scaleUpAndDown.setAutoReverse(true);
+        scaleUpAndDown.setCycleCount(Animation.INDEFINITE);
+        scaleUpAndDown.play();
+
+        for(Label button : buttons) {
+            FadeTransition fadeOut = new FadeTransition(Duration.millis(200), button);
+            FadeTransition fadeIn = new FadeTransition(Duration.millis(200), button);
+
+            fadeOut.setToValue(0.7);
+            fadeIn.setToValue(1.0);
+
+            button.setOnMouseEntered(e -> {
+                button.setCursor(Cursor.HAND);
+                fadeOut.play();
+            });
+            button.setOnMouseExited(e -> {
+                button.setCursor(Cursor.DEFAULT);
+                fadeIn.play();
+            });
+        }
+    }
+
+    public void startMenuAnimation(VBox centerPane, Node[] nodes, Label title){
         // 2 seconds pause
         PauseTransition pause = new PauseTransition();
         pause.setDuration(Duration.seconds(2));
@@ -74,18 +100,18 @@ public class AnimationMenu {
 
     public void menuHover(Node[] nodes) {
         for (Node node : nodes) {
-            applyScaleAnimation(node);
+            applyFadeAnimation(node);
 
             if (node instanceof HBox) {
                 HBox hBox = (HBox)node;
                 for (Node child : hBox.getChildren()) {
-                    applyScaleAnimation(child);
+                    applyFadeAnimation(child);
                 }
             }
         }
     }
 
-    private void applyScaleAnimation(Node node) {
+    private void applyFadeAnimation(Node node) {
         if (node instanceof Label) {
             Label button = (Label)node;
             FadeTransition fadeOut = new FadeTransition(Duration.millis(200), button);
@@ -98,7 +124,10 @@ public class AnimationMenu {
                 fadeOut.playFromStart();
                 button.setCursor(Cursor.HAND);
             });
-            button.setOnMouseExited(event -> fadeIn.playFromStart());
+            button.setOnMouseExited(event -> {
+                fadeIn.playFromStart();
+                button.setCursor(Cursor.DEFAULT);
+            });
         }
     }
 

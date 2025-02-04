@@ -18,6 +18,7 @@ public class AnimationGame {
     private int index;
 
     private final double DELETE_Y = 400;
+    private final double DELETE_X = 500;
 
     public void cardAnimation(ImageView card, AnchorPane cardPlace, List<ImageView> cards){
         cardHoverEffect(card);
@@ -64,7 +65,7 @@ public class AnimationGame {
         card.setOnMouseReleased(e -> {
             card.setOpacity(1.0);
 
-            if(card.getLayoutY() < DELETE_Y){
+            if(card.getLayoutY() < DELETE_Y && card.getLayoutX() > DELETE_X){
                 FadeTransition fadeOut = new FadeTransition(Duration.millis(500), card);
                 fadeOut.setToValue(0.0);
                 fadeOut.setOnFinished(event -> {
@@ -109,7 +110,7 @@ public class AnimationGame {
         moveBack.play();
     }
 
-    public void backAnimation(ImageView button){
+    public void buttonAnimation(ImageView button){
         ScaleTransition mouseOn = new ScaleTransition(Duration.millis(200), button);
         mouseOn.setToX(0.85);
         mouseOn.setToY(0.85);
@@ -125,6 +126,26 @@ public class AnimationGame {
         button.setOnMouseExited(e -> {
             mouseOff.playFromStart();
             button.setOpacity(1.0);
+        });
+    }
+
+    public void deckHoverAnimation(ImageView deck){
+        ScaleTransition deckUp = new ScaleTransition(Duration.millis(200), deck);
+        deckUp.setToX(1.0);
+        deckUp.setToY(1.0);
+        ScaleTransition deckDown = new ScaleTransition(Duration.millis(200), deck);
+        deckDown.setToX(0.95);
+        deckDown.setToY(0.95);
+
+        deck.setOnMouseEntered(event -> {
+            deck.setCursor(Cursor.HAND);
+            deck.setOpacity(0.8);
+            deckDown.playFromStart();
+        });
+        deck.setOnMouseExited(event -> {
+            deck.setCursor(Cursor.DEFAULT);
+            deck.setOpacity(1);
+            deckUp.playFromStart();
         });
     }
 }

@@ -7,8 +7,7 @@ public class StyleMenu {
     }
     public String loadingTitleStyle(){
         return "-fx-text-fill: #dddddd; " +
-                "-fx-font-weight: bold;" +
-                "-fx-opacity: 0.0";
+                "-fx-font-weight: bold;";
     }
     public String getLilitaOneFont(){
         return getClass().getResource("/font/LilitaOne-Regular.ttf").toExternalForm();

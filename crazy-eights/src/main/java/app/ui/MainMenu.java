@@ -19,6 +19,8 @@ public class MainMenu {
     private final AnimationMenu animation;
     private final Scene scene;
 
+    private static boolean started = false;
+
     public MainMenu(Scene _scene) {
         scene = _scene;
         pane = new BorderPane();
@@ -29,6 +31,59 @@ public class MainMenu {
     public void generate(){
         initPage();
 
+        if(!started){
+            startGameMenu();
+            started = true;
+        } else{
+            gameMenu();
+        }
+    }
+    private void gameMenu(){
+        Label title = createTitle();
+
+        // button 생성 및 스타일 지정
+        Label singlePlay = new Label();
+        Label multiPlay = new Label();
+        Label setting = new Label();
+        Label quit = new Label();
+
+        singlePlay.setText("SinglePlayer");
+        multiPlay.setText("MultiPlayer");
+        setting.setText("Setting");
+        quit.setText("Quit");
+
+        singlePlay.setStyle(style.loadingButtonCommonStyle() + style.loadingButtonLargeStyle());
+        multiPlay.setStyle(style.loadingButtonCommonStyle() + style.loadingButtonLargeStyle());
+        setting.setStyle(style.loadingButtonCommonStyle() + style.loadingButtonSmallStyle());
+        quit.setStyle(style.loadingButtonCommonStyle() + style.loadingButtonSmallStyle());
+
+        VBox menuPane = new VBox();
+        menuPane.setAlignment(Pos.CENTER);
+        HBox bottomPane = new HBox(setting, quit);
+        bottomPane.setAlignment(Pos.CENTER);
+
+        Region space = new Region();
+        space.setPrefHeight(10);
+
+        menuPane.setStyle(style.loadingBoxStyle());
+        bottomPane.setStyle(style.loadingBoxStyle());
+
+        menuPane.getChildren().addAll(title, space, singlePlay, multiPlay, bottomPane);
+        pane.setCenter(menuPane);
+
+        Label[] tmp = {singlePlay, multiPlay, setting, quit};
+        animation.menuAnimation(title, tmp);
+
+        singlePlay.setOnMouseClicked(event -> {
+            SinglePlayGame game = new SinglePlayGame(scene);
+            game.generate();
+        });
+        quit.setOnMouseClicked(event -> {
+            Platform.exit();;
+        });
+    }
+
+    private void startGameMenu() {
         Label title = createTitle();
 
         // button 생성 및 스타일 지정
@@ -66,7 +121,7 @@ public class MainMenu {
         pane.setCenter(menuPane);
 
         // 애니메이션 적용
-        animation.menuAnimation(menuPane, nodes, title);
+        animation.startMenuAnimation(menuPane, nodes, title);
         animation.menuHover(nodes);
 
         singlePlay.setOnMouseClicked(event -> {

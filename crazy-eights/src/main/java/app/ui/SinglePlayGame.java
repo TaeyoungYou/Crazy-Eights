@@ -13,7 +13,6 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.text.Font;
-import javafx.stage.Screen;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -24,8 +23,7 @@ public class SinglePlayGame {
     private final AnimationGame animation;
     private final Scene scene;
 
-    private final double screen_width = Screen.getPrimary().getVisualBounds().getWidth();
-    private final double screen_height = Screen.getPrimary().getVisualBounds().getHeight();
+    private static boolean volume = true;
 
     private final ArrayList<ImageView> cards = new ArrayList<>();
 
@@ -60,13 +58,13 @@ public class SinglePlayGame {
         cardPlace.setPrefSize(870,1080);
         cardPlace.setPadding(new Insets(0,0,0,0));
 
-        createCard(cardPlace);
+        createCard(cardPlace, 6);
 
         createDeck(cardPlace);
 
         gameGround.setCenter(cardPlace);
 
-        myTurnEffect(cardPlace);
+        // myTurnEffect(cardPlace);
         // set pane
         pane.setCenter(gameGround);
         pane.setRight(sidebar);
@@ -100,22 +98,29 @@ public class SinglePlayGame {
 
         deckPlace.getChildren().add(deck);
         deckPlace.getChildren().add(cardDummy);
+
+        animation.deckHoverAnimation(deck);
+        deck.setOnMouseClicked(event -> {
+            createCard(deckPlace, 1);
+        });
     }
 
-    private void createCard(AnchorPane cardPlace){
-        Random random = new Random();
-        for(int i=0; i<12; ++i){
-            int randomCard = random.nextInt(52) + 1;
-            String url = String.format("/card/Card-%d.png",randomCard);
-            ImageView card = new ImageView(new Image(getClass().getResource(url).toExternalForm()));
-            card.setFitWidth(220);
-            card.setPreserveRatio(true);
-            cards.add(card);
+    private void createCard(AnchorPane cardPlace, int total){
+        if(cards.size()+total <= 12){
+            Random random = new Random();
+            for(int i=0; i<total; ++i){
+                int randomCard = random.nextInt(52) + 1;
+                String url = String.format("/card/Card-%d.png",randomCard);
+                ImageView card = new ImageView(new Image(getClass().getResource(url).toExternalForm()));
+                card.setFitWidth(220);
+                card.setPreserveRatio(true);
+                cards.add(card);
 
-            animation.cardAnimation(card, cardPlace, cards);
-            cardPlace.getChildren().add(card);
+                animation.cardAnimation(card, cardPlace, cards);
+                cardPlace.getChildren().add(card);
+            }
+            resettingPosCard(cardPlace);
         }
-        resettingPosCard(cardPlace);
     }
 
     private void resettingPosCard(AnchorPane cardPlace){
@@ -175,12 +180,12 @@ public class SinglePlayGame {
         HBox player02 = new HBox();
         HBox player03 = new HBox();
 
-        createScorePlayer(me, "/avatar/User-02.png", 12);
+        createScorePlayer(me, "/avatar/User-02.png", 15);
         createScorePlayer(player01, "/avatar/User-01.png", 20);
         createScorePlayer(player02, "/avatar/User-03.png", 5);
-        createScorePlayer(player03, "/avatar/User-05.png", 15);
+        createScorePlayer(player03, "/avatar/User-05.png", 12);
 
-        scoreBox.getChildren().addAll(player01, player03, me, player02);
+        scoreBox.getChildren().addAll(player01, me, player03, player02);
 
         scoreContainer.getChildren().addAll(score, scoreBox);
 
@@ -203,7 +208,7 @@ public class SinglePlayGame {
         scoreLbl.setFont(Font.loadFont(style.getLilitaOneFont(), 40));
         scoreLbl.setStyle(style.sideLabelStyle());
         scoreBox.getChildren().addAll(player, scoreLbl);
-        scoreBox.setAlignment(Pos.CENTER);
+        scoreBox.setAlignment(Pos.CENTER_LEFT);
         scoreBox.setSpacing(60);
     }
     private void createPlayerStatus(HBox playerPlace, String avatarURL, int leftCard){
@@ -223,7 +228,7 @@ public class SinglePlayGame {
         cardLeft.setFont(Font.loadFont(style.getLilitaOneFont(), 40));
         cardLeft.setStyle(style.sideLabelStyle());
 
-        playerPlace.setAlignment(Pos.CENTER);
+        playerPlace.setAlignment(Pos.CENTER_LEFT);
         playerPlace.getChildren().add(cardLeft);
     }
     private void sidebarConfig(VBox sidebar){
@@ -236,12 +241,14 @@ public class SinglePlayGame {
         HBox buttonBar = new HBox();
         buttonBar.setSpacing(40);
         buttonBar.setAlignment(Pos.CENTER);
-        ImageView volumeOn = new ImageView(new Image(getClass().getResource("/button/volume-on.png").toExternalForm()));
+        ImageView volume = new ImageView(new Image(getClass().getResource("/button/volume-on.png").toExternalForm()));
         ImageView setting = new ImageView(new Image(getClass().getResource("/button/settings.png").toExternalForm()));
         ImageView back = new ImageView(new Image(getClass().getResource("/button/back.png").toExternalForm()));
 
-        animation.backAnimation(back);
-        buttonBar.getChildren().addAll(volumeOn, setting, back);
+        animation.buttonAnimation(setting);
+        animation.buttonAnimation(volume);
+        animation.buttonAnimation(back);
+        buttonBar.getChildren().addAll(volume, setting, back);
 
         sidebar.getChildren().add(buttonBar);
 
@@ -272,6 +279,15 @@ public class SinglePlayGame {
         back.setOnMouseClicked(e -> {
             MainMenu menu = new MainMenu(scene);
             menu.generate();
+        });
+        volume.setOnMouseClicked(e -> {
+            if(SinglePlayGame.volume){
+                volume.setImage(new Image(getClass().getResource("/button/volume-off.png").toExternalForm()));
+                SinglePlayGame.volume = false;
+            } else {
+                volume.setImage(new Image(getClass().getResource("/button/volume-on.png").toExternalForm()));
+                SinglePlayGame.volume = true;
+            }
         });
     }
     private void initPage(){
