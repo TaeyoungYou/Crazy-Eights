@@ -17,6 +17,10 @@ import javafx.scene.text.Font;
 import java.util.ArrayList;
 import java.util.Random;
 
+/**
+ * Represents the single-player game screen for Crazy Eights.
+ * Handles UI components and game state management.
+ */
 public class SinglePlayGame {
     private final BorderPane pane;
     private final StyleGame style;
@@ -29,7 +33,12 @@ public class SinglePlayGame {
 
     private final ArrayList<ImageView> cards = new ArrayList<>();
 
-    public SinglePlayGame(Scene _scene){
+    /**
+     * Constructs a SinglePlayGame instance.
+     *
+     * @param _scene The scene where the single-player game is displayed.
+     */
+    public SinglePlayGame(Scene _scene) {
         scene = _scene;
         pane = new BorderPane();
         style = new StyleGame();
@@ -37,13 +46,16 @@ public class SinglePlayGame {
         msg = new Msg("nothing", Msg.status.status);
     }
 
-    public void generate(){
+    /**
+     * Generates and sets up the game layout.
+     */
+    public void generate() {
         initPage();
 
         // game ground and sidebar
         BorderPane gameGround = new BorderPane();
         VBox sidebar = new VBox();
-        sidebar.setPrefSize(350,1080);
+        sidebar.setPrefSize(350, 1080);
 
         // sidebar config
         sidebarConfig(sidebar);
@@ -58,8 +70,8 @@ public class SinglePlayGame {
 
         // my card place area
         AnchorPane cardPlace = new AnchorPane();
-        cardPlace.setPrefSize(870,1080);
-        cardPlace.setPadding(new Insets(0,0,0,0));
+        cardPlace.setPrefSize(870, 1080);
+        cardPlace.setPadding(new Insets(0, 0, 0, 0));
 
         createCard(cardPlace, 6);
 
@@ -74,7 +86,13 @@ public class SinglePlayGame {
         pane.setCenter(gameGround);
         pane.setRight(sidebar);
     }
-    private void createStatusMsg(AnchorPane deckPlace){
+
+    /**
+     * Creates and displays the game status message.
+     *
+     * @param deckPlace The AnchorPane where the status message is displayed.
+     */
+    private void createStatusMsg(AnchorPane deckPlace) {
         Label statusMsg = new Label();
         msg.setMsg("This is a status message");
         msg.setMsg_status(Msg.status.status);
@@ -87,7 +105,12 @@ public class SinglePlayGame {
         //animation.msgAnimation(statusMsg, msg);
     }
 
-    private void myTurnEffect(AnchorPane pane){
+    /**
+     * Highlights the UI to indicate the player's turn.
+     *
+     * @param pane The AnchorPane where the effect will be applied.
+     */
+    private void myTurnEffect(AnchorPane pane) {
         Region highlight = new Region();
         highlight.setPrefHeight(10);
 
@@ -101,7 +124,13 @@ public class SinglePlayGame {
         pane.getChildren().add(highlight);
     }
 
-    private void createDeck(AnchorPane deckPlace){
+    /**
+     * Creates and displays the deck and a placeholder for the current card.
+     * Adds hover animation and click event to draw a new card.
+     *
+     * @param deckPlace The AnchorPane where the deck and placeholder card are displayed.
+     */
+    private void createDeck(AnchorPane deckPlace) {
         ImageView deck = new ImageView(new Image(getClass().getResource("/card/Card-Deck.png").toExternalForm()));
         ImageView cardDummy = new ImageView(new Image(getClass().getResource("/card/Card-Empty.png").toExternalForm()));
         deck.setFitWidth(250);
@@ -123,12 +152,20 @@ public class SinglePlayGame {
         });
     }
 
-    private void createCard(AnchorPane cardPlace, int total){
-        if(cards.size()+total <= 12){
+    /**
+     * Generates and adds a specified number of random playing cards to the game UI.
+     * Ensures the total number of cards does not exceed the limit (12).
+     * Applies animations and updates the card positions accordingly.
+     *
+     * @param cardPlace The AnchorPane where the cards will be displayed.
+     * @param total     The number of cards to generate.
+     */
+    private void createCard(AnchorPane cardPlace, int total) {
+        if (cards.size() + total <= 12) {
             Random random = new Random();
-            for(int i=0; i<total; ++i){
+            for (int i = 0; i < total; ++i) {
                 int randomCard = random.nextInt(52) + 1;
-                String url = String.format("/card/Card-%d.png",randomCard);
+                String url = String.format("/card/Card-%d.png", randomCard);
                 ImageView card = new ImageView(new Image(getClass().getResource(url).toExternalForm()));
                 card.setFitWidth(220);
                 card.setPreserveRatio(true);
@@ -141,20 +178,32 @@ public class SinglePlayGame {
         }
     }
 
-    private void resettingPosCard(AnchorPane cardPlace){
+    /**
+     * Adjusts the positions of the player's cards in a visually organized manner.
+     * Ensures that cards are spaced evenly for better readability.
+     *
+     * @param cardPlace The AnchorPane containing the player's cards.
+     */
+    private void resettingPosCard(AnchorPane cardPlace) {
         int i = 0;
 
-        for(Node node: cardPlace.getChildren()){
-            if(node instanceof ImageView && cards.contains((ImageView)node)){
-                ImageView card = (ImageView)node;
-                card.setLayoutX( i * 75);
-                card.setLayoutY(1080-200);
+        for (Node node : cardPlace.getChildren()) {
+            if (node instanceof ImageView && cards.contains((ImageView) node)) {
+                ImageView card = (ImageView) node;
+                card.setLayoutX(i * 75);
+                card.setLayoutY(1080 - 200);
                 i++;
             }
         }
     }
 
-    private void gamePlayerStatusConfig(VBox gamePlayerStatus){
+    /**
+     * Configures the game player status area, displaying avatars and remaining card counts.
+     * Also sets up the score and timer container for the players.
+     *
+     * @param gamePlayerStatus The VBox where the player status components will be added.
+     */
+    private void gamePlayerStatusConfig(VBox gamePlayerStatus) {
         // Player area
         HBox playerPlace01 = new HBox();
         HBox playerPlace02 = new HBox();
@@ -174,10 +223,16 @@ public class SinglePlayGame {
 
         gamePlayerStatus.setAlignment(Pos.TOP_LEFT);
         gamePlayerStatus.setSpacing(30);
-        gamePlayerStatus.setPadding(new Insets(30,30,30,30));
+        gamePlayerStatus.setPadding(new Insets(30, 30, 30, 30));
     }
 
-    private void scoreTimeContainerConfig(HBox scoreTimeContainer){
+    /**
+     * Configures the score and timer container.
+     * Displays the players' scores in a list and includes a countdown timer.
+     *
+     * @param scoreTimeContainer The HBox where the score and timer elements will be added.
+     */
+    private void scoreTimeContainerConfig(HBox scoreTimeContainer) {
         VBox scoreContainer = new VBox();
         scoreContainer.setSpacing(10);
         scoreContainer.setAlignment(Pos.CENTER);
@@ -186,12 +241,11 @@ public class SinglePlayGame {
         score.setFont(Font.loadFont(style.getLilitaOneFont(), 40));
         score.setStyle(style.sideLabelStyle());
 
-
         VBox scoreBox = new VBox();
         scoreBox.setStyle(style.statusScoreBoxStyle());
         scoreBox.setPrefSize(250, 300);
         scoreBox.setAlignment(Pos.CENTER);
-        scoreBox.setPadding(new Insets(10,10,10,10));
+        scoreBox.setPadding(new Insets(10, 10, 10, 10));
         scoreBox.setSpacing(10);
         HBox me = new HBox();
         HBox player01 = new HBox();
@@ -207,7 +261,6 @@ public class SinglePlayGame {
 
         scoreContainer.getChildren().addAll(score, scoreBox);
 
-
         Label timer = new Label("10");
         timer.setFont(Font.loadFont(style.getLilitaOneFont(), 80));
         timer.setStyle(style.sideLabelStyle());
@@ -215,9 +268,17 @@ public class SinglePlayGame {
         scoreTimeContainer.getChildren().addAll(scoreContainer, timer);
         scoreTimeContainer.setAlignment(Pos.CENTER_LEFT);
         scoreTimeContainer.setSpacing(55);
-        scoreTimeContainer.setPadding(new Insets(0,0,0,0));
+        scoreTimeContainer.setPadding(new Insets(0, 0, 0, 0));
     }
-    private void createScorePlayer(HBox scoreBox, String imageURL, int score){
+
+    /**
+     * Creates and configures a player's score display with an avatar and score label.
+     *
+     * @param scoreBox The HBox where the player's score will be displayed.
+     * @param imageURL The file path to the player's avatar image.
+     * @param score    The player's current score.
+     */
+    private void createScorePlayer(HBox scoreBox, String imageURL, int score) {
         ImageView player = new ImageView(new Image(getClass().getResource(imageURL).toExternalForm()));
         player.setFitWidth(70);
         player.setFitHeight(70);
@@ -229,7 +290,15 @@ public class SinglePlayGame {
         scoreBox.setAlignment(Pos.CENTER_LEFT);
         scoreBox.setSpacing(60);
     }
-    private void createPlayerStatus(HBox playerPlace, String avatarURL, int leftCard){
+
+    /**
+     * Creates and configures a player's status display with an avatar, card back, and remaining card count.
+     *
+     * @param playerPlace The HBox where the player's status will be displayed.
+     * @param avatarURL   The file path to the player's avatar image.
+     * @param leftCard    The number of cards the player has left.
+     */
+    private void createPlayerStatus(HBox playerPlace, String avatarURL, int leftCard) {
         ImageView player = new ImageView(new Image(getClass().getResource(avatarURL).toExternalForm()));
         player.setFitWidth(150);
         player.setFitHeight(150);
@@ -249,8 +318,15 @@ public class SinglePlayGame {
         playerPlace.setAlignment(Pos.CENTER_LEFT);
         playerPlace.getChildren().add(cardLeft);
     }
-    private void sidebarConfig(VBox sidebar){
-        sidebar.setPadding(new Insets(40,20,20,20));
+
+    /**
+     * Configures the sidebar with buttons, chat area, and a message input field.
+     * Includes interactive elements such as volume control, settings, and back button.
+     *
+     * @param sidebar The VBox where sidebar components will be added.
+     */
+    private void sidebarConfig(VBox sidebar) {
+        sidebar.setPadding(new Insets(40, 20, 20, 20));
         sidebar.setAlignment(Pos.BOTTOM_CENTER);
         sidebar.setPrefWidth(384);
         sidebar.setSpacing(10);
@@ -299,7 +375,7 @@ public class SinglePlayGame {
             menu.generate();
         });
         volume.setOnMouseClicked(e -> {
-            if(SinglePlayGame.volume){
+            if (SinglePlayGame.volume) {
                 volume.setImage(new Image(getClass().getResource("/button/volume-off.png").toExternalForm()));
                 SinglePlayGame.volume = false;
             } else {
@@ -308,7 +384,11 @@ public class SinglePlayGame {
             }
         });
     }
-    private void initPage(){
+
+    /**
+     * Initializes the game page by setting the root layout and applying styles.
+     */
+    private void initPage() {
         scene.setRoot(pane);
         pane.setStyle(style.gameBorderPaneStyle());
     }

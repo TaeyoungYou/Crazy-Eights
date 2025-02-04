@@ -2,7 +2,9 @@ package app.animation;
 
 import app.style.StyleGame;
 import app.ui.Msg;
-import javafx.animation.*;
+import javafx.animation.FadeTransition;
+import javafx.animation.ScaleTransition;
+import javafx.animation.TranslateTransition;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
@@ -13,6 +15,10 @@ import javafx.util.Duration;
 
 import java.util.List;
 
+/**
+ * Handles various animations for the game, such as card interactions,
+ * hover effects, and transitions.
+ */
 public class AnimationGame {
     private final StyleGame style = new StyleGame();
     private double mouseOffsetX, mouseOffsetY;
@@ -22,12 +28,25 @@ public class AnimationGame {
     private final double DELETE_Y = 400;
     private final double DELETE_X = 500;
 
-    public void cardAnimation(ImageView card, AnchorPane cardPlace, List<ImageView> cards){
+    /**
+     * Applies animations to a card, including hover and drag effects.
+     *
+     * @param card      The ImageView representing the card.
+     * @param cardPlace The AnchorPane where the card is displayed.
+     * @param cards     The list of cards currently in play.
+     */
+    public void cardAnimation(ImageView card, AnchorPane cardPlace, List<ImageView> cards) {
         cardHoverEffect(card);
         cardDragEffect(card, cardPlace, cards);
     }
 
-    private void cardHoverEffect(ImageView card){
+    /**
+     * Applies a hover effect to a card by scaling it up when the mouse enters
+     * and scaling it back down when the mouse exits.
+     *
+     * @param card The ImageView representing the card.
+     */
+    private void cardHoverEffect(ImageView card) {
         ScaleTransition scaleUp = new ScaleTransition(Duration.millis(200), card);
         scaleUp.setToX(1.1);
         scaleUp.setToY(1.1);
@@ -44,7 +63,16 @@ public class AnimationGame {
         });
     }
 
-    private void cardDragEffect(ImageView card, AnchorPane cardPlace, List<ImageView> cards){
+    /**
+     * Applies a drag-and-drop effect to a card, allowing it to be moved within the play area.
+     * If the card is released in a designated delete area, it fades out and is removed.
+     * Otherwise, it returns to its original position.
+     *
+     * @param card      The ImageView representing the card.
+     * @param cardPlace The AnchorPane where the card is displayed.
+     * @param cards     The list of cards currently in play.
+     */
+    private void cardDragEffect(ImageView card, AnchorPane cardPlace, List<ImageView> cards) {
         card.setOnMousePressed(e -> {
             mouseOffsetX = e.getSceneX() - card.getLayoutX();
             mouseOffsetY = e.getSceneY() - card.getLayoutY();
@@ -57,17 +85,17 @@ public class AnimationGame {
         card.setOnMouseDragged(e -> {
             double newX = e.getSceneX() - mouseOffsetX;
             double newY = e.getSceneY() - mouseOffsetY;
-            if(newX >= 0 && newX <= 865){
+            if (newX >= 0 && newX <= 865) {
                 card.setLayoutX(newX);
             }
-            if(newY >= 0 && newY <= 1080){
+            if (newY >= 0 && newY <= 1080) {
                 card.setLayoutY(newY);
             }
         });
         card.setOnMouseReleased(e -> {
             card.setOpacity(1.0);
 
-            if(card.getLayoutY() < DELETE_Y && card.getLayoutX() > DELETE_X){
+            if (card.getLayoutY() < DELETE_Y && card.getLayoutX() > DELETE_X) {
                 FadeTransition fadeOut = new FadeTransition(Duration.millis(500), card);
                 fadeOut.setToValue(0.0);
                 fadeOut.setOnFinished(event -> {
@@ -76,7 +104,7 @@ public class AnimationGame {
                     resettingPosCard(cardPlace, cards);
                 });
                 fadeOut.play();
-            } else{
+            } else {
                 cardMoveBackEffect(card, cardPlace);
                 cardPlace.getChildren().remove(card);
                 cardPlace.getChildren().add(index, card);
@@ -84,26 +112,39 @@ public class AnimationGame {
         });
     }
 
-    private void resettingPosCard(AnchorPane cardPlace, List<ImageView> cards){
+    /**
+     * Resets the positions of the player's cards, aligning them in a structured manner.
+     * Ensures that the cards are evenly spaced within the play area.
+     *
+     * @param cardPlace The AnchorPane containing the player's cards.
+     * @param cards     The list of ImageView objects representing the cards.
+     */
+    private void resettingPosCard(AnchorPane cardPlace, List<ImageView> cards) {
         int i = 0;
 
-        for(Node node: cardPlace.getChildren()){
-            if(node instanceof ImageView && cards.contains((ImageView)node)){
-                ImageView card = (ImageView)node;
-                card.setLayoutX( i * 75);
-                card.setLayoutY(1080-200);
+        for (Node node : cardPlace.getChildren()) {
+            if (node instanceof ImageView && cards.contains((ImageView) node)) {
+                ImageView card = (ImageView) node;
+                card.setLayoutX(i * 75);
+                card.setLayoutY(1080 - 200);
                 i++;
             }
         }
     }
 
-    private void cardMoveBackEffect(ImageView card, Pane cardPlace){
+    /**
+     * Animates the card moving back to its original position if it was dragged but not placed in a valid area.
+     *
+     * @param card      The ImageView representing the card.
+     * @param cardPlace The Pane where the card is displayed.
+     */
+    private void cardMoveBackEffect(ImageView card, Pane cardPlace) {
         TranslateTransition moveBack = new TranslateTransition(Duration.millis(200), card);
         moveBack.setFromX(0);
         moveBack.setToX(0);
         moveBack.setToX(originCardX - card.getLayoutX());
         moveBack.setToY(originCardY - card.getLayoutY());
-        moveBack.setOnFinished(e->{
+        moveBack.setOnFinished(e -> {
             card.setLayoutX(originCardX);
             card.setLayoutY(originCardY);
             card.setTranslateX(0);
@@ -112,7 +153,13 @@ public class AnimationGame {
         moveBack.play();
     }
 
-    public void buttonAnimation(ImageView button){
+    /**
+     * Applies a hover animation effect to a button, scaling it down slightly when hovered
+     * and restoring its original size when the mouse exits.
+     *
+     * @param button The ImageView representing the button.
+     */
+    public void buttonAnimation(ImageView button) {
         ScaleTransition mouseOn = new ScaleTransition(Duration.millis(200), button);
         mouseOn.setToX(0.85);
         mouseOn.setToY(0.85);
@@ -131,7 +178,13 @@ public class AnimationGame {
         });
     }
 
-    public void deckHoverAnimation(ImageView deck){
+    /**
+     * Applies a hover animation effect to the deck, slightly scaling it down when hovered
+     * and restoring its original size when the mouse exits.
+     *
+     * @param deck The ImageView representing the deck.
+     */
+    public void deckHoverAnimation(ImageView deck) {
         ScaleTransition deckUp = new ScaleTransition(Duration.millis(200), deck);
         deckUp.setToX(1.0);
         deckUp.setToY(1.0);
@@ -151,21 +204,28 @@ public class AnimationGame {
         });
     }
 
-    public void msgAnimation(Label msgLbl, Msg msg){
+    /**
+     * Animates a message label by scaling it up and down in a loop.
+     * After a set number of cycles, the message toggles between a status message and an error message.
+     *
+     * @param msgLbl The Label displaying the message.
+     * @param msg    The Msg object containing the message content and status.
+     */
+    public void msgAnimation(Label msgLbl, Msg msg) {
         ScaleTransition scaleUpAndDown = new ScaleTransition(Duration.seconds(2), msgLbl);
         scaleUpAndDown.setToX(1.05);
         scaleUpAndDown.setToY(1.05);
         scaleUpAndDown.setAutoReverse(true);
         scaleUpAndDown.setCycleCount(6);
 
-        scaleUpAndDown.setOnFinished(e->{
-            if(Msg.status.status == msg.getMsg_status()){
+        scaleUpAndDown.setOnFinished(e -> {
+            if (Msg.status.status == msg.getMsg_status()) {
                 msg.setMsg_status(Msg.status.error);
                 msg.setMsg("This is a error message");
                 msgLbl.setText(msg.getMsg());
                 msgLbl.setStyle(style.errorMsgStyle());
                 msgAnimation(msgLbl, msg);
-            } else{
+            } else {
                 msg.setMsg_status(Msg.status.status);
                 msg.setMsg("This is a status message");
                 msgLbl.setText(msg.getMsg());
