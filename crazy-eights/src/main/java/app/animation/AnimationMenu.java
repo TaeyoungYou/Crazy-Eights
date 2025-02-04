@@ -10,7 +10,7 @@ import javafx.util.Duration;
 
 public class AnimationMenu {
 
-    public void menuAnimation(VBox centerPane, Node[] nodes){
+    public void menuAnimation(VBox centerPane, Node[] nodes, Label title){
         // 2 seconds pause
         PauseTransition pause = new PauseTransition();
         pause.setDuration(Duration.seconds(2));
@@ -53,7 +53,14 @@ public class AnimationMenu {
             }
         }
 
-        // background color changing animation
+        ScaleTransition scaleUpAndDown = new ScaleTransition(Duration.seconds(2), title);
+        scaleUpAndDown.setToX(1.1);
+        scaleUpAndDown.setToY(1.1);
+        scaleUpAndDown.setAutoReverse(true);
+        scaleUpAndDown.setCycleCount(Animation.INDEFINITE);
+        scaleUpAndDown.play();
+
+        buttons_parallel.getChildren().add(scaleUpAndDown);
 
         SequentialTransition sequence = new SequentialTransition(
                 pause,
@@ -63,17 +70,6 @@ public class AnimationMenu {
         );
 
         sequence.play();
-    }
-
-    public void titleHover(Label title){
-        ScaleTransition scaleUp = new ScaleTransition(Duration.millis(200), title);
-        scaleUp.setToX(1.1);
-        scaleUp.setToY(1.1);
-        ScaleTransition scaleDown = new ScaleTransition(Duration.millis(200), title);
-        scaleDown.setToX(1.0);
-        scaleDown.setToY(1.0);
-        title.setOnMouseEntered(event -> scaleUp.playFromStart());
-        title.setOnMouseExited(event -> scaleDown.playFromStart());
     }
 
     public void menuHover(Node[] nodes) {

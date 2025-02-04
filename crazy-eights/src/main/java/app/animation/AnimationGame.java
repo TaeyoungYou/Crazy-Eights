@@ -1,19 +1,27 @@
 package app.animation;
 
+import javafx.animation.FadeTransition;
 import javafx.animation.ScaleTransition;
 import javafx.animation.TranslateTransition;
+import javafx.scene.Cursor;
+import javafx.scene.Node;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.util.Duration;
+
+import java.util.List;
 
 public class AnimationGame {
     private double mouseOffsetX, mouseOffsetY;
     private double originCardX, originCardY;
     private int index;
 
-    public void cardAnimation(ImageView card, Pane cardPlace){
+    private final double DELETE_Y = 400;
+
+    public void cardAnimation(ImageView card, AnchorPane cardPlace, List<ImageView> cards){
         cardHoverEffect(card);
-        cardDragEffect(card, cardPlace);
+        cardDragEffect(card, cardPlace, cards);
     }
 
     private void cardHoverEffect(ImageView card){
@@ -33,7 +41,7 @@ public class AnimationGame {
         });
     }
 
-    private void cardDragEffect(ImageView card, Pane cardPlace){
+    private void cardDragEffect(ImageView card, AnchorPane cardPlace, List<ImageView> cards){
         card.setOnMousePressed(e -> {
             mouseOffsetX = e.getSceneX() - card.getLayoutX();
             mouseOffsetY = e.getSceneY() - card.getLayoutY();
@@ -55,10 +63,35 @@ public class AnimationGame {
         });
         card.setOnMouseReleased(e -> {
             card.setOpacity(1.0);
-            cardMoveBackEffect(card, cardPlace);
-            cardPlace.getChildren().remove(card);
-            cardPlace.getChildren().add(index, card);
+
+            if(card.getLayoutY() < DELETE_Y){
+                FadeTransition fadeOut = new FadeTransition(Duration.millis(500), card);
+                fadeOut.setToValue(0.0);
+                fadeOut.setOnFinished(event -> {
+                    cards.remove(card);
+                    cardPlace.getChildren().remove(card);
+                    resettingPosCard(cardPlace, cards);
+                });
+                fadeOut.play();
+            } else{
+                cardMoveBackEffect(card, cardPlace);
+                cardPlace.getChildren().remove(card);
+                cardPlace.getChildren().add(index, card);
+            }
         });
+    }
+
+    private void resettingPosCard(AnchorPane cardPlace, List<ImageView> cards){
+        int i = 0;
+
+        for(Node node: cardPlace.getChildren()){
+            if(node instanceof ImageView && cards.contains((ImageView)node)){
+                ImageView card = (ImageView)node;
+                card.setLayoutX( i * 75);
+                card.setLayoutY(1080-200);
+                i++;
+            }
+        }
     }
 
     private void cardMoveBackEffect(ImageView card, Pane cardPlace){
@@ -74,5 +107,24 @@ public class AnimationGame {
             card.setTranslateY(0);
         });
         moveBack.play();
+    }
+
+    public void backAnimation(ImageView button){
+        ScaleTransition mouseOn = new ScaleTransition(Duration.millis(200), button);
+        mouseOn.setToX(0.85);
+        mouseOn.setToY(0.85);
+        ScaleTransition mouseOff = new ScaleTransition(Duration.millis(200), button);
+        mouseOff.setToX(1.0);
+        mouseOff.setToY(1.0);
+        button.setCursor(Cursor.HAND);
+
+        button.setOnMouseEntered(e -> {
+            mouseOn.playFromStart();
+            button.setOpacity(0.8);
+        });
+        button.setOnMouseExited(e -> {
+            mouseOff.playFromStart();
+            button.setOpacity(1.0);
+        });
     }
 }

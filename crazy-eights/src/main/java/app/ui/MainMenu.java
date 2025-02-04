@@ -2,17 +2,16 @@ package app.ui;
 
 import app.animation.AnimationMenu;
 import app.style.StyleMenu;
+import javafx.application.Platform;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
-import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
-import javafx.stage.Stage;
 
 public class MainMenu {
     private final BorderPane pane;
@@ -28,15 +27,9 @@ public class MainMenu {
     }
 
     public void generate(){
-        scene.setRoot(pane);
-        // pane 스타일 지정
-        pane.setStyle(style.loadingBorderPaneStyle());
+        initPage();
 
-        // title 생성 및 스타일 지정
-        Label title = new Label();
-        title.setText("Crazy Eights");
-        title.setFont(Font.loadFont(style.getLilitaOneFont(), 180));
-        title.setStyle(style.loadingTitleStyle());
+        Label title = createTitle();
 
         // button 생성 및 스타일 지정
         Label singlePlay = new Label();
@@ -73,20 +66,28 @@ public class MainMenu {
         pane.setCenter(menuPane);
 
         // 애니메이션 적용
-        animation.menuAnimation(menuPane, nodes);
+        animation.menuAnimation(menuPane, nodes, title);
         animation.menuHover(nodes);
-        animation.titleHover(title);
 
         singlePlay.setOnMouseClicked(event -> {
             SinglePlayGame game = new SinglePlayGame(scene);
             game.generate();
         });
+        quit.setOnMouseClicked(event -> {
+            Platform.exit();;
+        });
     }
-    private void configStage(Stage primaryStage) {
-        primaryStage.setTitle("Crazy Eights");
-        primaryStage.setResizable(false);
-        primaryStage.setFullScreen(true);
-        primaryStage.setFullScreenExitHint("");
-        primaryStage.setFullScreenExitKeyCombination(KeyCombination.NO_MATCH);
+
+    private void initPage(){
+        scene.setRoot(pane);
+        pane.setStyle(style.loadingBorderPaneStyle());
+    }
+    private Label createTitle(){
+        // title 생성 및 스타일 지정
+        Label title = new Label();
+        title.setText("Crazy Eights");
+        title.setFont(Font.loadFont(style.getLilitaOneFont(), 180));
+        title.setStyle(style.loadingTitleStyle());
+        return title;
     }
 }

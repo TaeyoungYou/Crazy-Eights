@@ -4,6 +4,7 @@ import app.animation.AnimationGame;
 import app.style.StyleGame;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
@@ -36,10 +37,7 @@ public class SinglePlayGame {
     }
 
     public void generate(){
-        // Scene default config
-        scene.setRoot(pane);
-
-        pane.setStyle(style.gameBorderPaneStyle());
+        initPage();
 
         // game ground and sidebar
         BorderPane gameGround = new BorderPane();
@@ -114,18 +112,22 @@ public class SinglePlayGame {
             card.setPreserveRatio(true);
             cards.add(card);
 
-            animation.cardAnimation(card, cardPlace);
+            animation.cardAnimation(card, cardPlace, cards);
             cardPlace.getChildren().add(card);
         }
         resettingPosCard(cardPlace);
     }
 
     private void resettingPosCard(AnchorPane cardPlace){
-        int total = cardPlace.getChildren().size();
-        for(int i=0; i<total; ++i){
-            ImageView card = (ImageView) cardPlace.getChildren().get(i);
-            card.setLayoutX( i * 75);
-            card.setLayoutY(1080-200);
+        int i = 0;
+
+        for(Node node: cardPlace.getChildren()){
+            if(node instanceof ImageView && cards.contains((ImageView)node)){
+                ImageView card = (ImageView)node;
+                card.setLayoutX( i * 75);
+                card.setLayoutY(1080-200);
+                i++;
+            }
         }
     }
 
@@ -135,9 +137,9 @@ public class SinglePlayGame {
         HBox playerPlace02 = new HBox();
         HBox playerPlace03 = new HBox();
 
-        player01Config(playerPlace01);
-        player02Config(playerPlace02);
-        player03Config(playerPlace03);
+        createPlayerStatus(playerPlace01, "/avatar/User-01.png", 5);
+        createPlayerStatus(playerPlace02, "/avatar/User-03.png", 10);
+        createPlayerStatus(playerPlace03, "/avatar/User-05.png", 7);
 
         Region spacer = new Region();
         spacer.setPrefHeight(20);
@@ -173,10 +175,10 @@ public class SinglePlayGame {
         HBox player02 = new HBox();
         HBox player03 = new HBox();
 
-        scoreMine(me);
-        scorePlayer01(player01);
-        scorePlayer02(player02);
-        scorePlayer03(player03);
+        createScorePlayer(me, "/avatar/User-02.png", 12);
+        createScorePlayer(player01, "/avatar/User-01.png", 20);
+        createScorePlayer(player02, "/avatar/User-03.png", 5);
+        createScorePlayer(player03, "/avatar/User-05.png", 15);
 
         scoreBox.getChildren().addAll(player01, player03, me, player02);
 
@@ -192,124 +194,36 @@ public class SinglePlayGame {
         scoreTimeContainer.setSpacing(55);
         scoreTimeContainer.setPadding(new Insets(0,0,0,0));
     }
-    private void scoreMine(HBox scoreBox){
-        ImageView player = new ImageView();
-        player.setImage(new Image(getClass().getResource("/avatar/User-02.png").toExternalForm()));
+    private void createScorePlayer(HBox scoreBox, String imageURL, int score){
+        ImageView player = new ImageView(new Image(getClass().getResource(imageURL).toExternalForm()));
         player.setFitWidth(70);
         player.setFitHeight(70);
 
-        Label score = new Label("12");
-        score.setFont(Font.loadFont(style.getLilitaOneFont(), 40));
-        score.setStyle(style.sideLabelStyle());
-        scoreBox.getChildren().addAll(player, score);
-        scoreBox.setAlignment(Pos.CENTER_LEFT);
+        Label scoreLbl = new Label(String.valueOf(score));
+        scoreLbl.setFont(Font.loadFont(style.getLilitaOneFont(), 40));
+        scoreLbl.setStyle(style.sideLabelStyle());
+        scoreBox.getChildren().addAll(player, scoreLbl);
+        scoreBox.setAlignment(Pos.CENTER);
         scoreBox.setSpacing(60);
     }
-
-    private void scorePlayer01(HBox scoreBox){
-        ImageView player = new ImageView();
-        player.setImage(new Image(getClass().getResource("/avatar/User-01.png").toExternalForm()));
-        player.setFitWidth(70);
-        player.setFitHeight(70);
-
-        Label score = new Label("20");
-        score.setFont(Font.loadFont(style.getLilitaOneFont(), 40));
-        score.setStyle(style.sideLabelStyle());
-        scoreBox.getChildren().addAll(player, score);
-        scoreBox.setAlignment(Pos.CENTER_LEFT);
-        scoreBox.setSpacing(60);
-    }
-    private void scorePlayer02(HBox scoreBox){
-        ImageView player = new ImageView();
-        player.setImage(new Image(getClass().getResource("/avatar/User-03.png").toExternalForm()));
-        player.setFitWidth(70);
-        player.setFitHeight(70);
-
-        Label score = new Label("5");
-        score.setFont(Font.loadFont(style.getLilitaOneFont(), 40));
-        score.setStyle(style.sideLabelStyle());
-        scoreBox.getChildren().addAll(player, score);
-        scoreBox.setAlignment(Pos.CENTER_LEFT);
-        scoreBox.setSpacing(60);
-    }
-    private void scorePlayer03(HBox scoreBox){
-        ImageView player = new ImageView();
-        player.setImage(new Image(getClass().getResource("/avatar/User-05.png").toExternalForm()));
-        player.setFitWidth(70);
-        player.setFitHeight(70);
-
-        Label score = new Label("15");
-        score.setFont(Font.loadFont(style.getLilitaOneFont(), 40));
-        score.setStyle(style.sideLabelStyle());
-        scoreBox.getChildren().addAll(player, score);
-        scoreBox.setAlignment(Pos.CENTER_LEFT);
-        scoreBox.setSpacing(60);
-    }
-
-    private void player01Config(HBox playerPlace){
-        ImageView player = new ImageView();
-        player.setImage(new Image(getClass().getResource("/avatar/User-01.png").toExternalForm()));
+    private void createPlayerStatus(HBox playerPlace, String avatarURL, int leftCard){
+        ImageView player = new ImageView(new Image(getClass().getResource(avatarURL).toExternalForm()));
         player.setFitWidth(150);
         player.setFitHeight(150);
 
         playerPlace.getChildren().add(player);
 
-        ImageView cardBack = new ImageView();
-        cardBack.setImage(new Image(getClass().getResource("/card/Card-0.png").toExternalForm()));
+        ImageView cardBack = new ImageView(new Image(getClass().getResource("/card/Card-0.png").toExternalForm()));
+        cardBack.setFitWidth(150);
         cardBack.setFitHeight(200);
-        cardBack.setFitWidth(151);
 
         playerPlace.getChildren().add(cardBack);
 
-        Label cardLeft = new Label("x 5");
+        Label cardLeft = new Label(String.format("x %d", leftCard));
         cardLeft.setFont(Font.loadFont(style.getLilitaOneFont(), 40));
         cardLeft.setStyle(style.sideLabelStyle());
 
-        playerPlace.setAlignment(Pos.CENTER_LEFT);
-        playerPlace.getChildren().add(cardLeft);
-    }
-    private void player02Config(HBox playerPlace){
-        ImageView player = new ImageView();
-        player.setImage(new Image(getClass().getResource("/avatar/User-03.png").toExternalForm()));
-        player.setFitWidth(150);
-        player.setFitHeight(150);
-
-        playerPlace.getChildren().add(player);
-
-        ImageView cardBack = new ImageView();
-        cardBack.setImage(new Image(getClass().getResource("/card/Card-0.png").toExternalForm()));
-        cardBack.setFitHeight(200);
-        cardBack.setFitWidth(151);
-
-        playerPlace.getChildren().add(cardBack);
-
-        Label cardLeft = new Label("x 10");
-        cardLeft.setFont(Font.loadFont(style.getLilitaOneFont(), 40));
-        cardLeft.setStyle(style.sideLabelStyle());
-
-        playerPlace.setAlignment(Pos.CENTER_LEFT);
-        playerPlace.getChildren().add(cardLeft);
-    }
-    private void player03Config(HBox playerPlace){
-        ImageView player = new ImageView();
-        player.setImage(new Image(getClass().getResource("/avatar/User-05.png").toExternalForm()));
-        player.setFitWidth(150);
-        player.setFitHeight(150);
-
-        playerPlace.getChildren().add(player);
-
-        ImageView cardBack = new ImageView();
-        cardBack.setImage(new Image(getClass().getResource("/card/Card-0.png").toExternalForm()));
-        cardBack.setFitHeight(200);
-        cardBack.setFitWidth(151);
-
-        playerPlace.getChildren().add(cardBack);
-
-        Label cardLeft = new Label("x 7");
-        cardLeft.setFont(Font.loadFont(style.getLilitaOneFont(), 40));
-        cardLeft.setStyle(style.sideLabelStyle());
-
-        playerPlace.setAlignment(Pos.CENTER_LEFT);
+        playerPlace.setAlignment(Pos.CENTER);
         playerPlace.getChildren().add(cardLeft);
     }
     private void sidebarConfig(VBox sidebar){
@@ -325,6 +239,8 @@ public class SinglePlayGame {
         ImageView volumeOn = new ImageView(new Image(getClass().getResource("/button/volume-on.png").toExternalForm()));
         ImageView setting = new ImageView(new Image(getClass().getResource("/button/settings.png").toExternalForm()));
         ImageView back = new ImageView(new Image(getClass().getResource("/button/back.png").toExternalForm()));
+
+        animation.backAnimation(back);
         buttonBar.getChildren().addAll(volumeOn, setting, back);
 
         sidebar.getChildren().add(buttonBar);
@@ -352,5 +268,14 @@ public class SinglePlayGame {
         message.setStyle(style.sideMessageBox());
 
         sidebar.getChildren().add(message);
+
+        back.setOnMouseClicked(e -> {
+            MainMenu menu = new MainMenu(scene);
+            menu.generate();
+        });
+    }
+    private void initPage(){
+        scene.setRoot(pane);
+        pane.setStyle(style.gameBorderPaneStyle());
     }
 }
