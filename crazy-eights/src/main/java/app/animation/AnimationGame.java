@@ -1,10 +1,11 @@
 package app.animation;
 
-import javafx.animation.FadeTransition;
-import javafx.animation.ScaleTransition;
-import javafx.animation.TranslateTransition;
+import app.style.StyleGame;
+import app.ui.Msg;
+import javafx.animation.*;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
+import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
@@ -13,6 +14,7 @@ import javafx.util.Duration;
 import java.util.List;
 
 public class AnimationGame {
+    private final StyleGame style = new StyleGame();
     private double mouseOffsetX, mouseOffsetY;
     private double originCardX, originCardY;
     private int index;
@@ -147,5 +149,30 @@ public class AnimationGame {
             deck.setOpacity(1);
             deckUp.playFromStart();
         });
+    }
+
+    public void msgAnimation(Label msgLbl, Msg msg){
+        ScaleTransition scaleUpAndDown = new ScaleTransition(Duration.seconds(2), msgLbl);
+        scaleUpAndDown.setToX(1.05);
+        scaleUpAndDown.setToY(1.05);
+        scaleUpAndDown.setAutoReverse(true);
+        scaleUpAndDown.setCycleCount(6);
+
+        scaleUpAndDown.setOnFinished(e->{
+            if(Msg.status.status == msg.getMsg_status()){
+                msg.setMsg_status(Msg.status.error);
+                msg.setMsg("This is a error message");
+                msgLbl.setText(msg.getMsg());
+                msgLbl.setStyle(style.errorMsgStyle());
+                msgAnimation(msgLbl, msg);
+            } else{
+                msg.setMsg_status(Msg.status.status);
+                msg.setMsg("This is a status message");
+                msgLbl.setText(msg.getMsg());
+                msgLbl.setStyle(style.statusMsgStyle());
+                msgAnimation(msgLbl, msg);
+            }
+        });
+        scaleUpAndDown.play();
     }
 }

@@ -54,4 +54,15 @@ public class StyleGame {
                 "-fx-border-width: 2px;" +
                 "-fx-border-radius: 20px;";
     }
+
+    public String statusMsgStyle(){
+        return "-fx-text-fill: #549159;" +
+                "-fx-font-family: 'Comic Sans MS';" +
+                "-fx-font-size: 30px;";
+    }
+    public String errorMsgStyle(){
+        return "-fx-text-fill: #EE4035;"+
+                "-fx-font-family: 'Comic Sans MS';" +
+                "-fx-font-size: 30px;";
+    }
 }

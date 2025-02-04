@@ -23,7 +23,9 @@ public class SinglePlayGame {
     private final AnimationGame animation;
     private final Scene scene;
 
+
     private static boolean volume = true;
+    private static Msg msg;
 
     private final ArrayList<ImageView> cards = new ArrayList<>();
 
@@ -32,6 +34,7 @@ public class SinglePlayGame {
         pane = new BorderPane();
         style = new StyleGame();
         animation = new AnimationGame();
+        msg = new Msg("nothing", Msg.status.status);
     }
 
     public void generate(){
@@ -62,6 +65,8 @@ public class SinglePlayGame {
 
         createDeck(cardPlace);
 
+        createStatusMsg(cardPlace);
+
         gameGround.setCenter(cardPlace);
 
         // myTurnEffect(cardPlace);
@@ -69,6 +74,19 @@ public class SinglePlayGame {
         pane.setCenter(gameGround);
         pane.setRight(sidebar);
     }
+    private void createStatusMsg(AnchorPane deckPlace){
+        Label statusMsg = new Label();
+        msg.setMsg("This is a status message");
+        msg.setMsg_status(Msg.status.status);
+        statusMsg.setText(msg.getMsg());
+        statusMsg.setStyle(style.statusMsgStyle());
+        statusMsg.setLayoutX(380);
+        statusMsg.setLayoutY(550);
+
+        deckPlace.getChildren().add(statusMsg);
+        //animation.msgAnimation(statusMsg, msg);
+    }
+
     private void myTurnEffect(AnchorPane pane){
         Region highlight = new Region();
         highlight.setPrefHeight(10);
