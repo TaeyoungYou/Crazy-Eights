@@ -3,9 +3,14 @@ package app;
 import app.ui.MainMenu;
 import javafx.application.Application;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
+
+import javax.swing.*;
+import java.awt.*;
 
 /**
  * The main entry point for the Crazy Eights game application.
@@ -43,11 +48,12 @@ public class App extends Application {    /**
      *
      * @param primaryStage The primary stage to configure.
      */
-    private void configStage(Stage primaryStage) {
+    private void configStage(Stage primaryStage) throws AWTException {
         primaryStage.setTitle("Crazy Eights");
         primaryStage.setResizable(false);
         primaryStage.setFullScreen(true);
         primaryStage.setFullScreenExitHint("");
         primaryStage.setFullScreenExitKeyCombination(KeyCombination.NO_MATCH);
+        primaryStage.getIcons().add(new Image(getClass().getResource("/icon/icon.png").toExternalForm()));
     }
 }
