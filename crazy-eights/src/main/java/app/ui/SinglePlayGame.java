@@ -55,7 +55,7 @@ public class SinglePlayGame {
         // game ground and sidebar
         BorderPane gameGround = new BorderPane();
         VBox sidebar = new VBox();
-        sidebar.setPrefSize(350, 1080);
+        sidebar.setPrefSize(385, 1080);
 
         // sidebar config
         sidebarConfig(sidebar);
@@ -139,9 +139,9 @@ public class SinglePlayGame {
         cardDummy.setPreserveRatio(true);
 
         deck.setLayoutX(300);
-        deck.setLayoutY(200);
+        deck.setLayoutY(180);
         cardDummy.setLayoutX(600);
-        cardDummy.setLayoutY(220);
+        cardDummy.setLayoutY(200);
 
         deckPlace.getChildren().add(deck);
         deckPlace.getChildren().add(cardDummy);
@@ -191,7 +191,7 @@ public class SinglePlayGame {
             if (node instanceof ImageView && cards.contains((ImageView) node)) {
                 ImageView card = (ImageView) node;
                 card.setLayoutX(i * 75);
-                card.setLayoutY(1080 - 200);
+                card.setLayoutY(1080 - 300);
                 i++;
             }
         }
@@ -213,16 +213,14 @@ public class SinglePlayGame {
         createPlayerStatus(playerPlace02, "/avatar/User-03.png", 10);
         createPlayerStatus(playerPlace03, "/avatar/User-05.png", 7);
 
-        Region spacer = new Region();
-        spacer.setPrefHeight(20);
         HBox scoreTimeContainer = new HBox();
 
         scoreTimeContainerConfig(scoreTimeContainer);
 
-        gamePlayerStatus.getChildren().addAll(playerPlace01, playerPlace02, playerPlace03, spacer, scoreTimeContainer);
+        gamePlayerStatus.getChildren().addAll(playerPlace01, playerPlace02, playerPlace03, scoreTimeContainer);
 
         gamePlayerStatus.setAlignment(Pos.TOP_LEFT);
-        gamePlayerStatus.setSpacing(30);
+        gamePlayerStatus.setSpacing(10);
         gamePlayerStatus.setPadding(new Insets(30, 30, 30, 30));
     }
 
@@ -326,9 +324,8 @@ public class SinglePlayGame {
      * @param sidebar The VBox where sidebar components will be added.
      */
     private void sidebarConfig(VBox sidebar) {
-        sidebar.setPadding(new Insets(40, 20, 20, 20));
-        sidebar.setAlignment(Pos.BOTTOM_CENTER);
-        sidebar.setPrefWidth(384);
+        sidebar.setPadding(new Insets(50, 20, 20, 20));
+        sidebar.setAlignment(Pos.TOP_CENTER);
         sidebar.setSpacing(10);
         sidebar.setStyle(style.gameSidePaneStyle());
 
@@ -355,7 +352,7 @@ public class SinglePlayGame {
         scroll.setStyle(style.sideScrollPane());
         VBox chats = new VBox();
         chats.setPrefWidth(340);
-        chats.setPrefHeight(950);
+        chats.setPrefHeight(820);
         chats.setStyle(style.sideChatBox());
 
         scroll.setContent(chats);

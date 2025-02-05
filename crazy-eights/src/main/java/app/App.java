@@ -11,8 +11,7 @@ import javafx.stage.Stage;
  * The main entry point for the Crazy Eights game application.
  * This class initializes the JavaFX application and sets up the main menu.
  */
-public class App extends Application {
-    /**
+public class App extends Application {    /**
      * Starts the JavaFX application by setting up the primary stage.
      *
      * @param primaryStage The main window of the application.

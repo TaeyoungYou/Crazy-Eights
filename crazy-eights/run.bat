@@ -1,7 +1,6 @@
 @echo off
 CLS
 
-:: 환경 변수 설정
 SET JDK=jdk-1.8
 SET JAVA_HOME=%CD%\%JDK%
 SET "OLD_PATH=%PATH%"
@@ -14,7 +13,6 @@ javac -version
 ECHO "[LABS SCRIPT ---------------------]"
 ECHO "0. Cleaning previous build files..."
 
-:: 기존 빌드 폴더 및 파일 삭제
 IF EXIST "bin" RD /S /Q "bin"
 IF EXIST "doc" RD /S /Q "doc"
 IF EXIST "labs-javac.err" DEL "labs-javac.err"
@@ -52,7 +50,6 @@ cd bin
 java -jar "Crazy-Eights.jar"
 cd ..
 
-:: 원래 PATH 복구
 SET PATH=%OLD_PATH%
 
 ECHO "JAR execution finished."

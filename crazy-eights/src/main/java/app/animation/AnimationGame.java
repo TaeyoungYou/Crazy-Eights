@@ -26,7 +26,7 @@ public class AnimationGame {
     private int index;
 
     private final double DELETE_Y = 400;
-    private final double DELETE_X = 500;
+    private final double DELETE_X = 480;
 
     /**
      * Applies animations to a card, including hover and drag effects.
@@ -126,7 +126,7 @@ public class AnimationGame {
             if (node instanceof ImageView && cards.contains((ImageView) node)) {
                 ImageView card = (ImageView) node;
                 card.setLayoutX(i * 75);
-                card.setLayoutY(1080 - 200);
+                card.setLayoutY(1080 - 300);
                 i++;
             }
         }
