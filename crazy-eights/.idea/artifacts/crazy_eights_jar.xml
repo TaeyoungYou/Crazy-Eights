@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="crazy-eights:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/crazy_eights_jar</output-path>
+    <root id="archive" name="crazy-eights.jar">
+      <element id="module-output" name="crazy-eights" />
+    </root>
+  </artifact>
+</component>
