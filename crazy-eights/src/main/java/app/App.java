@@ -12,7 +12,6 @@ import javafx.stage.Stage;
  * This class initializes the JavaFX application and sets up the main menu.
  */
 public class App extends Application {
-
     /**
      * Starts the JavaFX application by setting up the primary stage.
      *
