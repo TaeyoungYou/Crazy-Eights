@@ -1,0 +1,6 @@
+Patch Notes
+ - The window standard is 1920 x 1080, but this game uses full screen and therefore relies on the display's window size (you need to set your display to 1920 x 1080 before running the game).
+ - I decided to use only three colors (#dddddd, #e1e1e1, #17171A) to keep the design as minimalist as possible.
+ - I initially planned to change the main menu color from #e1e1e1 to #dddddd, but due to technical limitations in JavaFX, I couldn't make it transition smoothly, so we excluded that change.
+ - I thought it would be better from a UX standpoint to place options like Setting and Quit which used to appear after pressing ESC to pause—at the top of the right sidebar, so I changed it.
+ - I updated the UI to add a Score box and Timer in the bottom-left corner to make it feel more lively.
