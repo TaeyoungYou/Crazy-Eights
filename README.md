@@ -1,5 +1,5 @@
 <div align="center">
-<h2>[2025] 🂡Game Development Assignment 🂡</h2>
+<h2>[2025] 🂡 Game Development Assignment 🂡</h2>
 Crazy Eights is a fun card game that you can enjoy solo or in multiplayer with friends! <br>
 It is designed to let you play while chatting with friends and enjoying relaxing music.
 </div>

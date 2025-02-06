@@ -1,7 +1,6 @@
 package app.animation;
 
 import app.style.StyleGame;
-import app.ui.Msg;
 import javafx.animation.FadeTransition;
 import javafx.animation.ScaleTransition;
 import javafx.animation.TranslateTransition;
@@ -202,37 +201,5 @@ public class AnimationGame {
             deck.setOpacity(1);
             deckUp.playFromStart();
         });
-    }
-
-    /**
-     * Animates a message label by scaling it up and down in a loop.
-     * After a set number of cycles, the message toggles between a status message and an error message.
-     *
-     * @param msgLbl The Label displaying the message.
-     * @param msg    The Msg object containing the message content and status.
-     */
-    public void msgAnimation(Label msgLbl, Msg msg) {
-        ScaleTransition scaleUpAndDown = new ScaleTransition(Duration.seconds(2), msgLbl);
-        scaleUpAndDown.setToX(1.05);
-        scaleUpAndDown.setToY(1.05);
-        scaleUpAndDown.setAutoReverse(true);
-        scaleUpAndDown.setCycleCount(6);
-
-        scaleUpAndDown.setOnFinished(e -> {
-            if (Msg.status.status == msg.getMsg_status()) {
-                msg.setMsg_status(Msg.status.error);
-                msg.setMsg("This is a error message");
-                msgLbl.setText(msg.getMsg());
-                msgLbl.setStyle(style.errorMsgStyle());
-                msgAnimation(msgLbl, msg);
-            } else {
-                msg.setMsg_status(Msg.status.status);
-                msg.setMsg("This is a status message");
-                msgLbl.setText(msg.getMsg());
-                msgLbl.setStyle(style.statusMsgStyle());
-                msgAnimation(msgLbl, msg);
-            }
-        });
-        scaleUpAndDown.play();
     }
 }
