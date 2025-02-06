@@ -27,9 +27,7 @@ public class SinglePlayGame {
     private final AnimationGame animation;
     private final Scene scene;
 
-
     private static boolean volume = true;
-    private static Msg msg;
 
     private final ArrayList<ImageView> cards = new ArrayList<>();
 
@@ -43,7 +41,6 @@ public class SinglePlayGame {
         pane = new BorderPane();
         style = new StyleGame();
         animation = new AnimationGame();
-        msg = new Msg("nothing", Msg.status.status);
     }
 
     /**
@@ -77,32 +74,12 @@ public class SinglePlayGame {
 
         createDeck(cardPlace);
 
-        createStatusMsg(cardPlace);
-
         gameGround.setCenter(cardPlace);
 
         // myTurnEffect(cardPlace);
         // set pane
         pane.setCenter(gameGround);
         pane.setRight(sidebar);
-    }
-
-    /**
-     * Creates and displays the game status message.
-     *
-     * @param deckPlace The AnchorPane where the status message is displayed.
-     */
-    private void createStatusMsg(AnchorPane deckPlace) {
-        Label statusMsg = new Label();
-        msg.setMsg("This is a status message");
-        msg.setMsg_status(Msg.status.status);
-        statusMsg.setText(msg.getMsg());
-        statusMsg.setStyle(style.statusMsgStyle());
-        statusMsg.setLayoutX(380);
-        statusMsg.setLayoutY(550);
-
-        deckPlace.getChildren().add(statusMsg);
-        //animation.msgAnimation(statusMsg, msg);
     }
 
     /**
@@ -348,17 +325,29 @@ public class SinglePlayGame {
 
         sidebar.getChildren().add(spacer);
 
-        ScrollPane scroll = new ScrollPane();
-        scroll.setStyle(style.sideScrollPane());
+        ScrollPane logScroll = new ScrollPane();
+        logScroll.setStyle(style.sideScrollPane());
+        VBox log =new VBox();
+        log.setPrefWidth(340);
+        log.setPrefHeight(236);
+        log.setStyle(style.sideChatBox());
+        logScroll.setContent(log);
+        logScroll.setFitToHeight(true);
+        logScroll.setFitToWidth(true);
+        sidebar.getChildren().add(logScroll);
+
+
+        ScrollPane msgScroll = new ScrollPane();
+        msgScroll.setStyle(style.sideScrollPane());
         VBox chats = new VBox();
         chats.setPrefWidth(340);
-        chats.setPrefHeight(820);
+        chats.setPrefHeight(574);
         chats.setStyle(style.sideChatBox());
 
-        scroll.setContent(chats);
-        scroll.setFitToHeight(true);
-        scroll.setFitToWidth(true);
-        sidebar.getChildren().add(scroll);
+        msgScroll.setContent(chats);
+        msgScroll.setFitToHeight(true);
+        msgScroll.setFitToWidth(true);
+        sidebar.getChildren().add(msgScroll);
 
         TextField message = new TextField();
         message.setPrefWidth(300);

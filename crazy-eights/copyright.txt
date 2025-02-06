@@ -1,0 +1,16 @@
+Asest References:
+
+Avatar
+https://www.figma.com/community/file/996122665902209471
+
+Button
+https://feathericons.com/
+
+Card
+https://www.figma.com/community/file/766891735301855242
+
+Font
+https://fonts.google.com/specimen/Lilita+One
+
+Icon
+https://www.flaticon.com/kr/free-icon/card-games_2764309?term=%EC%B9%B4%EB%93%9C&page=1&position=59&origin=style&related_id=2764309
