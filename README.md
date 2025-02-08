@@ -17,6 +17,8 @@ It is designed to let you play while chatting with friends and enjoying relaxing
 - Member: Taeyoung You
 
 ## Explain Game
-|![image](https://github.com/user-attachments/assets/1eb492d5-031e-44f5-9512-f0c559626274)|![image-1](https://github.com/user-attachments/assets/8744d55d-68e6-40d8-8c8b-6fab4cee00b1)|
+|![image](https://github.com/user-attachments/assets/1eb492d5-031e-44f5-9512-f0c559626274)|![image](https://github.com/user-attachments/assets/d36781b2-33cf-44d0-bf0c-ce760e58a45b)|
 |:---:|:---:|
 |Main Menu|Single Play Window|
+
+
