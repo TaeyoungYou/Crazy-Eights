@@ -1,9 +1,13 @@
 package app.animation;
 
+import app.ui.Music;
+import app.ui.SinglePlayGame;
 import javafx.animation.*;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.util.Duration;
@@ -80,6 +84,7 @@ public class AnimationMenu {
         titleMoveUp.setOnFinished(event -> {
             centerPane.getChildren().addAll(nodes);
             centerPane.getChildren().get(0).setTranslateY(0);
+            Music.play();
         });
 
 
@@ -165,5 +170,31 @@ public class AnimationMenu {
                 button.setCursor(Cursor.DEFAULT);
             });
         }
+    }
+
+    public void fadeOutMainMenu(Scene scene, VBox pane) {
+        ParallelTransition fadeOutParallel = new ParallelTransition();
+        for(Node node : pane.getChildren()) {
+            FadeTransition fadeOut = new FadeTransition(Duration.seconds(1.5), node);
+            fadeOut.setFromValue(1.0);
+            fadeOut.setToValue(0.0);
+            fadeOutParallel.getChildren().add(fadeOut);
+        }
+        fadeOutParallel.play();
+        fadeOutParallel.setOnFinished(event -> {
+            SinglePlayGame game = new SinglePlayGame(scene);
+            game.generate();
+        });
+    }
+
+    public void fadeInMainMenu(VBox pane) {
+        ParallelTransition fadeOutParallel = new ParallelTransition();
+        for(Node node : pane.getChildren()) {
+            FadeTransition fadeOut = new FadeTransition(Duration.seconds(1.5), node);
+            fadeOut.setFromValue(0.0);
+            fadeOut.setToValue(1.0);
+            fadeOutParallel.getChildren().add(fadeOut);
+        }
+        fadeOutParallel.play();
     }
 }

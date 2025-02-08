@@ -1,14 +1,16 @@
 package app.animation;
 
 import app.style.StyleGame;
-import javafx.animation.FadeTransition;
-import javafx.animation.ScaleTransition;
-import javafx.animation.TranslateTransition;
+import app.ui.MainMenu;
+import javafx.animation.*;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.util.Duration;
 
@@ -201,5 +203,61 @@ public class AnimationGame {
             deck.setOpacity(1);
             deckUp.playFromStart();
         });
+    }
+
+    public ImageView getCardAnimation(AnchorPane deckPlace, List<ImageView> cards) {
+        ImageView card = new ImageView(new Image(getClass().getResource("/card/Card-0.png").toExternalForm()));
+        card.setFitWidth(220);
+        card.setPreserveRatio(true);
+        card.setOpacity(0.5);
+        card.setLayoutX(300);
+        card.setLayoutY(200+180);
+        deckPlace.getChildren().add(card);
+
+        return card;
+    }
+
+    public Animation getCardTranslateAnimation(ImageView card, List<ImageView> cards) {
+        TranslateTransition moveToHand = new TranslateTransition(Duration.millis(500), card);
+        moveToHand.setToX((cards.size() - 2) * 75);
+        moveToHand.setToY(1080 - 300 - 380);
+        moveToHand.play();
+
+        return moveToHand;
+    }
+
+
+    public void fadeInSinglePlay(Pane pane){
+        ParallelTransition parallelFadeIn = new ParallelTransition();
+        addFadeIn(pane, parallelFadeIn);
+        parallelFadeIn.play();
+    }
+
+    private void addFadeIn(Pane pane, ParallelTransition parallelFadeIn){
+        for(Node node: pane.getChildren()){
+            FadeTransition fadeIn = new FadeTransition(Duration.seconds(1.5), node);
+            fadeIn.setFromValue(0.0);
+            fadeIn.setToValue(1.0);
+            parallelFadeIn.getChildren().add(fadeIn);
+        }
+    }
+
+    public void fadeOutSinglePlay(Scene scene, Pane pane){
+        ParallelTransition parallelFadeOut = new ParallelTransition();
+        addFadeOut(pane, parallelFadeOut);
+        parallelFadeOut.play();
+        parallelFadeOut.setOnFinished(e -> {
+            MainMenu menu = new MainMenu(scene);
+            menu.generate();
+        });
+    }
+
+    private void addFadeOut(Pane pane, ParallelTransition parallelFadeOut){
+        for(Node node: pane.getChildren()){
+            FadeTransition fadeOut = new FadeTransition(Duration.seconds(1.5), node);
+            fadeOut.setFromValue(1.0);
+            fadeOut.setToValue(0.0);
+            parallelFadeOut.getChildren().add(fadeOut);
+        }
     }
 }

@@ -2,6 +2,10 @@ package app.ui;
 
 import app.animation.AnimationGame;
 import app.style.StyleGame;
+import javafx.animation.Animation;
+import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -22,14 +26,15 @@ import java.util.Random;
  * Handles UI components and game state management.
  */
 public class SinglePlayGame {
+    private final StackPane root;
     private final BorderPane pane;
     private final StyleGame style;
     private final AnimationGame animation;
     private final Scene scene;
 
-    private static boolean volume = true;
+    private final ObservableList<ImageView> cards = FXCollections.observableArrayList();
 
-    private final ArrayList<ImageView> cards = new ArrayList<>();
+    private ImageView cardDummy = null;
 
     /**
      * Constructs a SinglePlayGame instance.
@@ -38,6 +43,7 @@ public class SinglePlayGame {
      */
     public SinglePlayGame(Scene _scene) {
         scene = _scene;
+        root = new StackPane();
         pane = new BorderPane();
         style = new StyleGame();
         animation = new AnimationGame();
@@ -76,10 +82,14 @@ public class SinglePlayGame {
 
         gameGround.setCenter(cardPlace);
 
-        // myTurnEffect(cardPlace);
+        //myTurnEffect(cardPlace);
         // set pane
         pane.setCenter(gameGround);
         pane.setRight(sidebar);
+
+        observerListen();
+
+        animation.fadeInSinglePlay(pane);
     }
 
     /**
@@ -109,7 +119,7 @@ public class SinglePlayGame {
      */
     private void createDeck(AnchorPane deckPlace) {
         ImageView deck = new ImageView(new Image(getClass().getResource("/card/Card-Deck.png").toExternalForm()));
-        ImageView cardDummy = new ImageView(new Image(getClass().getResource("/card/Card-Empty.png").toExternalForm()));
+        cardDummy = new ImageView(new Image(getClass().getResource("/card/Card-Empty.png").toExternalForm()));
         deck.setFitWidth(250);
         deck.setPreserveRatio(true);
         cardDummy.setFitWidth(220);
@@ -125,7 +135,15 @@ public class SinglePlayGame {
 
         animation.deckHoverAnimation(deck);
         deck.setOnMouseClicked(event -> {
-            createCard(deckPlace, 1);
+            if(cards.size() < 12){
+                ImageView animatedCard = animation.getCardAnimation(deckPlace, cards);
+                Animation cardAnimation = animation.getCardTranslateAnimation(animatedCard, cards);
+                cardAnimation.setOnFinished(e->{
+                    deckPlace.getChildren().remove(animatedCard);
+                    createCard(deckPlace, 1);
+                });
+                cardAnimation.play();
+            }
         });
     }
 
@@ -357,16 +375,20 @@ public class SinglePlayGame {
         sidebar.getChildren().add(message);
 
         back.setOnMouseClicked(e -> {
-            MainMenu menu = new MainMenu(scene);
-            menu.generate();
+            animation.fadeOutSinglePlay(scene, pane);
+        });
+
+        Setting settingPane = new Setting(root);
+        setting.setOnMouseClicked(e-> {
+            settingPane.generate();
         });
         volume.setOnMouseClicked(e -> {
-            if (SinglePlayGame.volume) {
+            if (Music.isVolumeOn()) {
                 volume.setImage(new Image(getClass().getResource("/button/volume-off.png").toExternalForm()));
-                SinglePlayGame.volume = false;
+                Music.volumeOff();
             } else {
                 volume.setImage(new Image(getClass().getResource("/button/volume-on.png").toExternalForm()));
-                SinglePlayGame.volume = true;
+                Music.volumeOn();
             }
         });
     }
@@ -375,7 +397,18 @@ public class SinglePlayGame {
      * Initializes the game page by setting the root layout and applying styles.
      */
     private void initPage() {
-        scene.setRoot(pane);
+        root.getChildren().add(pane);
+        scene.setRoot(root);
         pane.setStyle(style.gameBorderPaneStyle());
+    }
+
+    private void observerListen(){
+        cards.addListener((ListChangeListener<? super ImageView>) change -> {
+            while(change.next()){
+                if(change.wasRemoved()){
+                    cardDummy.setImage(change.getRemoved().get(0).getImage());
+                }
+            }
+        });
     }
 }

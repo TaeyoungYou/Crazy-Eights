@@ -7,10 +7,12 @@ import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Region;
-import javafx.scene.layout.VBox;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.*;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
+import javafx.scene.media.MediaView;
 import javafx.scene.text.Font;
 
 /**
@@ -18,10 +20,13 @@ import javafx.scene.text.Font;
  * This class initializes and manages the user interface for the main menu.
  */
 public class MainMenu {
+    private final StackPane root;
     private final BorderPane pane;
     private final StyleMenu style;
     private final AnimationMenu animation;
     private final Scene scene;
+
+    private MediaPlayer media = null;
 
     private static boolean started = false;
 
@@ -32,6 +37,7 @@ public class MainMenu {
      */
     public MainMenu(Scene _scene) {
         scene = _scene;
+        root = new StackPane();
         pane = new BorderPane();
         style = new StyleMenu();
         animation = new AnimationMenu();
@@ -85,9 +91,14 @@ public class MainMenu {
         Label[] tmp = {singlePlay, multiPlay, setting, quit};
         animation.menuAnimation(title, tmp);
 
+        animation.fadeInMainMenu(menuPane);
+
         singlePlay.setOnMouseClicked(event -> {
-            SinglePlayGame game = new SinglePlayGame(scene);
-            game.generate();
+            animation.fadeOutMainMenu(scene, menuPane);
+        });
+        Setting settingPane = new Setting(root);
+        setting.setOnMouseClicked(event -> {
+            settingPane.generate();
         });
         quit.setOnMouseClicked(event -> {
             Platform.exit();
@@ -134,9 +145,13 @@ public class MainMenu {
         animation.menuHover(nodes);
 
         singlePlay.setOnMouseClicked(event -> {
-            SinglePlayGame game = new SinglePlayGame(scene);
-            game.generate();
+            animation.fadeOutMainMenu(scene, menuPane);
         });
+        Setting settingPane = new Setting(root);
+        setting.setOnMouseClicked(event -> {
+            settingPane.generate();
+        });
+
         quit.setOnMouseClicked(event -> {
             Platform.exit();
         });
@@ -146,8 +161,10 @@ public class MainMenu {
      * Initializes the main page layout.
      */
     private void initPage() {
-        scene.setRoot(pane);
+        root.getChildren().add(pane);
+        scene.setRoot(root);
         pane.setStyle(style.loadingBorderPaneStyle());
+        initIntroBG();
     }
 
     /**
@@ -160,5 +177,13 @@ public class MainMenu {
         title.setFont(Font.loadFont(style.getLilitaOneFont(), 180));
         title.setStyle(style.loadingTitleStyle());
         return title;
+    }
+
+    private void initIntroBG(){
+        ImageView bg = new ImageView(new Image(getClass().getResource("/background/menu_background.png").toExternalForm()));
+        bg.setPreserveRatio(true);
+        bg.fitWidthProperty().bind(scene.widthProperty());
+
+        pane.getChildren().add(bg);
     }
 }
