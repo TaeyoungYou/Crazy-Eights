@@ -1,13 +1,12 @@
 package app.animation;
 
-import app.ui.Music;
+import app.model.Music;
 import app.ui.SinglePlayGame;
 import javafx.animation.*;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.util.Duration;
@@ -75,6 +74,10 @@ public class AnimationMenu {
         titleFadeIn.setNode(centerPane.getChildren().get(0));
         titleFadeIn.setFromValue(0);
         titleFadeIn.setToValue(1);
+        titleFadeIn.setOnFinished(e -> Music.play());
+
+        PauseTransition musicLoadPause = new PauseTransition();
+        musicLoadPause.setDuration(Duration.seconds(1));
 
         // Title movement to Up
         TranslateTransition titleMoveUp = new TranslateTransition();
@@ -84,7 +87,6 @@ public class AnimationMenu {
         titleMoveUp.setOnFinished(event -> {
             centerPane.getChildren().addAll(nodes);
             centerPane.getChildren().get(0).setTranslateY(0);
-            Music.play();
         });
 
 
@@ -120,6 +122,7 @@ public class AnimationMenu {
         SequentialTransition sequence = new SequentialTransition(
                 pause,
                 titleFadeIn,
+                musicLoadPause,
                 titleMoveUp,
                 buttons_parallel
         );

@@ -89,7 +89,7 @@ public class AnimationGame {
             if (newX >= 0 && newX <= 865) {
                 card.setLayoutX(newX);
             }
-            if (newY >= 0 && newY <= 1080) {
+            if (newY >= 0 && newY <= 1080-292) {
                 card.setLayoutY(newY);
             }
         });
@@ -205,13 +205,13 @@ public class AnimationGame {
         });
     }
 
-    public ImageView getCardAnimation(AnchorPane deckPlace, List<ImageView> cards) {
+    public ImageView getCardAnimation(AnchorPane deckPlace) {
         ImageView card = new ImageView(new Image(getClass().getResource("/card/Card-0.png").toExternalForm()));
         card.setFitWidth(220);
         card.setPreserveRatio(true);
         card.setOpacity(0.5);
         card.setLayoutX(300);
-        card.setLayoutY(200+180);
+        card.setLayoutY(200);
         deckPlace.getChildren().add(card);
 
         return card;
@@ -219,11 +219,35 @@ public class AnimationGame {
 
     public Animation getCardTranslateAnimation(ImageView card, List<ImageView> cards) {
         TranslateTransition moveToHand = new TranslateTransition(Duration.millis(500), card);
-        moveToHand.setToX((cards.size() - 2) * 75);
-        moveToHand.setToY(1080 - 300 - 380);
+        moveToHand.setToX((cards.size() - 4) * 75);
+        moveToHand.setToY(1080 - 300 - 200);
         moveToHand.play();
 
         return moveToHand;
+    }
+
+    public Animation getCardTranslateToPlayersAnimation(ImageView card, List<ImageView> cards) {
+        TranslateTransition moveToPlayer = new TranslateTransition(Duration.millis(500), card);
+        moveToPlayer.setToX(-500);
+
+        FadeTransition fadeOut = new FadeTransition(Duration.millis(500), card);
+        fadeOut.setFromValue(1.0);
+        fadeOut.setToValue(0.0);
+
+        ParallelTransition pt = new ParallelTransition(moveToPlayer, fadeOut);
+
+        pt.play();
+
+        return pt;
+    }
+
+    public void addLeftCardAnimation(Label left){
+        ScaleTransition scale = new ScaleTransition(Duration.millis(200), left);
+        scale.setToX(1.2);
+        scale.setToY(1.2);
+        scale.setAutoReverse(true);
+        scale.setCycleCount(2);
+        scale.play();
     }
 
 

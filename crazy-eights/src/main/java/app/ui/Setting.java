@@ -34,12 +34,13 @@ public class Setting {
         settingPane.setAlignment(Pos.TOP_CENTER);
 
         Label settingTitle = new Label("Settings");
-        settingTitle.setFont(Font.loadFont(style.getLilitaOneFont(), 60));
+        settingTitle.setFont(Font.loadFont(style.getLilitaOneFont(), 80));
         settingTitle.setStyle(style.settingTitleStyle());
 
         settingPane.getChildren().add(settingTitle);
 
 
+        animation.fadeInSetting(overlay);
         overlay.getChildren().add(settingPane);
         pane.getChildren().add(overlay);
 
@@ -48,7 +49,11 @@ public class Setting {
         settingPane.setOnMouseClicked(Event::consume);
         overlay.setOnMouseEntered(e->overlay.setCursor(Cursor.HAND));
         overlay.setOnMouseClicked(event -> {
-            pane.getChildren().remove(overlay);
+            animation.fadeOutSetting(pane, overlay);
         });
+    }
+
+    public StackPane getPane() {
+        return pane;
     }
 }

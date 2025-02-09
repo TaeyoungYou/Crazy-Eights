@@ -1,8 +1,12 @@
 package app.ui;
 
 import app.animation.AnimationGame;
+import app.model.Music;
+import app.model.Player;
 import app.style.StyleGame;
 import javafx.animation.Animation;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -17,9 +21,9 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.text.Font;
+import javafx.util.Duration;
 
-import java.util.ArrayList;
-import java.util.Random;
+import java.util.*;
 
 /**
  * Represents the single-player game screen for Crazy Eights.
@@ -33,6 +37,9 @@ public class SinglePlayGame {
     private final Scene scene;
 
     private final ObservableList<ImageView> cards = FXCollections.observableArrayList();
+    private List<Player> players = new ArrayList<>();
+
+    private AnchorPane cardPlace;
 
     private ImageView cardDummy = null;
 
@@ -72,13 +79,11 @@ public class SinglePlayGame {
         gameGround.setLeft(gamePlayerStatus);
 
         // my card place area
-        AnchorPane cardPlace = new AnchorPane();
+        cardPlace = new AnchorPane();
         cardPlace.setPrefSize(870, 1080);
         cardPlace.setPadding(new Insets(0, 0, 0, 0));
 
-        createCard(cardPlace, 6);
-
-        createDeck(cardPlace);
+        createDeck();
 
         gameGround.setCenter(cardPlace);
 
@@ -87,9 +92,50 @@ public class SinglePlayGame {
         pane.setCenter(gameGround);
         pane.setRight(sidebar);
 
+        // Game Start
+        start();
+
         observerListen();
 
         animation.fadeInSinglePlay(pane);
+    }
+
+    // game logic
+    public void start(){
+        shareCards();
+
+    }
+
+    private void shareCards(){
+        Timeline giveCard = new Timeline(
+                new KeyFrame(Duration.seconds(1), event -> {
+                    ImageView card = animation.getCardAnimation(cardPlace);
+                    Animation animationCard = animation.getCardTranslateToPlayersAnimation(card, cards);
+                    animationCard.setOnFinished(e->{
+                        cardPlace.getChildren().remove(card);
+                        for(Player player: players) {
+                            player.setCardLeft(player.getCardLeftValue() + 1);
+                            animation.addLeftCardAnimation(player.getCardLeft());
+                        }
+                    });
+                    animationCard.play();
+                })
+        );
+        giveCard.setCycleCount(6);
+        giveCard.play();
+        Timeline initCard = new Timeline(
+                new KeyFrame(Duration.seconds(1), event->{
+                    ImageView card = animation.getCardAnimation(cardPlace);
+                    Animation animationCard = animation.getCardTranslateAnimation(card, cards);
+                    animationCard.setOnFinished(e->{
+                        cardPlace.getChildren().remove(card);
+                        createCard(1);
+                    });
+                    animationCard.play();
+                })
+        );
+        initCard.setCycleCount(6);
+        initCard.play();
     }
 
     /**
@@ -115,9 +161,8 @@ public class SinglePlayGame {
      * Creates and displays the deck and a placeholder for the current card.
      * Adds hover animation and click event to draw a new card.
      *
-     * @param deckPlace The AnchorPane where the deck and placeholder card are displayed.
      */
-    private void createDeck(AnchorPane deckPlace) {
+    private void createDeck() {
         ImageView deck = new ImageView(new Image(getClass().getResource("/card/Card-Deck.png").toExternalForm()));
         cardDummy = new ImageView(new Image(getClass().getResource("/card/Card-Empty.png").toExternalForm()));
         deck.setFitWidth(250);
@@ -130,17 +175,17 @@ public class SinglePlayGame {
         cardDummy.setLayoutX(600);
         cardDummy.setLayoutY(200);
 
-        deckPlace.getChildren().add(deck);
-        deckPlace.getChildren().add(cardDummy);
+        cardPlace.getChildren().add(deck);
+        cardPlace.getChildren().add(cardDummy);
 
         animation.deckHoverAnimation(deck);
         deck.setOnMouseClicked(event -> {
             if(cards.size() < 12){
-                ImageView animatedCard = animation.getCardAnimation(deckPlace, cards);
+                ImageView animatedCard = animation.getCardAnimation(cardPlace);
                 Animation cardAnimation = animation.getCardTranslateAnimation(animatedCard, cards);
                 cardAnimation.setOnFinished(e->{
-                    deckPlace.getChildren().remove(animatedCard);
-                    createCard(deckPlace, 1);
+                    cardPlace.getChildren().remove(animatedCard);
+                    createCard(1);
                 });
                 cardAnimation.play();
             }
@@ -152,10 +197,9 @@ public class SinglePlayGame {
      * Ensures the total number of cards does not exceed the limit (12).
      * Applies animations and updates the card positions accordingly.
      *
-     * @param cardPlace The AnchorPane where the cards will be displayed.
      * @param total     The number of cards to generate.
      */
-    private void createCard(AnchorPane cardPlace, int total) {
+    private void createCard(int total) {
         if (cards.size() + total <= 12) {
             Random random = new Random();
             for (int i = 0; i < total; ++i) {
@@ -199,20 +243,23 @@ public class SinglePlayGame {
      * @param gamePlayerStatus The VBox where the player status components will be added.
      */
     private void gamePlayerStatusConfig(VBox gamePlayerStatus) {
-        // Player area
-        HBox playerPlace01 = new HBox();
-        HBox playerPlace02 = new HBox();
-        HBox playerPlace03 = new HBox();
-
-        createPlayerStatus(playerPlace01, "/avatar/User-01.png", 5);
-        createPlayerStatus(playerPlace02, "/avatar/User-03.png", 10);
-        createPlayerStatus(playerPlace03, "/avatar/User-05.png", 7);
-
         HBox scoreTimeContainer = new HBox();
+
+        Random random = new Random();
+        for(int i = 0; i < 4; ++i) {
+            HBox playerPlace = new HBox();
+            if(i==3){
+                createPlayerStatus(playerPlace, "/avatar/User-02.png", true);
+            }else{
+                int ranUser = random.nextInt(7) + 1;
+                createPlayerStatus(playerPlace, String.format("/avatar/User-0%d.png",ranUser), false);
+                gamePlayerStatus.getChildren().add(playerPlace);
+            }
+        }
 
         scoreTimeContainerConfig(scoreTimeContainer);
 
-        gamePlayerStatus.getChildren().addAll(playerPlace01, playerPlace02, playerPlace03, scoreTimeContainer);
+        gamePlayerStatus.getChildren().add(scoreTimeContainer);
 
         gamePlayerStatus.setAlignment(Pos.TOP_LEFT);
         gamePlayerStatus.setSpacing(10);
@@ -238,19 +285,15 @@ public class SinglePlayGame {
         scoreBox.setStyle(style.statusScoreBoxStyle());
         scoreBox.setPrefSize(250, 300);
         scoreBox.setAlignment(Pos.CENTER);
-        scoreBox.setPadding(new Insets(10, 10, 10, 10));
+        scoreBox.setPadding(new Insets(10, 10, 10, 20));
         scoreBox.setSpacing(10);
-        HBox me = new HBox();
-        HBox player01 = new HBox();
-        HBox player02 = new HBox();
-        HBox player03 = new HBox();
 
-        createScorePlayer(me, "/avatar/User-02.png", 15);
-        createScorePlayer(player01, "/avatar/User-01.png", 20);
-        createScorePlayer(player02, "/avatar/User-03.png", 5);
-        createScorePlayer(player03, "/avatar/User-05.png", 12);
-
-        scoreBox.getChildren().addAll(player01, me, player03, player02);
+        players.sort(Comparator.reverseOrder());
+        for(Player player : players){
+            HBox hBox = new HBox();
+            createScorePlayer(hBox, player);
+            scoreBox.getChildren().add(hBox);
+        }
 
         scoreContainer.getChildren().addAll(score, scoreBox);
 
@@ -268,18 +311,16 @@ public class SinglePlayGame {
      * Creates and configures a player's score display with an avatar and score label.
      *
      * @param scoreBox The HBox where the player's score will be displayed.
-     * @param imageURL The file path to the player's avatar image.
-     * @param score    The player's current score.
      */
-    private void createScorePlayer(HBox scoreBox, String imageURL, int score) {
-        ImageView player = new ImageView(new Image(getClass().getResource(imageURL).toExternalForm()));
-        player.setFitWidth(70);
-        player.setFitHeight(70);
+    private void createScorePlayer(HBox scoreBox, Player player) {
+        ImageView playerIcon = player.getIcon();
+        playerIcon.setFitWidth(70);
+        playerIcon.setFitHeight(70);
 
-        Label scoreLbl = new Label(String.valueOf(score));
+        Label scoreLbl = new Label(String.valueOf(player.getScore()));
         scoreLbl.setFont(Font.loadFont(style.getLilitaOneFont(), 40));
         scoreLbl.setStyle(style.sideLabelStyle());
-        scoreBox.getChildren().addAll(player, scoreLbl);
+        scoreBox.getChildren().addAll(playerIcon, scoreLbl);
         scoreBox.setAlignment(Pos.CENTER_LEFT);
         scoreBox.setSpacing(60);
     }
@@ -288,28 +329,32 @@ public class SinglePlayGame {
      * Creates and configures a player's status display with an avatar, card back, and remaining card count.
      *
      * @param playerPlace The HBox where the player's status will be displayed.
-     * @param avatarURL   The file path to the player's avatar image.
-     * @param leftCard    The number of cards the player has left.
      */
-    private void createPlayerStatus(HBox playerPlace, String avatarURL, int leftCard) {
-        ImageView player = new ImageView(new Image(getClass().getResource(avatarURL).toExternalForm()));
-        player.setFitWidth(150);
-        player.setFitHeight(150);
+    private void createPlayerStatus(HBox playerPlace, String url, boolean self) {
+        Player player = new Player();
+        player.setIcon(url);
+        players.add(player);
 
-        playerPlace.getChildren().add(player);
+        if(self){
+            player.setSelf(self);
+            return;
+        }
+
+        // 내가 왜 이렇게 코드를 짰냐고..? 객체만들고 이미지로드까지 시간이 걸려서 UI에 바로 안나와 씨발
+        ImageView icon = new ImageView(new Image(getClass().getResource(url).toExternalForm()));
+        icon.setFitWidth(150);
+        icon.setFitHeight(150);
 
         ImageView cardBack = new ImageView(new Image(getClass().getResource("/card/Card-0.png").toExternalForm()));
         cardBack.setFitWidth(150);
         cardBack.setFitHeight(200);
 
-        playerPlace.getChildren().add(cardBack);
-
-        Label cardLeft = new Label(String.format("x %d", leftCard));
+        Label cardLeft = player.getCardLeft();
         cardLeft.setFont(Font.loadFont(style.getLilitaOneFont(), 40));
         cardLeft.setStyle(style.sideLabelStyle());
 
         playerPlace.setAlignment(Pos.CENTER_LEFT);
-        playerPlace.getChildren().add(cardLeft);
+        playerPlace.getChildren().addAll(icon, cardBack, cardLeft);
     }
 
     /**
@@ -339,7 +384,7 @@ public class SinglePlayGame {
         sidebar.getChildren().add(buttonBar);
 
         Region spacer = new Region();
-        spacer.setPrefHeight(40);
+        spacer.setPrefHeight(30);
 
         sidebar.getChildren().add(spacer);
 
@@ -353,7 +398,6 @@ public class SinglePlayGame {
         logScroll.setFitToHeight(true);
         logScroll.setFitToWidth(true);
         sidebar.getChildren().add(logScroll);
-
 
         ScrollPane msgScroll = new ScrollPane();
         msgScroll.setStyle(style.sideScrollPane());
@@ -397,6 +441,7 @@ public class SinglePlayGame {
      * Initializes the game page by setting the root layout and applying styles.
      */
     private void initPage() {
+        root.setPrefSize(1920,1080);
         root.getChildren().add(pane);
         scene.setRoot(root);
         pane.setStyle(style.gameBorderPaneStyle());

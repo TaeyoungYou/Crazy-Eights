@@ -1,21 +1,24 @@
-package app.ui;
+package app.model;
 
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 
 public class Music {
-    private final static Media media = new Media(Music.class.getResource("/sound/music.mp3").toExternalForm());
-    private final static MediaPlayer mediaPlayer = new MediaPlayer(media);
-    private static boolean volumeOn;
+    private static MediaPlayer mediaPlayer;
+    private static boolean volumeOn = true;
 
-    public Music() {
-        volumeOn = true;
+
+    private static void initMusic(){
+        if(mediaPlayer != null) return;
+
+        Media media = new Media(Music.class.getResource("/sound/music.mp3").toExternalForm());
+        mediaPlayer = new MediaPlayer(media);
+        mediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);
+        mediaPlayer.setVolume(volumeOn ? 0.5 : 0.0);
     }
 
     public static void play(){
-        mediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);
-        mediaPlayer.setVolume(0.5);
-
+        initMusic();
         mediaPlayer.play();
     }
 

@@ -1,6 +1,7 @@
 package app.ui;
 
 import app.animation.AnimationMenu;
+import app.animation.AnimationSetting;
 import app.style.StyleMenu;
 import javafx.application.Platform;
 import javafx.geometry.Pos;
@@ -25,8 +26,6 @@ public class MainMenu {
     private final StyleMenu style;
     private final AnimationMenu animation;
     private final Scene scene;
-
-    private MediaPlayer media = null;
 
     private static boolean started = false;
 
