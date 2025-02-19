@@ -1,9 +1,12 @@
 package app.controller;
 
+import app.model.Card;
+import app.model.Deck;
 import app.model.Player;
 import app.view.*;
-import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
+import javafx.animation.ParallelTransition;
+import javafx.animation.SequentialTransition;
 import javafx.animation.Timeline;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
@@ -29,7 +32,10 @@ public class SinglePlayGameController {
     private final ObservableList<ImageView> cards = FXCollections.observableArrayList();
     private List<Player> players = new ArrayList<>();
     private final int playerNum = 4;
+    private Deck deck;
 
+    private int time = 0;
+    private int turn = 0;
 
     public SinglePlayGameController(Scene _scene) {
         scene = _scene;
@@ -37,43 +43,90 @@ public class SinglePlayGameController {
         mainPane = new BorderPane();
         mainView = new SinglePlayGameView(mainPane);
         settingView = new SettingView(root);
+        deck = new Deck();
     }
 
     public void startGame(){
         drawGamePage();
-
+        deck.generateDeck();
         createPlayers();
-        getSixCards();
 
+        SequentialTransition sequence = new SequentialTransition();
+
+        sequence.getChildren().add(getSixCards());
+
+        sequence.getChildren().add(putStartDummyCard());
+
+        sequence.getChildren().add(gameLoop());
+
+        sequence.play();
+    }
+    private Timeline gameLoop(){
+        Timeline gameLoop = new Timeline(
+                new KeyFrame(Duration.seconds(1),event -> {
+                    if(time % 11 == 0){
+                        updatePlayerTurn(turn);
+                        if(players.get(turn).isSelf()){
+                            mainView.setTimerEffect();
+                        } else {
+                            mainView.delTimerEffect();
+                        }
+
+                        turn = (turn+1)%playerNum;
+                        time = 0;
+                    }
+                    mainView.setTimer(10 - time);
+                    time++;
+            })
+        );
+        gameLoop.setCycleCount(Timeline.INDEFINITE);
+
+        return gameLoop;
+    }
+    private void updatePlayerTurn(int turn){
+        for(Player player: players){
+            player.setMyTurn(false);
+            addCardEffects(player);
+        }
+        players.get(turn).setMyTurn(true);
+        addCardEffects(players.get(turn));
     }
 
-    private void getSixCards(){
+    private Timeline putStartDummyCard(){
+        Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(1), event -> {
+            mainView.setCardDummy(deck.drawCard());
+        }));
+        return timeline;
+    }
+
+    private ParallelTransition getSixCards(){
+        ParallelTransition pt = new ParallelTransition();
         for(Player player : players){
+            Timeline giveCard;
             if(player.isSelf()){
-                Timeline giveCard = new Timeline(
+                giveCard = new Timeline(
                         new KeyFrame(Duration.seconds(1), event -> {
                             mainView.getCardAnimationToUser().setOnFinished(ev -> {
                                 mainView.removeAnimationCard();
-                                player.setCard();
+                                player.setCard(deck);
                                 addCardEffects(player);
                             });
                         })
                 );
-                giveCard.setCycleCount(6);
-                giveCard.play();
             }else{
-                Timeline giveCard = new Timeline(
+                giveCard = new Timeline(
                         new KeyFrame(Duration.seconds(1), event -> {
                             mainView.getCardAnimationToPlayer().setOnFinished(ev -> {
                                 mainView.removeAnimationCard();
-                                player.setCard();
+                                player.setCard(deck);
                             });
                         })
                 );
-                giveCard.setCycleCount(6);
-                giveCard.play();
             }
+            giveCard.setCycleCount(6);
+            pt.getChildren().add(giveCard);
         }
+        return pt;
     }
 
     private void createPlayers(){
@@ -95,13 +148,13 @@ public class SinglePlayGameController {
         players.add(player);
         new PlayerScoreView(player, mainView);
         new PlayerHandView(player, mainView);
-        player.setIcon("/avatar/User-01.png");
+        player.setIcon("/avatar/User-02.png");
 
         mainView.getDeck().setOnMouseClicked(event -> {
             if(player.getCardLeft() < 12){
                 mainView.setGetCardAnimation(player.getCardLeft()).setOnFinished(e -> {
                     mainView.removeAnimationCard();
-                    player.setCard();
+                    player.setCard(deck);
                     addCardEffects(player);
                 });
             } else {

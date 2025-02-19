@@ -5,9 +5,11 @@ import app.model.PlayerObserver;
 import app.style.StyleGame;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
+import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
 public class PlayerScoreView implements PlayerObserver {
@@ -33,9 +35,10 @@ public class PlayerScoreView implements PlayerObserver {
     @Override
     public void update(Player player) {
         playerIcon.setImage(new Image(getClass().getResource(player.getIcon()).toExternalForm()));
-        playerScore.setText("x " + (player.getScore() + ""));
+        playerScore.setText((player.getScore() + ""));
         mainView.setScoreBox(playerScoreBox, player);
     }
+
 
     private void updatePlayerScore() {
         playerIcon.setFitWidth(70);

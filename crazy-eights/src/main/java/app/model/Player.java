@@ -15,12 +15,14 @@ public class Player implements Comparable<Player>{
     private List<PlayerObserver> observers;
 
     private boolean self;   // 자기 자신인지
+    private boolean myTurn;
 
     public Player(int index){
         id = index;
         icon = "/avatar/User-01.png";
         score = 0;
         self = false;
+        myTurn = false;
         hand = new ArrayList<>();
         observers = new ArrayList<>();
     }
@@ -39,6 +41,13 @@ public class Player implements Comparable<Player>{
         icon = url;
         notifyObservers();
     }
+    public void setMyTurn(boolean myTurn){
+        this.myTurn = myTurn;
+        notifyObservers();
+    }
+    public boolean isMyTurn(){
+        return myTurn;
+    }
     public String getIcon(){
         return icon;
     }
@@ -48,8 +57,8 @@ public class Player implements Comparable<Player>{
     public List<Card> getHand(){
         return hand;
     }
-    public void setCard(){
-        hand.add(new Card().setCard());
+    public void setCard(Deck deck){
+        hand.add(deck.drawCard());
         notifyObservers();
     }
     public int getScore(){
@@ -74,7 +83,7 @@ public class Player implements Comparable<Player>{
     }
     public void notifyObservers(){
         for(PlayerObserver observer : observers){
-            if(observer instanceof PlayerStatusView && !isSelf()){
+            if(observer instanceof PlayerStatusView){
                 observer.update(this);
             } else if(observer instanceof PlayerHandView && isSelf()){
                 observer.update(this);

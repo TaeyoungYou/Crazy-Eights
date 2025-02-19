@@ -36,13 +36,13 @@ public class MenuController {
         initPage();
         if(!started){
             menuView.initDisplayMenu();
-            menuView.getSinglePlayButton().setOnMouseClicked(event -> menuView.fadeOutMenuAnimation(scene));
 
             started = true;
         } else {
             menuView.displayMenu();
         }
 
+        menuView.getSinglePlayButton().setOnMouseClicked(event -> menuView.fadeOutMenuAnimation(scene));
         menuView.getSettingsButton().setOnMouseClicked(event -> settingView.generate());
         menuView.getQuitButton().setOnMouseClicked(event -> Platform.exit());
     }

@@ -10,6 +10,10 @@ public class Card {
         this.suit = 0;
         this.rank = 0;
     }
+    public Card(int suit, int rank) {
+        this.suit = suit;
+        this.rank = rank;
+    }
     public int getSuit() {
         return suit;
     }
@@ -24,16 +28,5 @@ public class Card {
     }
     public String getCardURL(){
         return String.format("/card/Card-%d-%d.png", suit, rank);
-    }
-    public Card setCard(){
-        // 나중에 이걸 duplicate 되지 않게 조정을 할거임
-        Random rand = new Random();
-        int ranSuit = rand.nextInt(4);
-        int ranRank = rand.nextInt(13);
-
-        setSuit(ranSuit);
-        setRank(ranRank);
-
-        return this;
     }
 }

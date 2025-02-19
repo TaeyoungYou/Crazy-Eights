@@ -23,7 +23,6 @@ import java.util.List;
  * hover effects, and transitions.
  */
 public class AnimationGame {
-    private final StyleGame style = new StyleGame();
     private double mouseOffsetX, mouseOffsetY;
     private double originCardX, originCardY;
 
@@ -225,4 +224,5 @@ public class AnimationGame {
             parallelFadeOut.getChildren().add(fadeOut);
         }
     }
+
 }

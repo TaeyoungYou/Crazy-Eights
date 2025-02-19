@@ -1,6 +1,7 @@
 package app.view;
 
 import app.animation.AnimationGame;
+import app.model.Card;
 import app.model.Music;
 import app.model.Player;
 import app.style.StyleGame;
@@ -13,10 +14,12 @@ import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
+import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
 import java.util.*;
@@ -118,7 +121,7 @@ public class SinglePlayGameView {
 
         logScroll = new ScrollPane();
         logScroll.setStyle(style.sideScrollPane());
-        log =new VBox();
+        log = new VBox();
         log.setPrefWidth(340);
         log.setPrefHeight(236);
         log.setStyle(style.sideChatBox());
@@ -213,6 +216,27 @@ public class SinglePlayGameView {
     public ImageView getDeck(){
         return deck;
     }
+    public ImageView getDummyCard(){
+        return cardDummy;
+    }
+    public void setTimer(int time){
+        timer.setText(time+"");
+    }
+    public void setTimerEffect(){
+        DropShadow edgeGlow = new DropShadow();
+        edgeGlow.setRadius(10);
+        edgeGlow.setSpread(0.5);
+        edgeGlow.setColor(Color.DARKGREEN);
+        edgeGlow.setOffsetX(0);
+        edgeGlow.setOffsetY(0);
+        timer.setEffect(edgeGlow);
+    }
+    public void delTimerEffect(){
+        timer.setEffect(null);
+    }
+    public void setCardDummy(Card card){
+        cardDummy.setImage(new Image(getClass().getResource(card.getCardURL()).toExternalForm()));
+    }
     public ObservableList<ImageView> getCurCards(){
         return curCards;
     }
@@ -264,11 +288,12 @@ public class SinglePlayGameView {
     }
     public void setPlayerStatus(HBox newPlayerStatus, Label cardLeft, Player player) {
         gamePlayerStatus.getChildren().set(player.getId(), newPlayerStatus);
-        animation.addLeftCardAnimation(cardLeft);
+        animation.addLeftCardAnimation(cardLeft);   // 수정해야됨. 그 플레이어가 카드를 받을 때만 발동되어야함.
     }
     public void setScoreBox(HBox newScoreBox, Player player) {
         scoreBox.getChildren().set(player.getId(), newScoreBox);
     }
+
 
     /**
      * Creates and displays the deck and a placeholder for the current card.

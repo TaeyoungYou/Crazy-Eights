@@ -5,9 +5,12 @@ import app.model.PlayerObserver;
 import app.style.StyleGame;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
+import javafx.scene.effect.DropShadow;
+
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
 public class PlayerStatusView implements PlayerObserver {
@@ -34,9 +37,25 @@ public class PlayerStatusView implements PlayerObserver {
     }
     @Override
     public void update(Player player) {
-        playerIcon.setImage(new Image(getClass().getResource(player.getIcon()).toExternalForm()));
-        playerCardLeft.setText("x " + (player.getCardLeft()+""));
-        mainView.setPlayerStatus(playerStatus, playerCardLeft, player);
+        if(!player.isSelf()){
+            playerIcon.setImage(new Image(getClass().getResource(player.getIcon()).toExternalForm()));
+            playerCardLeft.setText("x " + (player.getCardLeft()+""));
+            if(player.isMyTurn()){
+                playerIcon.setEffect(createDropShadow());
+            } else {
+                playerIcon.setEffect(null);
+            }
+            mainView.setPlayerStatus(playerStatus, playerCardLeft, player);
+        }
+    }
+    private DropShadow createDropShadow(){
+        DropShadow edgeGlow = new DropShadow();
+        edgeGlow.setRadius(10);
+        edgeGlow.setSpread(0.5);
+        edgeGlow.setColor(Color.WHITE);
+        edgeGlow.setOffsetX(0);
+        edgeGlow.setOffsetY(0);
+        return edgeGlow;
     }
 
     private void updatePlayerStatus() {
