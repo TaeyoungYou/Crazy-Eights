@@ -31,13 +31,13 @@ public class AnimationGame {
     private final double DELETE_X = 480;
 
     public void cardHoverEffectScaleUp(ImageView card) {
-        ScaleTransition scaleUp = new ScaleTransition(Duration.millis(200), card);
+        ScaleTransition scaleUp = new ScaleTransition(Duration.millis(100), card);
         scaleUp.setToX(1.1);
         scaleUp.setToY(1.1);
         scaleUp.playFromStart();
     }
     public void cardHoverEffectScaleDown(ImageView card) {
-        ScaleTransition scaleDown = new ScaleTransition(Duration.millis(200), card);
+        ScaleTransition scaleDown = new ScaleTransition(Duration.millis(100), card);
         scaleDown.setToX(1.0);
         scaleDown.setToY(1.0);
         scaleDown.playFromStart();
@@ -167,7 +167,7 @@ public class AnimationGame {
         return moveToHand;
     }
 
-    public Animation getCardTranslateToPlayersAnimation(ImageView card, List<ImageView> cards) {
+    public Animation getCardTranslateToPlayersAnimation(ImageView card) {
         TranslateTransition moveToPlayer = new TranslateTransition(Duration.millis(500), card);
         moveToPlayer.setToX(-500);
 

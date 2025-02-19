@@ -2,7 +2,9 @@ package app.controller;
 
 import app.model.Player;
 import app.view.*;
-import javafx.application.Platform;
+import javafx.animation.Animation;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -10,6 +12,7 @@ import javafx.scene.Scene;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
+import javafx.util.Duration;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,12 +43,37 @@ public class SinglePlayGameController {
         drawGamePage();
 
         createPlayers();
-        shareCards();
+        getSixCards();
 
     }
 
-    private void shareCards(){
-
+    private void getSixCards(){
+        for(Player player : players){
+            if(player.isSelf()){
+                Timeline giveCard = new Timeline(
+                        new KeyFrame(Duration.seconds(1), event -> {
+                            mainView.getCardAnimationToUser().setOnFinished(ev -> {
+                                mainView.removeAnimationCard();
+                                player.setCard();
+                                addCardEffects(player);
+                            });
+                        })
+                );
+                giveCard.setCycleCount(6);
+                giveCard.play();
+            }else{
+                Timeline giveCard = new Timeline(
+                        new KeyFrame(Duration.seconds(1), event -> {
+                            mainView.getCardAnimationToPlayer().setOnFinished(ev -> {
+                                mainView.removeAnimationCard();
+                                player.setCard();
+                            });
+                        })
+                );
+                giveCard.setCycleCount(6);
+                giveCard.play();
+            }
+        }
     }
 
     private void createPlayers(){
@@ -69,7 +97,6 @@ public class SinglePlayGameController {
         new PlayerHandView(player, mainView);
         player.setIcon("/avatar/User-01.png");
 
-        // 유저가 카드를 한개 가져가기
         mainView.getDeck().setOnMouseClicked(event -> {
             if(player.getCardLeft() < 12){
                 mainView.setGetCardAnimation(player.getCardLeft()).setOnFinished(e -> {
@@ -87,21 +114,29 @@ public class SinglePlayGameController {
     private void addCardEffects(Player player){
         // 유저 핸드의 카드 움직임과 핸드 이벤트들 (매 카드가 추가가 될때 마다 실행)
         for(ImageView card: mainView.getCurCards()){
-            if(card.getOnMouseReleased() == null){
+            if(card.getOnMouseClicked() == null){
                 card.setOnMouseEntered(ev -> {
                     mainView.setCardHoverScaleUp(card);
                 });
+            }
+            if(card.getOnMouseExited() == null){
                 card.setOnMouseExited(ev -> {
                     mainView.setCardHoverScaleDown(card);
                 });
+            }
+            if(card.getOnMousePressed() == null){
                 card.setOnMousePressed(ev -> {
                     mainView.setDragPressed(ev, card);
                 });
+            }
+            if(card.getOnMouseDragged() == null){
                 card.setOnMouseDragged(ev -> {
                     mainView.setDragDragged(ev, card);
                 });
+            }
+            if(card.getOnMouseReleased() == null) {
                 card.setOnMouseReleased(ev -> {
-                    mainView.setDragReleased(ev, card, player,()->addCardEffects(player));
+                    mainView.setDragReleased(ev, card, player, () -> addCardEffects(player));
                 });
             }
         }

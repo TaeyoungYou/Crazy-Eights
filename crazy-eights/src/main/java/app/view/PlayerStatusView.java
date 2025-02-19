@@ -36,7 +36,7 @@ public class PlayerStatusView implements PlayerObserver {
     public void update(Player player) {
         playerIcon.setImage(new Image(getClass().getResource(player.getIcon()).toExternalForm()));
         playerCardLeft.setText("x " + (player.getCardLeft()+""));
-        mainView.setPlayerStatus(playerStatus, player);
+        mainView.setPlayerStatus(playerStatus, playerCardLeft, player);
     }
 
     private void updatePlayerStatus() {

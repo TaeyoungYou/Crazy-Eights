@@ -1,12 +1,10 @@
 package app.view;
 
 import app.animation.AnimationGame;
-import app.model.Card;
 import app.model.Music;
 import app.model.Player;
 import app.style.StyleGame;
 import javafx.animation.Animation;
-import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -264,46 +262,13 @@ public class SinglePlayGameView {
             Music.volumeOn();
         }
     }
-    public void setPlayerStatus(HBox newPlayerStatus, Player player) {
+    public void setPlayerStatus(HBox newPlayerStatus, Label cardLeft, Player player) {
         gamePlayerStatus.getChildren().set(player.getId(), newPlayerStatus);
+        animation.addLeftCardAnimation(cardLeft);
     }
     public void setScoreBox(HBox newScoreBox, Player player) {
         scoreBox.getChildren().set(player.getId(), newScoreBox);
     }
-
-
-    // Controller에서 부를 거
-//    private void shareCards(){
-//        Timeline giveCard = new Timeline(
-//                new KeyFrame(Duration.seconds(1), event -> {
-//                    ImageView card = animation.getCardAnimation(cardPlace);
-//                    Animation animationCard = animation.getCardTranslateToPlayersAnimation(card, cards);
-//                    animationCard.setOnFinished(e->{
-//                        cardPlace.getChildren().remove(card);
-//                        for(Player player: players) {
-//                            player.setCardLeft(player.getCardLeftValue() + 1);
-//                            animation.addLeftCardAnimation(player.getCardLeft());
-//                        }
-//                    });
-//                    animationCard.play();
-//                })
-//        );
-//        giveCard.setCycleCount(6);
-//        giveCard.play();
-//        Timeline initCard = new Timeline(
-//                new KeyFrame(Duration.seconds(1), event->{
-//                    ImageView card = animation.getCardAnimation(cardPlace);
-//                    Animation animationCard = animation.getCardTranslateAnimation(card, cards);
-//                    animationCard.setOnFinished(e->{
-//                        cardPlace.getChildren().remove(card);
-//                        createCard(1);
-//                    });
-//                    animationCard.play();
-//                })
-//        );
-//        initCard.setCycleCount(6);
-//        initCard.play();
-//    }
 
     /**
      * Creates and displays the deck and a placeholder for the current card.
@@ -360,4 +325,16 @@ public class SinglePlayGameView {
         }
     }
 
+    public Animation getCardAnimationToPlayer(){
+        tmpCard = animation.getCardAnimation(cardPlace);
+        Animation getCardTrans = animation.getCardTranslateToPlayersAnimation(tmpCard);
+        getCardTrans.play();
+        return getCardTrans;
+    }
+    public Animation getCardAnimationToUser(){
+        tmpCard = animation.getCardAnimation(cardPlace);
+        Animation getCardTrans = animation.getCardTranslateAnimation(tmpCard,curCards.size());
+        getCardTrans.play();
+        return getCardTrans;
+    }
 }
