@@ -1,4 +1,4 @@
-package app.ui;
+package app.view;
 
 import app.animation.AnimationSetting;
 import app.style.StyleSetting;
@@ -9,12 +9,12 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 
-public class Setting {
+public class SettingView {
     private final StackPane pane;
     private final StyleSetting style;
     private final AnimationSetting animation;
 
-    public Setting(StackPane pane) {
+    public SettingView(StackPane pane) {
         this.pane = pane;
         style = new StyleSetting();
         animation = new AnimationSetting();

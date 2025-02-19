@@ -1,7 +1,8 @@
 package app.animation;
 
+import app.controller.SinglePlayGameController;
 import app.model.Music;
-import app.ui.SinglePlayGame;
+import app.view.SinglePlayGameView;
 import javafx.animation.*;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
@@ -185,8 +186,8 @@ public class AnimationMenu {
         }
         fadeOutParallel.play();
         fadeOutParallel.setOnFinished(event -> {
-            SinglePlayGame game = new SinglePlayGame(scene);
-            game.generate();
+            SinglePlayGameController singlePlayGameController = new SinglePlayGameController(scene);
+            singlePlayGameController.startGame();
         });
     }
 

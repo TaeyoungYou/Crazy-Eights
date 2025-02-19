@@ -4,9 +4,18 @@ import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 
 public class Music {
+    private static Music music = null;
     private static MediaPlayer mediaPlayer;
     private static boolean volumeOn = true;
 
+    private Music(){}
+
+    public static Music getInstance(){
+        if(music == null){
+            music = new Music();
+        }
+        return music;
+    }
 
     private static void initMusic(){
         if(mediaPlayer != null) return;

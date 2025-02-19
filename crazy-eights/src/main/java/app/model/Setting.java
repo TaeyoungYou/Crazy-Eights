@@ -1,5 +1,5 @@
 package app.model;
 
-public class Deck {
+public class Setting {
 
 }

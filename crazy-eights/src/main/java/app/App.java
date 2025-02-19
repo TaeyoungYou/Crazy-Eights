@@ -1,16 +1,15 @@
 package app;
 
-import app.ui.MainMenu;
+import app.controller.MenuController;
+import app.view.MenuView;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.paint.Paint;
+import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
-import javax.swing.*;
 import java.awt.*;
 
 /**
@@ -25,14 +24,14 @@ public class App extends Application {    /**
      */
     @Override
     public void start(Stage primaryStage) throws Exception {
-        BorderPane root = new BorderPane();
+        StackPane root = new StackPane();
         Scene scene = new Scene(root);
         configStage(primaryStage);
         primaryStage.setScene(scene);
         primaryStage.show();
 
-        MainMenu menu = new MainMenu(scene);
-        menu.generate();
+        MenuController menuController = new MenuController(scene);
+        menuController.drawMenu();
     }
 
     /**

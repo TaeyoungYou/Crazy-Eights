@@ -1,48 +1,87 @@
 package app.model;
 
-import javafx.scene.control.Label;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
+import app.view.PlayerHandView;
+import app.view.PlayerStatusView;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class Player implements Comparable<Player>{
-    private ImageView icon;
-    private Label cardLeft;
-    private int score;
+    private int id;
+    private String icon;    // status와 score에 사용될
+    private int score;      // score에 사용될
 
-    private boolean self;
+    private List<Card> hand;
+    private List<PlayerObserver> observers;
 
-    public Player(){
-        icon = new ImageView(new Image(getClass().getResource("/avatar/User-01.png").toExternalForm()));
-        cardLeft = new Label("x 0");
+    private boolean self;   // 자기 자신인지
+
+    public Player(int index){
+        id = index;
+        icon = "/avatar/User-01.png";
         score = 0;
         self = false;
+        hand = new ArrayList<>();
+        observers = new ArrayList<>();
+    }
+    public void removeCard(int index){
+        hand.remove(index);
+        notifyObservers();
+    }
+    public int getId(){
+        return id;
+    }
+    public void setId(int id){
+        this.id = id;
+        notifyObservers();
     }
     public void setIcon(String url){
-        icon.setImage(new Image(getClass().getResource(url).toExternalForm()));
+        icon = url;
+        notifyObservers();
     }
-    public ImageView getIcon(){
+    public String getIcon(){
         return icon;
     }
-    public Label getCardLeft(){
-        return cardLeft;
+    public int getCardLeft(){
+        return hand.size();
     }
-    public int getCardLeftValue(){
-        return Integer.parseInt(getCardLeft().getText().split(" ")[1]);
+    public List<Card> getHand(){
+        return hand;
+    }
+    public void setCard(){
+        hand.add(new Card().setCard());
+        notifyObservers();
     }
     public int getScore(){
         return score;
     }
     public void setScore(int score){
         this.score = score;
+        notifyObservers();
     }
     public boolean isSelf(){
         return self;
     }
-    public void setSelf(boolean self){
-        this.self = self;
+    public void setSelf(){
+        this.self = true;
     }
-    public void setCardLeft(int left){
-        cardLeft.setText(String.format("x %d", left));
+
+    public void addObserver(PlayerObserver observer){
+        observers.add(observer);
+    }
+    public void removeObserver(PlayerObserver observer){
+        observers.remove(observer);
+    }
+    public void notifyObservers(){
+        for(PlayerObserver observer : observers){
+            if(observer instanceof PlayerStatusView && !isSelf()){
+                observer.update(this);
+            } else if(observer instanceof PlayerHandView && isSelf()){
+                observer.update(this);
+            }else {
+                observer.update(this);
+            }
+        }
     }
 
     @Override
