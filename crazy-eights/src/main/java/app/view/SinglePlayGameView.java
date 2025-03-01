@@ -2,10 +2,12 @@ package app.view;
 
 import app.animation.AnimationGame;
 import app.model.Card;
+import app.model.DummyCard;
 import app.model.Music;
 import app.model.Player;
 import app.style.StyleGame;
 import javafx.animation.Animation;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -21,6 +23,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javafx.util.Pair;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -59,6 +62,7 @@ public class SinglePlayGameView {
 
     private ImageView tmpCard;
     private ObservableList<ImageView> curCards;
+    private List<Pair<Card, ImageView>> curCardInfo = new ArrayList<>();
 
     public SinglePlayGameView(BorderPane _pane) {
         pane = _pane;
@@ -234,11 +238,16 @@ public class SinglePlayGameView {
     public void delTimerEffect(){
         timer.setEffect(null);
     }
-    public void setCardDummy(Card card){
-        cardDummy.setImage(new Image(getClass().getResource(card.getCardURL()).toExternalForm()));
+
+    public void setCardDummy(DummyCard card){
+        cardDummy.setImage(card.getImage());
     }
+
     public ObservableList<ImageView> getCurCards(){
         return curCards;
+    }
+    public List<Pair<Card, ImageView>> getCurCardInfo(){
+        return curCardInfo;
     }
     public void setFadeOutSinglePlay(Scene _scene) {
         animation.fadeOutSinglePlay(_scene, pane);
@@ -257,25 +266,30 @@ public class SinglePlayGameView {
     public void setDragDragged(MouseEvent event, ImageView card){
         animation.cardDragDragged(event, card);
     }
-    public void setDragReleased(MouseEvent event, ImageView card, Player player, Runnable effect){
+    public void setDragReleased(MouseEvent event, ImageView card, Player player, DummyCard dummyCard, boolean correct){
         Animation removed = animation.cardDragReleased(event, card);
-        if(removed != null){
+        if(removed != null && correct){
             int index = curCards.indexOf(card);
 
             removed.setOnFinished(e -> {
                 curCards.remove(card);
+                dummyCard.setCard(curCardInfo.get(index).getKey());
+                dummyCard.setImage();
+                curCardInfo.remove(index);
                 cardPlace.getChildren().remove(card);
                 player.removeCard(index);
-                effect.run();
+                setCardDummy(dummyCard);
             });
 
             removed.play();
         }else{
-            animation.cardMoveBackEffect(card, cardPlace);
-            cardPlace.getChildren().remove(card);
-            cardPlace.getChildren().add(index, card);
-            effect.run();
+            getBackAnimation(card);
         }
+    }
+    public void getBackAnimation(ImageView card){
+        animation.cardMoveBackEffect(card, cardPlace);
+        cardPlace.getChildren().remove(card);
+        cardPlace.getChildren().add(index, card);
     }
     public void setMusicVolume() {
         if (Music.isVolumeOn()) {
@@ -337,6 +351,12 @@ public class SinglePlayGameView {
         resettingPosCard();
         curCards = cards;
     }
+    public void setUserHandInfo(List<Card> cards){
+        curCardInfo.clear();
+        for(int i=0; i<cards.size(); i++){
+            curCardInfo.add(new Pair<>(cards.get(i), curCards.get(i)));
+        }
+    }
 
     public void resettingPosCard() {
         int i = 0;
@@ -362,4 +382,5 @@ public class SinglePlayGameView {
         getCardTrans.play();
         return getCardTrans;
     }
+
 }

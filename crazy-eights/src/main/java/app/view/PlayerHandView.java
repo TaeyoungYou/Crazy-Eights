@@ -33,5 +33,6 @@ public class PlayerHandView implements PlayerObserver {
             setCards(card);
         }
         mainView.setUserHand(cards);
+        mainView.setUserHandInfo(player.getHand());
     }
 }
