@@ -27,7 +27,7 @@ public class PlayerHandView implements PlayerObserver {
     }
 
     @Override
-    public void update(Player player) {
+    public void update(Player player, boolean handleCard) {
         cards.clear();
         for(Card card:player.getHand()){
             setCards(card);

@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class SinglePlayGameController implements CardObserver {
+public class SinglePlayGameController implements CardObserver, DeckObserver {
     private Scene scene;
     private StackPane root;
     private BorderPane mainPane;
@@ -31,7 +31,9 @@ public class SinglePlayGameController implements CardObserver {
     private DummyCard dummyCard;
 
     private int time = 0;
-    private int turn = 0;
+    private int turn = -1;
+    private int playerRanPutTime = new Random().nextInt(9)+1;
+    private boolean userDid = false;
 
     public SinglePlayGameController(Scene _scene) {
         scene = _scene;
@@ -39,7 +41,7 @@ public class SinglePlayGameController implements CardObserver {
         mainPane = new BorderPane();
         mainView = new SinglePlayGameView(mainPane);
         settingView = new SettingView(root);
-        deck = new Deck();
+        deck = new Deck(this);
         dummyCard = new DummyCard(this);
     }
 
@@ -62,24 +64,73 @@ public class SinglePlayGameController implements CardObserver {
         Timeline gameLoop = new Timeline(
                 new KeyFrame(Duration.seconds(1),event -> {
                     if(time % 11 == 0){
+                        if(userDid) userDid = false;
+                        turn = (turn+1)%playerNum;
+                        time = 0;
+
+                        System.out.println("Turn " + turn);
                         updatePlayerTurn();
                         if(players.get(turn).isSelf()){
                             mainView.setTimerEffect();
                         } else {
                             mainView.delTimerEffect();
                         }
-
-                        turn = (turn+1)%playerNum;
-                        time = 0;
                     }
+
                     mainView.setTimer(10 - time);
                     time++;
+
+                    if(time % playerRanPutTime == 0 && !players.get(turn).isSelf()){
+                        Timeline temp = playerPutCard(players.get(turn));
+                        temp.setOnFinished(e -> {
+                            time = 0;
+                            playerRanPutTime = new Random().nextInt(8) + 2;
+                        });
+                        temp.play();
+                    }
+                    if(!userDid){
+                        if(time == 11) {
+                            timeOut(players.get(turn));
+                            userDid = false;
+                        }
+                    }
             })
         );
         gameLoop.setCycleCount(Timeline.INDEFINITE);
 
         return gameLoop;
     }
+    private Timeline playerPutCard(Player player) {
+        for(Card card: player.getHand()){
+            if(dummyCard.getCard().getSuit() == card.getSuit() || dummyCard.getCard().getRank() == card.getRank()){
+                return new Timeline(new KeyFrame(Duration.seconds(1), event -> {mainView.putCardAnimationWithPlayer().setOnFinished(e->{
+                    putCardDummy(card);
+                    player.removeCard(card);
+                });}));
+            }
+        }
+        return new Timeline(new KeyFrame(Duration.seconds(1),event -> mainView.getCardAnimationToPlayer().setOnFinished(e -> player.setCard(deck))));
+    }
+    private void timeOut(Player player) {
+        if(player.getHand().size() < 12){
+            Timeline timeoutAnimation = new Timeline(new KeyFrame(Duration.seconds(1), event -> {
+                if (player.isSelf()) {
+                    mainView.getCardAnimationToUser().setOnFinished(e -> {
+                        mainView.removeAnimationCard();
+                        player.setCard(deck);
+                    });
+                } else {
+                    mainView.getCardAnimationToPlayer().setOnFinished(e -> {
+                        mainView.removeAnimationCard();
+                        player.setCard(deck);
+                    });
+                }
+            }));
+
+            timeoutAnimation.play();
+        }
+    }
+
     private void updatePlayerTurn(){
         for(Player player: players){
             player.setMyTurn(false);
@@ -95,9 +146,7 @@ public class SinglePlayGameController implements CardObserver {
 
     private Timeline putStartDummyCard(){
         Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(1), event -> {
-            dummyCard.setCard(deck.drawCard());
-            dummyCard.setImage();
-            mainView.setCardDummy(dummyCard);
+            putCardDummy(deck.drawCard());
         }));
         return timeline;
     }
@@ -244,10 +293,28 @@ public class SinglePlayGameController implements CardObserver {
         scene.setRoot(root);
     }
 
+    private void putCardDummy(Card card){
+        dummyCard.setCard(card);
+        dummyCard.setImage();
+        mainView.setCardDummy(dummyCard);
+    }
     @Override
     public void update(Card card) {
+        if(turn != -1 && players.get(turn).isSelf()) {
+            userDid = true;
+            time = 0;
+        }
         System.out.println("더미 카드 놓아짐 감지: "+card.getSuit()+" "+card.getRank());
         removeDeckEffects();
         removeCardEffects();
+    }
+
+    @Override
+    public void update() {
+        if(turn != -1 && players.get(turn).isSelf()) {
+            userDid = true;
+            time = 0;
+        }
+        System.out.println("플레이어 "+turn+": 드로우 감지");
     }
 }

@@ -33,7 +33,7 @@ public class PlayerScoreView implements PlayerObserver {
     }
 
     @Override
-    public void update(Player player) {
+    public void update(Player player, boolean handleCard) {
         playerIcon.setImage(new Image(getClass().getResource(player.getIcon()).toExternalForm()));
         playerScore.setText((player.getScore() + ""));
         mainView.setScoreBox(playerScoreBox, player);

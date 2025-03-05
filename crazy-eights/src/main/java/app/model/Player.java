@@ -16,6 +16,7 @@ public class Player implements Comparable<Player>{
 
     private boolean self;   // 자기 자신인지
     private boolean myTurn;
+    private boolean handleCard;
 
     public Player(int index){
         id = index;
@@ -23,6 +24,7 @@ public class Player implements Comparable<Player>{
         score = 0;
         self = false;
         myTurn = false;
+        handleCard = false;
         hand = new ArrayList<>();
         observers = new ArrayList<>();
     }
@@ -57,8 +59,14 @@ public class Player implements Comparable<Player>{
     public List<Card> getHand(){
         return hand;
     }
+    public void removeCard(Card card){
+        hand.remove(card);
+        handleCard = true;
+        notifyObservers();
+    }
     public void setCard(Deck deck){
         hand.add(deck.drawCard());
+        handleCard = true;
         notifyObservers();
     }
     public int getScore(){
@@ -84,13 +92,14 @@ public class Player implements Comparable<Player>{
     public void notifyObservers(){
         for(PlayerObserver observer : observers){
             if(observer instanceof PlayerStatusView){
-                observer.update(this);
+                observer.update(this, handleCard);
             } else if(observer instanceof PlayerHandView && isSelf()){
-                observer.update(this);
+                observer.update(this, false);
             }else {
-                observer.update(this);
+                observer.update(this, false);
             }
         }
+        handleCard = false;
     }
 
     @Override

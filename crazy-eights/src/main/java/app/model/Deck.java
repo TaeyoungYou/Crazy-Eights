@@ -1,12 +1,16 @@
 package app.model;
 
+import app.controller.SinglePlayGameController;
+
 import java.util.ArrayList;
 import java.util.Collections;
 
 public class Deck {
     private ArrayList<Card> deck;
+    private SinglePlayGameController controller;
 
-    public Deck() {
+    public Deck(SinglePlayGameController controller) {
+        this.controller = controller;
         deck = new ArrayList<>();
     }
     public void generateDeck() {
@@ -27,6 +31,11 @@ public class Deck {
         }
         Card card = deck.remove(0);
         System.out.println(card.getCardURL());
+        notification();
         return card;
+    }
+
+    private void notification(){
+        controller.update();
     }
 }

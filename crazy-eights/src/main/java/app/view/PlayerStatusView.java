@@ -36,7 +36,7 @@ public class PlayerStatusView implements PlayerObserver {
         updatePlayerStatus();
     }
     @Override
-    public void update(Player player) {
+    public void update(Player player, boolean handleCard) {
         if(!player.isSelf()){
             playerIcon.setImage(new Image(getClass().getResource(player.getIcon()).toExternalForm()));
             playerCardLeft.setText("x " + (player.getCardLeft()+""));
@@ -45,7 +45,7 @@ public class PlayerStatusView implements PlayerObserver {
             } else {
                 playerIcon.setEffect(null);
             }
-            mainView.setPlayerStatus(playerStatus, playerCardLeft, player);
+            mainView.setPlayerStatus(playerStatus, playerCardLeft, player, handleCard);
         }
     }
     private DropShadow createDropShadow(){

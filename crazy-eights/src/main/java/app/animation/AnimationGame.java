@@ -166,6 +166,22 @@ public class AnimationGame {
         return moveToHand;
     }
 
+    public Animation putCardTranslateWithPlayerAnimation(ImageView card){
+        TranslateTransition moveToDummy = new TranslateTransition(Duration.millis(500), card);
+        moveToDummy.setFromX(-500);
+        moveToDummy.setToX(300);
+
+        FadeTransition fadeIn = new FadeTransition(Duration.millis(500), card);
+        fadeIn.setFromValue(0.0);
+        fadeIn.setToValue(1.0);
+
+        ParallelTransition pt = new ParallelTransition(moveToDummy, fadeIn);
+
+        pt.play();
+
+        return pt;
+    }
+
     public Animation getCardTranslateToPlayersAnimation(ImageView card) {
         TranslateTransition moveToPlayer = new TranslateTransition(Duration.millis(500), card);
         moveToPlayer.setToX(-500);

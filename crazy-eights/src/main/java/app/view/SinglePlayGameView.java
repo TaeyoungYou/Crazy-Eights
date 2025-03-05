@@ -300,9 +300,11 @@ public class SinglePlayGameView {
             Music.volumeOn();
         }
     }
-    public void setPlayerStatus(HBox newPlayerStatus, Label cardLeft, Player player) {
+    public void setPlayerStatus(HBox newPlayerStatus, Label cardLeft, Player player, boolean handleCard) {
         gamePlayerStatus.getChildren().set(player.getId(), newPlayerStatus);
-        animation.addLeftCardAnimation(cardLeft);   // 수정해야됨. 그 플레이어가 카드를 받을 때만 발동되어야함.
+        if(handleCard){
+            animation.addLeftCardAnimation(cardLeft);   // 수정해야됨. 그 플레이어가 카드를 받을 때만 발동되어야함.
+        }
     }
     public void setScoreBox(HBox newScoreBox, Player player) {
         scoreBox.getChildren().set(player.getId(), newScoreBox);
@@ -370,6 +372,12 @@ public class SinglePlayGameView {
         }
     }
 
+    public Animation putCardAnimationWithPlayer(){
+        tmpCard = animation.getCardAnimation(cardPlace);
+        Animation putCardTrans = animation.putCardTranslateWithPlayerAnimation(tmpCard);
+        putCardTrans.play();
+        return putCardTrans;
+    }
     public Animation getCardAnimationToPlayer(){
         tmpCard = animation.getCardAnimation(cardPlace);
         Animation getCardTrans = animation.getCardTranslateToPlayersAnimation(tmpCard);
