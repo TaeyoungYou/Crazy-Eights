@@ -1,10 +1,7 @@
 package app.view;
 
 import app.animation.AnimationGame;
-import app.model.Card;
-import app.model.DummyCard;
-import app.model.Music;
-import app.model.Player;
+import app.model.*;
 import app.style.StyleGame;
 import javafx.animation.Animation;
 import javafx.collections.ListChangeListener;
@@ -16,6 +13,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
+import javafx.scene.control.TextFormatter;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -26,6 +24,7 @@ import javafx.scene.text.Font;
 import javafx.util.Pair;
 
 import java.util.*;
+import java.util.function.UnaryOperator;
 import java.util.stream.Collectors;
 
 /**
@@ -40,8 +39,10 @@ public class SinglePlayGameView {
     private BorderPane gamePane;
     private VBox sidebar;
     private HBox buttonBar;
+    private BorderPane logPane;
     private ScrollPane logScroll;
     private VBox log;
+    private BorderPane msgPane;
     private ScrollPane msgScroll;
     private VBox chats;
     private TextField message;
@@ -123,33 +124,55 @@ public class SinglePlayGameView {
 
         sidebar.getChildren().add(spacer);
 
+        logPane = new BorderPane();
+        logPane.setStyle(style.sideBorderPaneStyle());
+        logPane.setPrefSize(340,236);
+        logPane.setPadding(new Insets(10,10,10,10));
+
         logScroll = new ScrollPane();
         logScroll.setStyle(style.sideScrollPane());
-        log = new VBox();
-        log.setPrefWidth(340);
-        log.setPrefHeight(236);
-        log.setStyle(style.sideChatBox());
-        logScroll.setContent(log);
-        logScroll.setFitToHeight(true);
         logScroll.setFitToWidth(true);
-        sidebar.getChildren().add(logScroll);
+        logScroll.setFitToHeight(true);
+        logScroll.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        logScroll.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+
+        log = new VBox(5);
+        log.setFillWidth(true);
+        log.setPrefHeight(Region.USE_COMPUTED_SIZE);
+        log.setStyle(style.sideVBox());
+
+        logScroll.setContent(log);
+        logPane.setCenter(logScroll);
+        sidebar.getChildren().add(logPane);
+        log.heightProperty().addListener((obs, oldVal, newVal) -> logScroll.setVvalue(1.0));
+
+        msgPane = new BorderPane();
+        msgPane.setStyle(style.sideBorderPaneStyle());
+        msgPane.setPrefSize(340,574);
+        msgPane.setPadding(new Insets(10,10,10,10));
 
         msgScroll = new ScrollPane();
         msgScroll.setStyle(style.sideScrollPane());
-        chats = new VBox();
-        chats.setPrefWidth(340);
-        chats.setPrefHeight(574);
-        chats.setStyle(style.sideChatBox());
-
-        msgScroll.setContent(chats);
         msgScroll.setFitToHeight(true);
         msgScroll.setFitToWidth(true);
-        sidebar.getChildren().add(msgScroll);
+        msgScroll.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        msgScroll.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+
+        chats = new VBox(10);
+        chats.setFillWidth(true);
+        chats.setPrefHeight(Region.USE_COMPUTED_SIZE);
+        chats.setStyle(style.sideVBox());
+        chats.heightProperty().addListener((obs, oldVal, newVal) -> msgScroll.setVvalue(1.0));
+
+        msgScroll.setContent(chats);
+        msgPane.setCenter(msgScroll);
+        sidebar.getChildren().add(msgPane);
 
         message = new TextField();
         message.setPrefWidth(300);
         message.setPrefHeight(50);
         message.setStyle(style.sideMessageBox());
+
 
         sidebar.getChildren().add(message);
     }
@@ -219,6 +242,9 @@ public class SinglePlayGameView {
     }
     public ImageView getDeck(){
         return deck;
+    }
+    public TextField getMessage(){
+        return message;
     }
     public ImageView getDummyCard(){
         return cardDummy;
@@ -391,4 +417,42 @@ public class SinglePlayGameView {
         return getCardTrans;
     }
 
+    public void addLog(String message, State state){
+        Label msg = new Label(message);
+        msg.setFont(new Font("Comic Sans MS", 16));
+        if(state == State.System) msg.setTextFill(Color.GREEN);
+        if(state == State.Error) msg.setTextFill(Color.RED);
+        if(state == State.Log) msg.setStyle(style.sideLabelStyle());
+        log.getChildren().add(msg);
+    }
+
+    public void addMsgFromUser(String message){
+        HBox box = new HBox();
+
+        Label msg = new Label(message);
+        msg.setFont(new Font("Comic Sans MS", 16));
+        msg.setWrapText(true);
+        msg.setMaxWidth(300);
+        msg.setStyle(style.sideMessageBox());
+        box.getChildren().add(msg);
+        box.setAlignment(Pos.CENTER_RIGHT);
+        chats.getChildren().add(box);
+    }
+
+    public void addMsgFromPlayer(String message, Player player){
+        HBox box = new HBox(5);
+
+        ImageView icon = new ImageView(getClass().getResource(player.getIcon()).toExternalForm());
+        icon.setFitWidth(60);
+        icon.setFitHeight(60);
+
+        Label msg = new Label(message);
+        msg.setFont(new Font("Comic Sans MS", 16));
+        msg.setWrapText(true);
+        msg.setMaxWidth(250);
+        msg.setStyle(style.sideMessageBox());
+        box.getChildren().addAll(icon, msg);
+        box.setAlignment(Pos.CENTER_LEFT);
+        chats.getChildren().add(box);
+    }
 }

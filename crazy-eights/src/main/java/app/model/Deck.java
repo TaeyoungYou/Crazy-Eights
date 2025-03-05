@@ -30,7 +30,6 @@ public class Deck {
             return null;
         }
         Card card = deck.remove(0);
-        System.out.println(card.getCardURL());
         notification();
         return card;
     }

@@ -26,6 +26,14 @@ public class Card {
     public void setRank(int rank) {
         this.rank = rank;
     }
+
+    public String getImogeSuit(){
+        if (suit == 0) return "♠";
+        if (suit == 1) return "♥";
+        if (suit == 2) return "♦";
+        return "♣";
+    }
+
     public String getCardURL(){
         return String.format("/card/Card-%d-%d.png", suit, rank);
     }

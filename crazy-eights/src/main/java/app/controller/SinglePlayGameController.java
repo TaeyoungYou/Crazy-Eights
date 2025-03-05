@@ -16,8 +16,9 @@ import javafx.util.Pair;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
-public class SinglePlayGameController implements CardObserver, DeckObserver {
+public class SinglePlayGameController implements CardObserver, DeckObserver, LogObserver, ChatObserver {
     private Scene scene;
     private StackPane root;
     private BorderPane mainPane;
@@ -29,10 +30,14 @@ public class SinglePlayGameController implements CardObserver, DeckObserver {
     private final int playerNum = 4;
     private Deck deck;
     private DummyCard dummyCard;
+    private Log log;
+    private Chat chat;
 
     private int time = 0;
     private int turn = -1;
-    private int playerRanPutTime = new Random().nextInt(9)+1;
+    private int playerRanPutTime = ThreadLocalRandom.current().nextInt(2, 10);
+    private boolean playerDoChat = new Random().nextBoolean();
+    private int playerChatTime = ThreadLocalRandom.current().nextInt(1,playerRanPutTime);
     private boolean userDid = false;
 
     public SinglePlayGameController(Scene _scene) {
@@ -43,6 +48,8 @@ public class SinglePlayGameController implements CardObserver, DeckObserver {
         settingView = new SettingView(root);
         deck = new Deck(this);
         dummyCard = new DummyCard(this);
+        log = new Log(this);
+        chat = new Chat(this);
     }
 
     public void startGame(){
@@ -50,6 +57,7 @@ public class SinglePlayGameController implements CardObserver, DeckObserver {
         deck.generateDeck();
         createPlayers();
 
+        log.setLogs("Setting Game..." , State.System);
         SequentialTransition sequence = new SequentialTransition();
 
         sequence.getChildren().add(getSixCards());
@@ -68,30 +76,48 @@ public class SinglePlayGameController implements CardObserver, DeckObserver {
                         turn = (turn+1)%playerNum;
                         time = 0;
 
-                        System.out.println("Turn " + turn);
                         updatePlayerTurn();
                         if(players.get(turn).isSelf()){
                             mainView.setTimerEffect();
                         } else {
                             mainView.delTimerEffect();
                         }
+                        if(playerChatTime == 1) playerDoChat = false;
+                        log.setLogs("DoChat: "+playerDoChat+", PlayTime: "+playerRanPutTime+", ChatTime: "+playerChatTime, State.System);
+
+                        log.setLogs(String.format("Player %d turn", turn + 1), State.Log);
                     }
 
-                    mainView.setTimer(10 - time);
+                    if(time < 11) mainView.setTimer(10 - time);
                     time++;
 
                     if(time % playerRanPutTime == 0 && !players.get(turn).isSelf()){
                         Timeline temp = playerPutCard(players.get(turn));
                         temp.setOnFinished(e -> {
                             time = 0;
-                            playerRanPutTime = new Random().nextInt(8) + 2;
+                            playerRanPutTime = ThreadLocalRandom.current().nextInt(2, 10);
+                            playerDoChat = new Random().nextBoolean();
+                            playerChatTime = ThreadLocalRandom.current().nextInt(1,playerRanPutTime);
                         });
                         temp.play();
                     }
+
+                    if(playerDoChat && time % playerChatTime == 0 && playerRanPutTime > 4 && !players.get(turn).isSelf()){
+                        chat.addMessage(CPU_Msg.getMessage(new Random().nextInt(CPU_Msg.getSize())), players.get(turn));
+                    }
+
                     if(!userDid){
                         if(time == 11) {
-                            timeOut(players.get(turn));
-                            userDid = false;
+                            log.setLogs("Time out!", State.Error);
+                            if(players.get(turn).getHand().size() < 12){
+                                timeOut(players.get(turn));
+                                userDid = false;
+                                time++; // Hold the turn until the animation completes
+                            } else {
+                                time = 0;
+                                userDid = false;
+                            }
+
                         }
                     }
             })
@@ -112,23 +138,21 @@ public class SinglePlayGameController implements CardObserver, DeckObserver {
         return new Timeline(new KeyFrame(Duration.seconds(1),event -> mainView.getCardAnimationToPlayer().setOnFinished(e -> player.setCard(deck))));
     }
     private void timeOut(Player player) {
-        if(player.getHand().size() < 12){
-            Timeline timeoutAnimation = new Timeline(new KeyFrame(Duration.seconds(1), event -> {
-                if (player.isSelf()) {
-                    mainView.getCardAnimationToUser().setOnFinished(e -> {
-                        mainView.removeAnimationCard();
-                        player.setCard(deck);
-                    });
-                } else {
-                    mainView.getCardAnimationToPlayer().setOnFinished(e -> {
-                        mainView.removeAnimationCard();
-                        player.setCard(deck);
-                    });
-                }
-            }));
-
-            timeoutAnimation.play();
-        }
+        Timeline timeoutAnimation = new Timeline(new KeyFrame(Duration.seconds(1), event -> {
+            if (player.isSelf()) {
+                mainView.getCardAnimationToUser().setOnFinished(e -> {
+                    mainView.removeAnimationCard();
+                    player.setCard(deck);
+                });
+            } else {
+                mainView.getCardAnimationToPlayer().setOnFinished(e -> {
+                    mainView.removeAnimationCard();
+                    player.setCard(deck);
+                });
+            }
+        }));
+        timeoutAnimation.setOnFinished(e -> time=0);
+        timeoutAnimation.play();
     }
 
     private void updatePlayerTurn(){
@@ -148,6 +172,7 @@ public class SinglePlayGameController implements CardObserver, DeckObserver {
         Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(1), event -> {
             putCardDummy(deck.drawCard());
         }));
+        timeline.setOnFinished(e -> log.setLogs("Start Game!", State.System));
         return timeline;
     }
 
@@ -210,7 +235,7 @@ public class SinglePlayGameController implements CardObserver, DeckObserver {
                     removeDeckEffects();
                 });
             } else {
-                System.out.println("Player has "+player.getCardLeft()+" cards!");
+                log.setLogs("Already has "+player.getCardLeft()+" cards!", State.Error);
             }
         });
     }
@@ -285,7 +310,14 @@ public class SinglePlayGameController implements CardObserver, DeckObserver {
         mainView.getBack().setOnMouseClicked(event -> mainView.setFadeOutSinglePlay(scene));
         mainView.getSetting().setOnMouseClicked(event -> settingView.generate());
         mainView.getVolume().setOnMouseClicked(event -> mainView.setMusicVolume());
+        mainView.getMessage().setOnAction(event -> {
+            String msg = mainView.getMessage().getText();
+            if(!msg.isEmpty()){
+                chat.addMessage(msg);
+                mainView.getMessage().clear();
+            }
 
+        });
     }
 
     private void initPage(){
@@ -304,7 +336,7 @@ public class SinglePlayGameController implements CardObserver, DeckObserver {
             userDid = true;
             time = 0;
         }
-        System.out.println("더미 카드 놓아짐 감지: "+card.getSuit()+" "+card.getRank());
+        log.setLogs(String.format(" - Put %s %d card", card.getImogeSuit(), card.getRank() + 1), State.Log);
         removeDeckEffects();
         removeCardEffects();
     }
@@ -315,6 +347,21 @@ public class SinglePlayGameController implements CardObserver, DeckObserver {
             userDid = true;
             time = 0;
         }
-        System.out.println("플레이어 "+turn+": 드로우 감지");
+        if(turn != -1) log.setLogs(" - Draw card", State.Log);
+    }
+
+    @Override
+    public void updateLog(String message, State state) {
+        mainView.addLog(message, state);
+    }
+
+    @Override
+    public void updateChat(String message, Player player) {
+        if(player == null){
+            mainView.addMsgFromUser(message);
+        } else {
+            mainView.addMsgFromPlayer(message, player);
+        }
+
     }
 }
