@@ -153,14 +153,14 @@ public class SinglePlayGameView {
 
         msgScroll = new ScrollPane();
         msgScroll.setStyle(style.sideScrollPane());
-        msgScroll.setFitToHeight(true);
         msgScroll.setFitToWidth(true);
+        msgScroll.setFitToHeight(false); // Chat의 생략방지!!
         msgScroll.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         msgScroll.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
 
         chats = new VBox(10);
         chats.setFillWidth(true);
-        chats.setPrefHeight(Region.USE_COMPUTED_SIZE);
+
         chats.setStyle(style.sideVBox());
         chats.heightProperty().addListener((obs, oldVal, newVal) -> msgScroll.setVvalue(1.0));
 
@@ -428,7 +428,7 @@ public class SinglePlayGameView {
 
     public void addMsgFromUser(String message){
         HBox box = new HBox();
-        box.setMaxWidth(300);
+//        box.setMaxWidth(300);
 
         Label msg = new Label(message);
         msg.setWrapText(true);
@@ -441,16 +441,17 @@ public class SinglePlayGameView {
 
     public void addMsgFromPlayer(String message, Player player){
         HBox box = new HBox(5);
-        box.setMaxWidth(300);
 
         ImageView icon = new ImageView(getClass().getResource(player.getIcon()).toExternalForm());
         icon.setFitWidth(60);
         icon.setFitHeight(60);
 
         Label msg = new Label(message);
-        msg.setWrapText(true);
-        msg.setMaxWidth(250);
         msg.setStyle(style.sideMessageBox());
+        msg.setWrapText(true);
+        msg.setMaxWidth(Double.MAX_VALUE);
+
+        HBox.setHgrow(msg, Priority.ALWAYS);
         box.getChildren().addAll(icon, msg);
         box.setAlignment(Pos.CENTER_LEFT);
         chats.getChildren().add(box);

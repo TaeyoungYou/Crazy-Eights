@@ -69,6 +69,7 @@ public class StyleGame {
     }
     public String sideScrollPane(){
         return "-fx-background-color: transparent;" +
+                "-fx-background: #17171A;" +
                 "-fx-focus-color: transparent;" +
                 "-fx-faint-focus-color: transparent;" +
                 "-fx-border-color: transparent;" +
@@ -93,6 +94,7 @@ public class StyleGame {
                 "-fx-background-radius: 20px;" +
                 "-fx-font-family: 'Comic Sans MS';" +
                 "-fx-font-size: 16px;" +
+                "-fx-text-fill: #17171A;" +
                 "-fx-padding: 10px;" +
                 "-fx-focus-color: transparent;" +
                 "-fx-faint-focus-color: transparent;";
