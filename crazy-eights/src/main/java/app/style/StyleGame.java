@@ -60,8 +60,22 @@ public class StyleGame {
      *
      * @return A CSS string defining transparency settings.
      */
-    public String sideScrollPane() {
+    public String sideBorderPaneStyle() {
+        return "-fx-background-color: #17171A;" +
+                "-fx-border-color: #dddddd;" +
+                "-fx-border-style: solid;" +
+                "-fx-border-width: 2px;" +
+                "-fx-border-radius: 20px;";
+    }
+    public String sideScrollPane(){
         return "-fx-background-color: transparent;" +
+                "-fx-focus-color: transparent;" +
+                "-fx-faint-focus-color: transparent;" +
+                "-fx-border-color: transparent;" +
+                "-fx-background-insets: 0;";
+    }
+    public String sideVBox(){
+        return "-fx-background-color: #17171A;" +
                 "-fx-focus-color: transparent;" +
                 "-fx-faint-focus-color: transparent;" +
                 "-fx-border-color: transparent;" +
