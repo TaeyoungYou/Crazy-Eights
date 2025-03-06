@@ -2,10 +2,7 @@ package app.controller;
 
 import app.model.*;
 import app.view.*;
-import javafx.animation.KeyFrame;
-import javafx.animation.ParallelTransition;
-import javafx.animation.SequentialTransition;
-import javafx.animation.Timeline;
+import javafx.animation.*;
 import javafx.scene.Scene;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
@@ -25,6 +22,7 @@ public class SinglePlayGameController implements CardObserver, DeckObserver, Log
 
     private SinglePlayGameView mainView;
     private SettingView settingView;
+    private ChooseEightView chooseEightView;
 
     private List<Player> players = new ArrayList<>();
     private final int playerNum = 4;
@@ -36,9 +34,10 @@ public class SinglePlayGameController implements CardObserver, DeckObserver, Log
     private int time = 0;
     private int turn = -1;
     private int playerRanPutTime = ThreadLocalRandom.current().nextInt(2, 10);
-    private boolean playerDoChat = new Random().nextBoolean();
+    private boolean playerDoChat = new Random().nextDouble() < 0.7;
     private int playerChatTime = ThreadLocalRandom.current().nextInt(1,playerRanPutTime);
     private boolean userDid = false;
+    private boolean eightTime = false;
 
     public SinglePlayGameController(Scene _scene) {
         scene = _scene;
@@ -46,6 +45,7 @@ public class SinglePlayGameController implements CardObserver, DeckObserver, Log
         mainPane = new BorderPane();
         mainView = new SinglePlayGameView(mainPane);
         settingView = new SettingView(root);
+        chooseEightView = new ChooseEightView(root);
         deck = new Deck(this);
         dummyCard = new DummyCard(this);
         log = new Log(this);
@@ -70,56 +70,51 @@ public class SinglePlayGameController implements CardObserver, DeckObserver, Log
     }
     private Timeline gameLoop(){
         Timeline gameLoop = new Timeline(
-                new KeyFrame(Duration.seconds(1),event -> {
-                    if(time % 11 == 0){
-                        if(userDid) userDid = false;
-                        turn = (turn+1)%playerNum;
+            new KeyFrame(Duration.seconds(1),event -> {
+                if(time % 11 == 0){
+                    if(userDid) userDid = false;
+                    turn = (turn+1)%playerNum;
+                    time = 0;
+
+                    updatePlayerTurn();
+                    if(players.get(turn).isSelf()){
+                        mainView.setTimerEffect();
+                    } else {
+                        mainView.delTimerEffect();
+                    }
+                    if(playerChatTime == 1) playerDoChat = false;
+
+                    log.setLogs(String.format("Player %d turn", turn + 1), State.Log);
+                }
+
+                if(time < 11) mainView.setTimer(10 - time);
+                if(!eightTime) time++;
+
+                if(time % playerRanPutTime == 0 && !players.get(turn).isSelf()){
+                    Timeline temp = playerPutCard(players.get(turn));
+                    temp.setOnFinished(e -> {
                         time = 0;
+                        playerRanPutTime = ThreadLocalRandom.current().nextInt(2, 10);
+                        playerDoChat = new Random().nextDouble() < 0.7;
+                        playerChatTime = ThreadLocalRandom.current().nextInt(1,playerRanPutTime);
+                    });
+                    temp.play();
+                }
 
-                        updatePlayerTurn();
-                        if(players.get(turn).isSelf()){
-                            mainView.setTimerEffect();
-                        } else {
-                            mainView.delTimerEffect();
-                        }
-                        if(playerChatTime == 1) playerDoChat = false;
-                        log.setLogs("DoChat: "+playerDoChat+", PlayTime: "+playerRanPutTime+", ChatTime: "+playerChatTime, State.System);
+                if(playerDoChat && time % playerChatTime == 0 && playerRanPutTime > 4 && !players.get(turn).isSelf()){
+                    chat.addMessage(CPU_Msg.getMessage(new Random().nextInt(CPU_Msg.getSize())), players.get(turn));
+                }
 
-                        log.setLogs(String.format("Player %d turn", turn + 1), State.Log);
-                    }
-
-                    if(time < 11) mainView.setTimer(10 - time);
-                    time++;
-
-                    if(time % playerRanPutTime == 0 && !players.get(turn).isSelf()){
-                        Timeline temp = playerPutCard(players.get(turn));
-                        temp.setOnFinished(e -> {
-                            time = 0;
-                            playerRanPutTime = ThreadLocalRandom.current().nextInt(2, 10);
-                            playerDoChat = new Random().nextBoolean();
-                            playerChatTime = ThreadLocalRandom.current().nextInt(1,playerRanPutTime);
-                        });
-                        temp.play();
-                    }
-
-                    if(playerDoChat && time % playerChatTime == 0 && playerRanPutTime > 4 && !players.get(turn).isSelf()){
-                        chat.addMessage(CPU_Msg.getMessage(new Random().nextInt(CPU_Msg.getSize())), players.get(turn));
-                    }
-
-                    if(!userDid){
-                        if(time == 11) {
-                            log.setLogs("Time out!", State.Error);
-                            if(players.get(turn).getHand().size() < 12){
-                                timeOut(players.get(turn));
-                                userDid = false;
-                                time++; // Hold the turn until the animation completes
-                            } else {
-                                time = 0;
-                                userDid = false;
-                            }
-
+                if(!userDid && !eightTime){
+                    if(time == 11) {
+                        log.setLogs("Time out!", State.Error);
+                        if(players.get(turn).getHand().size() < 12) {
+                            timeOut(players.get(turn));
+                            userDid = false;
+                            time++; // Hold the turn until the animation completes
                         }
                     }
+                }
             })
         );
         gameLoop.setCycleCount(Timeline.INDEFINITE);
@@ -130,7 +125,7 @@ public class SinglePlayGameController implements CardObserver, DeckObserver, Log
         for(Card card: player.getHand()){
             if(dummyCard.getCard().getSuit() == card.getSuit() || dummyCard.getCard().getRank() == card.getRank()){
                 return new Timeline(new KeyFrame(Duration.seconds(1), event -> {mainView.putCardAnimationWithPlayer().setOnFinished(e->{
-                    putCardDummy(card);
+                    putCardDummy(card, false);
                     player.removeCard(card);
                 });}));
             }
@@ -170,7 +165,7 @@ public class SinglePlayGameController implements CardObserver, DeckObserver, Log
 
     private Timeline putStartDummyCard(){
         Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(1), event -> {
-            putCardDummy(deck.drawCard());
+            putCardDummy(deck.drawCard(), false);
         }));
         timeline.setOnFinished(e -> log.setLogs("Start Game!", State.System));
         return timeline;
@@ -233,6 +228,7 @@ public class SinglePlayGameController implements CardObserver, DeckObserver, Log
                     mainView.removeAnimationCard();
                     player.setCard(deck);
                     removeDeckEffects();
+                    mainView.getDeck().setDisable(false);
                 });
             } else {
                 log.setLogs("Already has "+player.getCardLeft()+" cards!", State.Error);
@@ -325,8 +321,8 @@ public class SinglePlayGameController implements CardObserver, DeckObserver, Log
         scene.setRoot(root);
     }
 
-    private void putCardDummy(Card card){
-        dummyCard.setCard(card);
+    private void putCardDummy(Card card, boolean isEight){
+        dummyCard.setCard(card, isEight);
         dummyCard.setImage();
         mainView.setCardDummy(dummyCard);
     }
@@ -334,11 +330,52 @@ public class SinglePlayGameController implements CardObserver, DeckObserver, Log
     public void update(Card card) {
         if(turn != -1 && players.get(turn).isSelf()) {
             userDid = true;
-            time = 0;
+            if(card.getSuit() < 4 || card.getRank() == 7){
+                eightTime = true;
+                log.setLogs("Crazy Eight Time!", State.System);
+                chooseEightView.generate();
+
+                chooseEightView.getSpace().setOnMouseClicked(event -> {
+                    event.consume();
+                    fadeOutPane();
+                    putCardDummy(new Card(0,7), true);
+                    log.setLogs("Change to Space!", State.System);
+                });
+                chooseEightView.getHeart().setOnMouseClicked(event -> {
+                    event.consume();
+                    fadeOutPane();
+                    putCardDummy(new Card(1,7), true);
+                    log.setLogs("Change to Heart!", State.System);
+                });
+                chooseEightView.getDiamond().setOnMouseClicked(event -> {
+                    event.consume();
+                    fadeOutPane();
+                    putCardDummy(new Card(2,7), true);
+                    log.setLogs("Change to Diamond!", State.System);
+                });
+                chooseEightView.getClub().setOnMouseClicked(event -> {
+                    event.consume();
+                    fadeOutPane();
+                    putCardDummy(new Card(3,7), true);
+                    log.setLogs("Change to Club!", State.System);
+                });
+            } else {
+                time = 0;
+            }
         }
-        log.setLogs(String.format(" - Put %s %d card", card.getImogeSuit(), card.getRank() + 1), State.Log);
         removeDeckEffects();
         removeCardEffects();
+        log.setLogs(String.format(" - Put %s %d card", card.getImogeSuit(), card.getRank() + 1), State.Log);
+    }
+
+    private void fadeOutPane(){
+        Animation fadeOutPane = chooseEightView.getFadeOutPaneAnimation();
+        fadeOutPane.play();
+        fadeOutPane.setOnFinished(e -> {
+            chooseEightView.getPane().getChildren().remove(chooseEightView.getOverlay());
+            eightTime = false;
+            time = 0;
+        });
     }
 
     @Override

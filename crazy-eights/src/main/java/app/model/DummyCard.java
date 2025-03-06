@@ -25,11 +25,12 @@ public class DummyCard {
         return card;
     }
 
-    public void setCard(Card card) {
+    public void setCard(Card card, boolean isEight) {
         this.card = card;
-        notifyObserver();
+        if (!isEight) {
+            notifyObserver();
+        }
     }
-
     public void notifyObserver(){
         controller.update(card);
     }

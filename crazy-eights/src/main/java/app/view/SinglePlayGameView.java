@@ -299,7 +299,7 @@ public class SinglePlayGameView {
 
             removed.setOnFinished(e -> {
                 curCards.remove(card);
-                dummyCard.setCard(curCardInfo.get(index).getKey());
+                dummyCard.setCard(curCardInfo.get(index).getKey(), false);
                 dummyCard.setImage();
                 curCardInfo.remove(index);
                 cardPlace.getChildren().remove(card);
@@ -361,6 +361,7 @@ public class SinglePlayGameView {
         animation.deckHoverAnimation(deck);
     }
     public Animation setGetCardAnimation(int prevHandCount){
+        deck.setDisable(true);
         tmpCard = animation.getCardAnimation(cardPlace);
         Animation cardAnimation = animation.getCardTranslateAnimation(tmpCard, prevHandCount);
         cardAnimation.play();
