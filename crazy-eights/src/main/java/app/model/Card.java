@@ -7,8 +7,8 @@ public class Card {
     private int rank;
 
     public Card() {
-        this.suit = 0;
-        this.rank = 0;
+        this.suit = -1;
+        this.rank = -1;
     }
     public Card(int suit, int rank) {
         this.suit = suit;
@@ -31,10 +31,22 @@ public class Card {
         if (suit == 0) return "♠";
         if (suit == 1) return "♥";
         if (suit == 2) return "♦";
-        return "♣";
+        if (suit == 3) return "♣";
+        return "Empty";
     }
 
     public String getCardURL(){
+        if(suit == -1 && rank == -1){
+            return "/card/Card-Empty.png";
+        }
         return String.format("/card/Card-%d-%d.png", suit, rank);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if(this == o) return true;
+        if(o == null || getClass() != o.getClass()) return false;
+        Card card = (Card) o;
+        return this.suit == card.suit && this.rank == card.rank;
     }
 }

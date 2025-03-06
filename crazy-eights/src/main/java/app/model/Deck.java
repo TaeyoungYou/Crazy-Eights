@@ -4,6 +4,7 @@ import app.controller.SinglePlayGameController;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 public class Deck {
     private ArrayList<Card> deck;
@@ -14,7 +15,7 @@ public class Deck {
         deck = new ArrayList<>();
     }
     public void generateDeck() {
-        int[] suits = {0,1,2,3};
+        int[] suits = {0,1};
         int[] ranks = {0,1,2,3,4,5,6,7,8,9,10,11,12};
         for(int suit : suits) {
             for(int rank : ranks) {
@@ -25,13 +26,21 @@ public class Deck {
     }
 
     public Card drawCard() {
-        if(deck.isEmpty()) {
-            System.out.println("Deck is empty");
-            return null;
-        }
         Card card = deck.remove(0);
         notification();
+        if(deck.isEmpty()) {
+            resettingDeck(controller.emptyDeck());
+        }
+        System.out.println(deck.size());
         return card;
+    }
+    private void resettingDeck(List<Player> players){
+        deck.clear();
+        generateDeck();
+        for(Player player : players){
+            deck.removeAll(player.getHand());
+        }
+        controller.resetDeck();
     }
 
     private void notification(){
