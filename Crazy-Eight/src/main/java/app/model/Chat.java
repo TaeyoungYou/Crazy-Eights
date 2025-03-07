@@ -23,6 +23,12 @@ public class Chat {
         messages.add(message);
         notifyMessage(message, player);
     }
+    public String getRecentMessage(){
+        return messages.getLast() + " " + messages.get(messages.size()-2) + " " + messages.get(messages.size()-3);
+    }
+    public String getLastMessage(){
+        return messages.getLast();
+    }
 
     private  void notifyMessage(String message){
         controller.updateChat(message, null);

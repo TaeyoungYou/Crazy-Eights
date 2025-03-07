@@ -1,6 +1,8 @@
 package app;
 
 import app.controller.MenuController;
+import app.model.AI;
+import app.model.Player;
 import app.view.MenuView;
 import javafx.application.Application;
 import javafx.scene.Scene;
@@ -24,6 +26,7 @@ public class App extends Application {    /**
      */
     @Override
     public void start(Stage primaryStage) throws Exception {
+        AI.generate("", new Player(0));
         StackPane root = new StackPane();
         Scene scene = new Scene(root);
         configStage(primaryStage);

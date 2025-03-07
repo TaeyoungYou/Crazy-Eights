@@ -41,6 +41,12 @@ public class StyleGame {
     public String sideLabelStyle() {
         return "-fx-text-fill: #dddddd;";
     }
+    public String errorLogStyle() {
+        return "-fx-text-fill: red;";
+    }
+    public String systemLogStyle() {
+        return "-fx-text-fill: green;";
+    }
 
     /**
      * Returns the style for the side chat box.
@@ -93,7 +99,7 @@ public class StyleGame {
                 "-fx-border-radius: 10px;" +
                 "-fx-background-radius: 20px;" +
                 "-fx-font-family: 'Comic Sans MS';" +
-                "-fx-font-size: 16px;" +
+                "-fx-font-size: 14px;" +
                 "-fx-text-fill: #17171A;" +
                 "-fx-padding: 10px;" +
                 "-fx-focus-color: transparent;" +

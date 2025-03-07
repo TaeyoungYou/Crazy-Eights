@@ -34,7 +34,7 @@ public class SinglePlayGameController implements CardObserver, DeckObserver, Log
     private int time = 0;
     private int turn = -1;
     private int playerRanPutTime = ThreadLocalRandom.current().nextInt(2, 10);
-    private boolean playerDoChat = new Random().nextDouble() < 0.7;
+    private boolean playerDoChat = Math.random() < 0.7;
     private int playerChatTime = ThreadLocalRandom.current().nextInt(1,playerRanPutTime);
     private boolean userDid = false;
     private boolean eightTime = false;
@@ -59,6 +59,12 @@ public class SinglePlayGameController implements CardObserver, DeckObserver, Log
         createPlayers();
 
         log.setLogs("Setting Game..." , State.System);
+        for(Player player: players){
+            if(!player.isSelf()){
+                chat.addMessage(AI.generate("Game start!", player), player);
+            }
+        }
+
         SequentialTransition sequence = new SequentialTransition();
 
         sequence.getChildren().add(getSixCards());
@@ -78,6 +84,12 @@ public class SinglePlayGameController implements CardObserver, DeckObserver, Log
                         time = 0;
 
                         updatePlayerTurn();
+                        if(playerDoChat && players.get(turn).getHand().size() == 1) chat.addMessage(AI.generate("I have only one cards left!", players.get(turn)), players.get(turn));
+                        else if(playerDoChat && players.get(turn).getHand().size() < 3) chat.addMessage(AI.generate("I have only two cards left!", players.get(turn)), players.get(turn));
+                        if(playerDoChat && players.get(turn).getHand().size() > 8) chat.addMessage(AI.generate("I have too many cards! I need a new strategy", players.get(turn)), players.get(turn));
+
+                        conversation(chat.getLastMessage());
+
                         if(players.get(turn).isSelf()){
                             mainView.setTimerEffect();
                         } else {
@@ -96,14 +108,14 @@ public class SinglePlayGameController implements CardObserver, DeckObserver, Log
                         temp.setOnFinished(e -> {
                             time = 0;
                             playerRanPutTime = ThreadLocalRandom.current().nextInt(2, 10);
-                            playerDoChat = new Random().nextDouble() < 0.7;
+                            playerDoChat = Math.random() < 0.7;
                             playerChatTime = ThreadLocalRandom.current().nextInt(1,playerRanPutTime);
                         });
                         temp.play();
                     }
 
-                    if(playerDoChat && time % playerChatTime == 0 && playerRanPutTime > 4 && !players.get(turn).isSelf()){
-                        chat.addMessage(CPU_Msg.getMessage(new Random().nextInt(CPU_Msg.getSize())), players.get(turn));
+                    if(playerDoChat && time == playerChatTime && playerRanPutTime > 4 && !players.get(turn).isSelf()){
+                        chat.addMessage(AI.generate("The player has been thinking for "+playerChatTime+" seconds", players.get(turn)), players.get(turn));
                     }
 
                     if(!userDid && !eightTime){
@@ -128,10 +140,14 @@ public class SinglePlayGameController implements CardObserver, DeckObserver, Log
                 return new Timeline(new KeyFrame(Duration.seconds(1), event -> {mainView.putCardAnimationWithPlayer().setOnFinished(e->{
                     putCardDummy(card, false);
                     player.removeCard(card);
-                });}));
+                });
+                }));
             }
         }
-        return new Timeline(new KeyFrame(Duration.seconds(1),event -> mainView.getCardAnimationToPlayer().setOnFinished(e -> player.setCard(deck))));
+        return new Timeline(new KeyFrame(Duration.seconds(1),event -> mainView.getCardAnimationToPlayer().setOnFinished(e -> {
+            if(playerDoChat) chat.addMessage(AI.generate("I have no playable cards and must draw a new one", players.get(turn)), players.get(turn));
+            player.setCard(deck);
+        })));
     }
     private void timeOut(Player player) {
         Timeline timeoutAnimation = new Timeline(new KeyFrame(Duration.seconds(1), event -> {
@@ -323,6 +339,7 @@ public class SinglePlayGameController implements CardObserver, DeckObserver, Log
             if(!msg.isEmpty()){
                 chat.addMessage(msg);
                 mainView.getMessage().clear();
+                conversation(msg);
             }
 
         });
@@ -389,6 +406,26 @@ public class SinglePlayGameController implements CardObserver, DeckObserver, Log
         removeDeckEffects();
         removeCardEffects();
         log.setLogs(String.format(" - Put %s %d card", card.getImogeSuit(), card.getRank() + 1), State.Log);
+    }
+
+    private void conversation(String msg){
+        Player player = players.get(new Random().nextInt(4));
+        if(!player.isSelf() && player != players.get(turn)){
+            double baseResponseChance = 0.5;
+            if(Math.random() < baseResponseChance) {
+                String context = chat.getRecentMessage();
+                boolean shouldAskQuestion = Math.random() < 0.4;
+
+                String prompt = "Here is the recent conversation:\n" + context +
+                        "\nRespond to " + msg +
+                        (shouldAskQuestion ? " Also, ask a relevant question to keep the conversation going." : "");
+                String responds = AI.generate(prompt, player);
+
+                chat.addMessage(responds, player);
+
+                if(Math.random() < 0.3) conversation(responds);
+            }
+        }
     }
 
     private void fadeOutPane(){

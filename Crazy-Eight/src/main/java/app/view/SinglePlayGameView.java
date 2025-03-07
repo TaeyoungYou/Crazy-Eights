@@ -4,7 +4,6 @@ import app.animation.AnimationGame;
 import app.model.*;
 import app.style.StyleGame;
 import javafx.animation.Animation;
-import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -13,7 +12,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
-import javafx.scene.control.TextFormatter;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -24,7 +22,6 @@ import javafx.scene.text.Font;
 import javafx.util.Pair;
 
 import java.util.*;
-import java.util.function.UnaryOperator;
 import java.util.stream.Collectors;
 
 /**
@@ -420,15 +417,14 @@ public class SinglePlayGameView {
     public void addLog(String message, State state){
         Label msg = new Label(message);
         msg.setFont(Font.font("Comic Sans MS", 16));
-        if(state == State.System) msg.setTextFill(Color.GREEN);
-        if(state == State.Error) msg.setTextFill(Color.RED);
+        if(state == State.System) msg.setStyle(style.systemLogStyle());
+        if(state == State.Error) msg.setStyle(style.errorLogStyle());
         if(state == State.Log) msg.setStyle(style.sideLabelStyle());
         log.getChildren().add(msg);
     }
 
     public void addMsgFromUser(String message){
         HBox box = new HBox();
-//        box.setMaxWidth(300);
 
         Label msg = new Label(message);
         msg.setWrapText(true);

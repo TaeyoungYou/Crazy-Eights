@@ -10,6 +10,7 @@ public class Player implements Comparable<Player>{
     private int id;
     private String icon;    // status와 score에 사용될
     private int score;      // score에 사용될
+    private Personality personality;
 
     private List<Card> hand;
     private List<PlayerObserver> observers;
@@ -27,6 +28,7 @@ public class Player implements Comparable<Player>{
         handleCard = false;
         hand = new ArrayList<>();
         observers = new ArrayList<>();
+        personality = Personality.getRandomPersonality();
     }
     public void removeCard(int index){
         hand.remove(index);
@@ -75,6 +77,9 @@ public class Player implements Comparable<Player>{
     public void setScore(int score){
         this.score = score;
         notifyObservers();
+    }
+    public Personality getPersonality(){
+        return personality;
     }
     public boolean isSelf(){
         return self;
