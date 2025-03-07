@@ -5,18 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="359720e0-8497-48d6-9a4e-8ff9b1ede7bb" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/../ChatBotTest/src/OpenAiExample.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/app/model/AI.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/app/model/Personality.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/config.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ChatBotTest/src/OpenAiExample.java" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/app/App.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/App.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/app/controller/SinglePlayGameController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/controller/SinglePlayGameController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/app/model/Chat.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/model/Chat.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/app/model/Player.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/model/Player.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/app/style/StyleGame.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/style/StyleGame.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/app/view/SinglePlayGameView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/view/SinglePlayGameView.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -94,7 +84,7 @@
       <workItem from="1741237464203" duration="3220000" />
       <workItem from="1741242628658" duration="5716000" />
       <workItem from="1741305111065" duration="721000" />
-      <workItem from="1741305997271" duration="12285000" />
+      <workItem from="1741305997271" duration="12682000" />
     </task>
     <servers />
   </component>
