@@ -27,10 +27,10 @@ public class Deck {
 
     public Card drawCard() {
         Card card = deck.remove(0);
-        notification();
         if(deck.isEmpty()) {
             resettingDeck(controller.emptyDeck());
         }
+        notification();
         return card;
     }
     private void resettingDeck(List<Player> players){

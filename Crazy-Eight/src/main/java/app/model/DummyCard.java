@@ -25,9 +25,9 @@ public class DummyCard {
         return card;
     }
 
-    public void setCard(Card card, boolean isEight) {
+    public void setCard(Card card, boolean isCardTime) {
         this.card = card;
-        if (!isEight) {
+        if (!isCardTime) {
             notifyObserver();
         }
     }

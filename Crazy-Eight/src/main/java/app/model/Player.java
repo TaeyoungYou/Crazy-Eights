@@ -5,6 +5,7 @@ import app.view.PlayerStatusView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class Player implements Comparable<Player>{
     private int id;
@@ -88,11 +89,30 @@ public class Player implements Comparable<Player>{
         this.self = true;
     }
 
+    public int getMostShape(){
+        if(Math.random() < 0.8){
+            int spade = 0, heart = 0, diamond = 0, club = 0;
+            for(Card card : hand){
+                switch (card.getSuit()){
+                    case 0 -> spade++;
+                    case 1 -> heart++;
+                    case 2 -> diamond++;
+                    case 3 -> club++;
+                }
+            }
+            int maxCount = Math.max(Math.max(diamond, club), Math.max(spade, heart));
+
+            if(maxCount == spade) return 0;
+            if(maxCount == heart) return 1;
+            if(maxCount == diamond) return 2;
+            return 3;
+        }
+        return new Random().nextInt(4);
+    }
+
+
     public void addObserver(PlayerObserver observer){
         observers.add(observer);
-    }
-    public void removeObserver(PlayerObserver observer){
-        observers.remove(observer);
     }
     public void notifyObservers(){
         for(PlayerObserver observer : observers){

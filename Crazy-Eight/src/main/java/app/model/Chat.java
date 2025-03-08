@@ -24,9 +24,15 @@ public class Chat {
         notifyMessage(message, player);
     }
     public String getRecentMessage(){
-        return messages.getLast() + " " + messages.get(messages.size()-2) + " " + messages.get(messages.size()-3);
+        if(messages.size() < 3) return getLastMessage();
+        String message="";
+        for(int i = messages.size() - 3; i <messages.size(); i++){
+            message += messages.get(i)+" ";
+        }
+        return message;
     }
     public String getLastMessage(){
+        if(messages.isEmpty()) return "Start Game!";
         return messages.getLast();
     }
 
