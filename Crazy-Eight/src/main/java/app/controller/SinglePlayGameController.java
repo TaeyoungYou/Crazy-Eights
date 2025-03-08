@@ -141,27 +141,29 @@ public class SinglePlayGameController implements CardObserver, DeckObserver, Log
     }
     private void playerPutCard(Player player) {
         if(stackGetCard > 1) {
-            for(Card card : player.getHand()) {
-                if(dummyCard.getCard().getRank() == card.getRank()) {
-                    cardTime = true;
-                    Animation putCard = mainView.putCardAnimationWithPlayer();
-                    putCard.setOnFinished(e -> {
-                        putCardDummy(card, false);
-                        player.removeCard(card);
-                        time = 0;
-                        cardTime = false;
-                        playerRanPutTime = ThreadLocalRandom.current().nextInt(2, 10);
-                        playerDoChat = Math.random() < 0.7;
-                        playerChatTime = ThreadLocalRandom.current().nextInt(1,playerRanPutTime);
-                        if(DEBUG) System.out.println(String.format("Turn %d done, Stack %d", turn, stackGetCard));
-                    });
-                    putCard.play();
-                    return;
+            if(dummyCard.getCard().getRank() == 1){
+                for(Card card : player.getHand()) {
+                    if(dummyCard.getCard().getRank() == card.getRank()) {
+                        cardTime = true;
+                        Animation putCard = mainView.putCardAnimationWithPlayer();
+                        putCard.setOnFinished(e -> {
+                            putCardDummy(card, false);
+                            player.removeCard(card);
+                            time = 0;
+                            cardTime = false;
+                            playerRanPutTime = ThreadLocalRandom.current().nextInt(2, 10);
+                            playerDoChat = Math.random() < 0.7;
+                            playerChatTime = ThreadLocalRandom.current().nextInt(1,playerRanPutTime);
+                            if(DEBUG) System.out.println(String.format("Turn %d done, Stack %d", turn, stackGetCard));
+                        });
+                        putCard.play();
+                        return;
+                    }
                 }
+                cardTime = true;
+                drawCards(player);
+                return;
             }
-            cardTime = true;
-            drawCards(player);
-            return;
         }
 
         for(Card card: player.getHand()){
@@ -380,7 +382,7 @@ public class SinglePlayGameController implements CardObserver, DeckObserver, Log
                 cardImg.setOnMouseReleased(ev -> {
                     Card dummy = dummyCard.getCard();
                     if(stackGetCard > 1){
-                        if(dummy.getRank() == card.getRank()){
+                        if(dummy.getRank() == 1 && dummy.getRank() == card.getRank()){
                             mainView.setDragReleased(ev, cardImg, player, dummyCard, true);
                         }else{
                             mainView.setDragReleased(ev, cardImg, player, dummyCard, false);
@@ -463,7 +465,7 @@ public class SinglePlayGameController implements CardObserver, DeckObserver, Log
 
         if(card.getRank() == 7) {
             whenCardEight();
-        } else if (card.getRank() == 2) {
+        } else if (card.getRank() == 1) {
             whenCardTwo();
         } else if (players.get(turn).isSelf()) {
             time = 0;
