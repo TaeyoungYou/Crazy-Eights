@@ -25,14 +25,20 @@ public class DummyCard {
         return card;
     }
 
-    public void setCard(Card card, boolean isCardTime) {
+    public void setCard(Card card, boolean skipObserver) {
+        Card prevCard = this.card;
         this.card = card;
-        if (!isCardTime) {
+        if(!skipObserver) {
             notifyObserver();
+            notifyAddObserver(prevCard);
         }
     }
     public void notifyObserver(){
         controller.update(card);
+    }
+
+    public void notifyAddObserver(Card card){
+        controller.updateAddToDeck(card);
     }
 
 }

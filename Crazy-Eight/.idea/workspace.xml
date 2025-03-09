@@ -5,13 +5,17 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="359720e0-8497-48d6-9a4e-8ff9b1ede7bb" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/src/main/java/app/animation/AnimationCharacter.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/app/model/GameStatusManager.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/app/style/StyleCharacter.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/app/view/CharacterChooseView.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/app/animation/AnimationEight.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/animation/AnimationEight.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/app/animation/AnimationMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/animation/AnimationMenu.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/app/controller/SinglePlayGameController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/controller/SinglePlayGameController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/app/model/AI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/model/AI.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/app/model/Chat.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/model/Chat.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/app/model/CardObserver.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/model/CardObserver.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/app/model/Deck.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/model/Deck.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/app/model/DummyCard.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/model/DummyCard.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/app/model/Personality.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/model/Personality.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/app/model/Player.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/model/Player.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -22,13 +26,16 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="Class" />
         <option value="Enum" />
+        <option value="Class" />
       </list>
     </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="file://$PROJECT_DIR$/src/main/java/app/model/Deck.java" root0="FORCE_HIGHLIGHTING" />
   </component>
   <component name="ProjectColorInfo">{
   &quot;customColor&quot;: &quot;&quot;,
@@ -95,7 +102,7 @@
       <workItem from="1741324605145" duration="116000" />
       <workItem from="1741325454053" duration="6796000" />
       <workItem from="1741361727585" duration="536000" />
-      <workItem from="1741362770919" duration="22273000" />
+      <workItem from="1741362770919" duration="63172000" />
     </task>
     <servers />
   </component>

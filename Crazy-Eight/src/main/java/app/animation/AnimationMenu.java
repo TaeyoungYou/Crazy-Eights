@@ -187,7 +187,9 @@ public class AnimationMenu {
         fadeOutParallel.play();
         fadeOutParallel.setOnFinished(event -> {
             SinglePlayGameController singlePlayGameController = new SinglePlayGameController(scene);
-            singlePlayGameController.startGame();
+            singlePlayGameController.selectCharacter(()->{
+                singlePlayGameController.startGame();
+            });
         });
     }
 

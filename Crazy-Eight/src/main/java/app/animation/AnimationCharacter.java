@@ -9,7 +9,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.util.Duration;
 
-public class AnimationEight {
+public class AnimationCharacter {
     public void fadeInPane(StackPane pane){
         FadeTransition fadeIn = new FadeTransition(Duration.seconds(0.5), pane);
         fadeIn.setFromValue(0.0);
@@ -22,7 +22,7 @@ public class AnimationEight {
         fadeOut.setToValue(0.0);
         return fadeOut;
     }
-    public void cardHoverAnimation(ImageView card){
+    public void characterHoverAnimation(ImageView card){
         ScaleTransition cardUp = new ScaleTransition(Duration.millis(200), card);
         cardUp.setToX(1.1);
         cardUp.setToY(1.1);

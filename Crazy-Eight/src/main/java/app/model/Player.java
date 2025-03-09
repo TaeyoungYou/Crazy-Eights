@@ -67,10 +67,10 @@ public class Player implements Comparable<Player>{
         handleCard = true;
         notifyObservers();
     }
-    public void setCard(Deck deck){
+    public void setCard(Deck deck, boolean skipObserver){
         hand.add(deck.drawCard());
         handleCard = true;
-        notifyObservers();
+        if(!skipObserver) notifyObservers();
     }
     public int getScore(){
         return score;

@@ -26,20 +26,17 @@ public class Deck {
     }
 
     public Card drawCard() {
-        Card card = deck.remove(0);
-        if(deck.isEmpty()) {
-            resettingDeck(controller.emptyDeck());
-        }
+        Card card = deck.removeFirst();
         notification();
         return card;
     }
-    private void resettingDeck(List<Player> players){
-        deck.clear();
-        generateDeck();
-        for(Player player : players){
-            deck.removeAll(player.getHand());
-        }
-        controller.resetDeck();
+    public void add(Card card) {
+        deck.add(card);
+        Collections.shuffle(deck);
+    }
+
+    public int deckSize(){
+        return deck.size();
     }
 
     private void notification(){
