@@ -1,6 +1,6 @@
 package app.style;
 
-public class StyleSetting {
+public class StyleScoring {
 
     public String overlayStyle(){
         return "-fx-background-color: rgba(0,0,0,0.8);";
@@ -24,24 +24,16 @@ public class StyleSetting {
                 "-fx-font-weight: bold;";
     }
 
-    public String setSliderStyle() {
-        return "-fx-background-color: transparent;" +  // 기본 바 색상
-                "-fx-control-inner-background: transparent;" +
-                "-fx-pref-height: 10px;";  // 바의 높이
-    }
-
-    public String setThumbStyle(){
-        return "-fx-background-color: #17171a;" +
-                "-fx-background-radius: 50%;" +
-                "-fx-border-color: #dddddd;" +
-                "-fx-border-width: 3px;" +
-                "-fx-pref-width: 20px;" +
-                "-fx-pref-height: 20px;";
-    }
-    public String setTrackStyle(){
+    public String loadingButtonCommonStyle() {
         return "-fx-background-color: #dddddd;" +
-                "-fx-background-radius: 5px;" +
-                "-fx-pref-height: 6px;";
+                "-fx-text-fill: #1e1e1e;" +
+                "-fx-background-insets: 0;" +
+                "-fx-background-radius: 10px;" +
+                "-fx-font-size: 20px;" +
+                "-fx-font-family: 'Comic Sans MS';" +
+                "-fx-font-weight: bold;" +
+                "-fx-alignment: center;" +
+                "-fx-text-alignment: center;";
     }
 
 }

@@ -28,12 +28,12 @@ public class PlayerScoreView implements PlayerObserver {
 
         mainView = _mainView;
         style = new StyleGame();
-        playerScoreBox = new HBox();
         updatePlayerScore();
     }
 
     @Override
     public void update(Player player, boolean handleCard) {
+        updatePlayerScore();
         playerIcon.setImage(new Image(getClass().getResource(player.getIcon()).toExternalForm()));
         playerScore.setText((player.getScore() + ""));
         mainView.setScoreBox(playerScoreBox, player);
@@ -41,6 +41,8 @@ public class PlayerScoreView implements PlayerObserver {
 
 
     private void updatePlayerScore() {
+        playerScoreBox = new HBox();
+
         playerIcon.setFitWidth(70);
         playerIcon.setFitHeight(70);
 

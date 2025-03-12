@@ -52,7 +52,7 @@ public class SinglePlayGameView {
     private Label scoreTitle;
     private Label timer;
 
-    private ImageView volume;
+    private ImageView restart;
     private ImageView setting;
     private ImageView back;
     private ImageView deck;
@@ -105,14 +105,14 @@ public class SinglePlayGameView {
         buttonBar = new HBox();
         buttonBar.setSpacing(40);
         buttonBar.setAlignment(Pos.CENTER);
-        volume = new ImageView(new Image(getClass().getResource("/button/volume-on.png").toExternalForm()));
+        restart = new ImageView(new Image(getClass().getResource("/button/restart.png").toExternalForm()));
         setting = new ImageView(new Image(getClass().getResource("/button/settings.png").toExternalForm()));
         back = new ImageView(new Image(getClass().getResource("/button/back.png").toExternalForm()));
 
         animation.buttonAnimation(setting);
-        animation.buttonAnimation(volume);
+        animation.buttonAnimation(restart);
         animation.buttonAnimation(back);
-        buttonBar.getChildren().addAll(volume, setting, back);
+        buttonBar.getChildren().addAll(restart, setting, back);
 
         sidebar.getChildren().add(buttonBar);
 
@@ -206,7 +206,6 @@ public class SinglePlayGameView {
         scoreBox.setPadding(new Insets(10, 10, 10, 20));
         scoreBox.setSpacing(10);
 
-//        players.sort(Comparator.reverseOrder());
         for(int i = 0; i < playerNum; ++i){
             HBox playerScoreBox = new HBox();
             scoreBox.getChildren().add(playerScoreBox);     // Empty Box, it will be initialized by PlayerScoreView, subView
@@ -230,8 +229,8 @@ public class SinglePlayGameView {
     public ImageView getSetting(){
         return setting;
     }
-    public ImageView getVolume(){
-        return volume;
+    public ImageView getRestart(){
+        return restart;
     }
     public ImageView getCardDummy(){
         return cardDummy;
@@ -313,25 +312,23 @@ public class SinglePlayGameView {
         cardPlace.getChildren().remove(card);
         cardPlace.getChildren().add(index, card);
     }
-    public void setMusicVolume() {
-        if (Music.isVolumeOn()) {
-            volume.setImage(new Image(getClass().getResource("/button/volume-off.png").toExternalForm()));
-            Music.volumeOff();
-        } else {
-            volume.setImage(new Image(getClass().getResource("/button/volume-on.png").toExternalForm()));
-            Music.volumeOn();
-        }
-    }
+
     public void setPlayerStatus(HBox newPlayerStatus, Label cardLeft, Player player, boolean handleCard) {
-        gamePlayerStatus.getChildren().set(player.getId(), newPlayerStatus);
+        gamePlayerStatus.getChildren().set(player.getStatusId(), newPlayerStatus);
         if(handleCard){
-            animation.addLeftCardAnimation(cardLeft);   // 수정해야됨. 그 플레이어가 카드를 받을 때만 발동되어야함.
+            animation.addLeftCardAnimation(cardLeft);
         }
     }
     public void setScoreBox(HBox newScoreBox, Player player) {
-        scoreBox.getChildren().set(player.getId(), newScoreBox);
+        scoreBox.getChildren().set(player.getScoreId(), newScoreBox);
     }
 
+    public VBox getGamePlayerStatus(){
+        return gamePlayerStatus;
+    }
+    public VBox getScoreBox(){
+        return scoreBox;
+    }
 
     /**
      * Creates and displays the deck and a placeholder for the current card.
@@ -409,7 +406,7 @@ public class SinglePlayGameView {
     }
     public Animation getCardAnimationToUser(){
         tmpCard = animation.getCardAnimation(cardPlace);
-        Animation getCardTrans = animation.getCardTranslateAnimation(tmpCard,curCards.size());
+        Animation getCardTrans = animation.getCardTranslateAnimation(tmpCard, curCards.size());
         getCardTrans.play();
         return getCardTrans;
     }
@@ -451,5 +448,9 @@ public class SinglePlayGameView {
         box.getChildren().addAll(icon, msg);
         box.setAlignment(Pos.CENTER_LEFT);
         chats.getChildren().add(box);
+    }
+
+    public void resetGame(Scene scene, BorderPane pane, List<Player> players){
+        animation.resetFadeOutGame(scene, pane, players);
     }
 }

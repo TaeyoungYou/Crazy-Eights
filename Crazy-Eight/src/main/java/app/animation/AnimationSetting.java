@@ -37,4 +37,6 @@ public class AnimationSetting {
         fadeOut.play();
         fadeOut.setOnFinished(e -> root.getChildren().remove(pane));
     }
+
+
 }

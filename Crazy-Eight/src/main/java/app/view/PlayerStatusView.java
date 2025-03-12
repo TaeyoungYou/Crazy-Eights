@@ -30,7 +30,6 @@ public class PlayerStatusView implements PlayerObserver {
         playerCardLeft = new Label(String.format("x %d", player.getCardLeft()));
 
         mainView = _mainView;
-        playerStatus = new HBox();
         style = new StyleGame();
 
         updatePlayerStatus();
@@ -38,6 +37,7 @@ public class PlayerStatusView implements PlayerObserver {
     @Override
     public void update(Player player, boolean handleCard) {
         if(!player.isSelf()){
+            updatePlayerStatus();
             playerIcon.setImage(new Image(getClass().getResource(player.getIcon()).toExternalForm()));
             playerCardLeft.setText("x " + (player.getCardLeft()+""));
             if(player.isMyTurn()){
@@ -59,6 +59,8 @@ public class PlayerStatusView implements PlayerObserver {
     }
 
     private void updatePlayerStatus() {
+        playerStatus = new HBox();
+
         playerIcon.setFitWidth(150);
         playerIcon.setFitHeight(150);
 

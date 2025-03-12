@@ -1,6 +1,8 @@
 package app.animation;
 
 import app.controller.MenuController;
+import app.controller.SinglePlayGameController;
+import app.model.Player;
 import app.style.StyleGame;
 import app.view.MenuView;
 import javafx.animation.*;
@@ -13,9 +15,12 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import javafx.util.Duration;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -239,6 +244,28 @@ public class AnimationGame {
             fadeOut.setToValue(0.0);
             parallelFadeOut.getChildren().add(fadeOut);
         }
+    }
+
+    public void resetFadeOutGame(Scene scene, BorderPane pane, List<Player> players) {
+        ParallelTransition fadeOutParallel = new ParallelTransition();
+        for(Node node : pane.getChildren()) {
+            FadeTransition fadeOut = new FadeTransition(Duration.seconds(1.5), node);
+            fadeOut.setFromValue(1.0);
+            fadeOut.setToValue(0.0);
+            fadeOutParallel.getChildren().add(fadeOut);
+        }
+        fadeOutParallel.play();
+        fadeOutParallel.setOnFinished(event -> {
+            if(players == null){
+                SinglePlayGameController singlePlayGameController = new SinglePlayGameController(scene);
+                singlePlayGameController.selectCharacter(()->{
+                    singlePlayGameController.startGame();
+                });
+            } else {
+                SinglePlayGameController singlePlayGameController = new SinglePlayGameController(scene);
+                singlePlayGameController.delaySecond(()->singlePlayGameController.resetGame(players));
+            }
+        });
     }
 
 }

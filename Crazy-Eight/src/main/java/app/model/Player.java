@@ -8,7 +8,8 @@ import java.util.List;
 import java.util.Random;
 
 public class Player implements Comparable<Player>{
-    private int id;
+    private int scoreId;
+    private int statusId;
     private String icon;    // status와 score에 사용될
     private int score;      // score에 사용될
     private Personality personality;
@@ -21,7 +22,8 @@ public class Player implements Comparable<Player>{
     private boolean handleCard;
 
     public Player(int index){
-        id = index;
+        scoreId = index;
+        statusId = index;
         icon = "/avatar/User-01.png";
         score = 0;
         self = false;
@@ -31,16 +33,30 @@ public class Player implements Comparable<Player>{
         observers = new ArrayList<>();
         personality = Personality.getRandomPersonality();
     }
+    public void copyPlayer(Player player){
+        this.icon = player.icon;
+        this.score = player.score;
+        this.self = player.self;
+        this.myTurn = player.myTurn;
+        this.handleCard = player.handleCard;
+        this.hand = player.hand;
+        this.observers = player.observers;
+    }
     public void removeCard(int index){
         hand.remove(index);
         notifyObservers();
     }
-    public int getId(){
-        return id;
+    public int getScoreId(){
+        return scoreId;
     }
-    public void setId(int id){
-        this.id = id;
-        notifyObservers();
+    public void setScoreId(int scoreId){
+        this.scoreId = scoreId;
+    }
+    public void setStatusId(int statusId){
+        this.statusId = statusId;
+    }
+    public int getStatusId(){
+        return statusId;
     }
     public void setIcon(String url){
         icon = url;
@@ -75,9 +91,8 @@ public class Player implements Comparable<Player>{
     public int getScore(){
         return score;
     }
-    public void setScore(int score){
-        this.score = score;
-        notifyObservers();
+    public void addScore(int score){
+        this.score += score;
     }
     public Personality getPersonality(){
         return personality;
@@ -109,7 +124,13 @@ public class Player implements Comparable<Player>{
         }
         return new Random().nextInt(4);
     }
+    public void resetHand(){
+        hand.clear();
+    }
 
+    public void callNotify(){
+        notifyObservers();
+    }
 
     public void addObserver(PlayerObserver observer){
         observers.add(observer);

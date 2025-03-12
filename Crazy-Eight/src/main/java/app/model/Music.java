@@ -6,7 +6,7 @@ import javafx.scene.media.MediaPlayer;
 public class Music {
     private static Music music = null;
     private static MediaPlayer mediaPlayer;
-    private static boolean volumeOn = true;
+    private static double volume = 0.5;
 
     private Music(){}
 
@@ -23,7 +23,7 @@ public class Music {
         Media media = new Media(Music.class.getResource("/sound/music.mp3").toExternalForm());
         mediaPlayer = new MediaPlayer(media);
         mediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);
-        mediaPlayer.setVolume(volumeOn ? 0.5 : 0.0);
+        mediaPlayer.setVolume(volume);
     }
 
     public static void play(){
@@ -31,15 +31,13 @@ public class Music {
         mediaPlayer.play();
     }
 
-    public static void volumeOn(){
-        volumeOn = true;
-        mediaPlayer.setVolume(0.5);
+    public static void setVolume(double value){
+        volume = value;
+        mediaPlayer.setVolume(value);
     }
-    public static void volumeOff(){
-        volumeOn = false;
-        mediaPlayer.setVolume(0.0);
+
+    public static double getVolume(){
+        return volume;
     }
-    public static boolean isVolumeOn(){
-        return volumeOn;
-    }
+
 }

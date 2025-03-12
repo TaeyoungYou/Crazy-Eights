@@ -10,10 +10,7 @@ import javafx.scene.layout.StackPane;
 import javafx.util.Duration;
 import javafx.util.Pair;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class SinglePlayGameController implements CardObserver, DeckObserver, LogObserver, ChatObserver {
@@ -25,6 +22,7 @@ public class SinglePlayGameController implements CardObserver, DeckObserver, Log
     private SettingView settingView;
     private ChooseEightView chooseEightView;
     private CharacterChooseView characterChooseView;
+    private ScoringView scoringView;
 
     private List<Player> players = new ArrayList<>();
     private final int playerNum = 4;
@@ -46,6 +44,9 @@ public class SinglePlayGameController implements CardObserver, DeckObserver, Log
 
     private Timeline game = null;
 
+    private final int[] scoreTable = {5,3,1,0};
+
+
     public SinglePlayGameController(Scene _scene) {
         scene = _scene;
         root = new StackPane();
@@ -54,6 +55,7 @@ public class SinglePlayGameController implements CardObserver, DeckObserver, Log
         settingView = new SettingView(root);
         chooseEightView = new ChooseEightView(root);
         characterChooseView = new CharacterChooseView(root);
+        scoringView = new ScoringView(root);
         deck = new Deck(this);
         dummyCard = new DummyCard(this);
         log = new Log(this);
@@ -103,6 +105,7 @@ public class SinglePlayGameController implements CardObserver, DeckObserver, Log
             delaySecond(()->{
                 gameLoop();
                 game.play();
+                disableButtons(false);
             });
         });
 
@@ -168,6 +171,11 @@ public class SinglePlayGameController implements CardObserver, DeckObserver, Log
                     // 이 플래그가 중요! 항상 carTime은 턴이 바뀔때 딱 한번 초기화를 시킴. 또한, 카드가 움직이고, 애니메이션이 끝날때 false로 끝남을 알림
                     // 이것이 false로 바뀔 때까지 그 플레이어의 턴은 끝나지 않음
                     if(statusManager.isPassTurn()){
+                        if(players.get(statusManager.getTurn()).getCardLeft() == 0){
+                            endGame();
+                        }
+
+
                         statusManager.resetTime();
 
                         playerRanPutTime = ThreadLocalRandom.current().nextInt(2, 10);
@@ -180,6 +188,70 @@ public class SinglePlayGameController implements CardObserver, DeckObserver, Log
 
         game = gameLoop;
     }
+    private void endGame(){
+        game.pause();
+        if(DEBUG) System.out.println("Game is done..!");
+        scoringView.generate(players, scoring());
+        scoringView.getContinueButton().setOnMouseClicked(e->{
+            scoringView.fadeOutPane();
+            mainView.resetGame(scene, mainPane, players);
+            game.stop();
+        });
+        scoringView.getExitButton().setOnMouseClicked(e->{
+            scoringView.fadeOutPane();
+            mainView.setFadeOutSinglePlay(scene);
+            game.stop();
+        });
+    }
+
+    private Map<Player, Pair<Integer, Integer>> scoring() {
+        // 1. 플레이어를 남은 카드 수 기준으로 정렬
+        players.sort(Comparator.comparingInt(Player::getCardLeft));
+
+        Map<Player, Pair<Integer, Integer>> scoreMap = new HashMap<>(); // {Player -> (순위, 점수)}
+        int[] scoreTable = {5, 3, 1, 0};  // 1등, 2등, 3등, 4등 점수
+
+        int rank = 1;  // 현재 순위
+        int scoreIndex = 0;  // 점수 테이블 인덱스
+        int countInRank = 0;  // 현재 등수 내에서 같은 카드 개수를 가진 사람 수
+        boolean hasThirdPlace = false;  // 3등 존재 여부
+
+        for (int i = 0; i < players.size(); ++i) {
+            // 이전 플레이어와 카드 수가 다르면 순위 증가
+            if (i > 0 && players.get(i).getCardLeft() > players.get(i - 1).getCardLeft()) {
+                if (rank == 1) rank = 2;  // 1등은 1명만
+                else if (rank == 2 && countInRank >= 3) rank = 3;  // 2등이 3명이면 그 다음은 3등
+                else if (rank == 3 && countInRank >= 2) rank = 4;  // 3등이 2명이면 4등
+                else rank++;
+
+                if (rank == 3) hasThirdPlace = true; // 3등 등장 확인
+                scoreIndex = Math.min(rank - 1, 3); // 점수 테이블 조정
+                countInRank = 0;
+            }
+
+            countInRank++;  // 현재 등수에 몇 명 있는지 카운트
+            int score = scoreTable[scoreIndex];  // 현재 등수에 맞는 점수 적용
+            players.get(i).addScore(score);
+
+            // 플레이어별 순위 및 점수 저장
+            scoreMap.put(players.get(i), new Pair<>(rank, score));
+        }
+
+        // 3등이 없으면, 4등을 3등으로 승격
+        if (!hasThirdPlace) {
+            for (Map.Entry<Player, Pair<Integer, Integer>> entry : scoreMap.entrySet()) {
+                if (entry.getValue().getKey() == 4) {
+                    scoreMap.put(entry.getKey(), new Pair<>(3, scoreTable[2]));  // 3등 점수 (1점)으로 변경
+                }
+            }
+        }
+
+        players.sort(Comparator.comparingInt(p -> scoreMap.get(p).getKey()));
+
+        return scoreMap;
+    }
+
+
     private void playerPutCard(Player player) {
         // 이 상황은 stack에 카드가 쌓임 > 예상 상황 : 2
         if(stackGetCard > 1) {
@@ -431,6 +503,12 @@ public class SinglePlayGameController implements CardObserver, DeckObserver, Log
     }
 
     private void whenCardFour(){
+        if(DEBUG) System.out.printf("Card Left %d\n",players.get(statusManager.getTurn()).getCardLeft());
+        if(players.get(statusManager.getTurn()).getCardLeft() == 1){
+            players.get(statusManager.getTurn()).removeCard(0);
+            endGame();
+            return;
+        }
         statusManager.setFourTime();
         stackGetCard += 3;
 
@@ -582,6 +660,60 @@ public class SinglePlayGameController implements CardObserver, DeckObserver, Log
 
         return timeline;
     }
+    public void resetGame(List<Player> prevPlayers){
+        initPage();
+        drawGamePage();
+
+        deck.generateDeck();
+
+        transformPlayers(prevPlayers);
+        for(Player player: players) System.out.println(player.getScore());
+
+        log.setLogs("Setting Game..." , State.System);
+
+        SequentialTransition sequence = new SequentialTransition();
+
+        sequence.getChildren().add(getSixCards());
+
+        sequence.getChildren().add(putStartDummyCard());
+
+        sequence.play();
+
+        sequence.setOnFinished(event -> {
+            delaySecond(()->{
+                gameLoop();
+                game.play();
+                disableButtons(false);
+            });
+        });
+        System.out.println("New Game Start");
+    }
+
+    private void transformPlayers(List<Player> prevPlayers) {
+        players = new ArrayList<>();
+        int scoreId=0;
+        int statusId = 0;
+        for(int i=0; i<4; ++i){
+            Player prevPlayer = prevPlayers.get(i);
+            Player player = new Player(i);
+            players.add(player);
+            player.copyPlayer(prevPlayer);
+            if(prevPlayer.isSelf()) {
+                player.setSelf();
+                player.setScoreId(scoreId++);
+                player.setStatusId(3);
+                new PlayerHandView(player, mainView);
+                new PlayerScoreView(player, mainView);
+            }else{
+                player.setScoreId(scoreId++);
+                player.setStatusId(statusId++);
+                new PlayerStatusView(player, mainView);
+                new PlayerScoreView(player, mainView);
+            }
+            player.resetHand();
+            player.callNotify();
+        }
+    }
 
     private void createPlayers(){
         Random random = new Random();
@@ -602,6 +734,14 @@ public class SinglePlayGameController implements CardObserver, DeckObserver, Log
             chosenPlayers.add(url);
         }
         createUser();
+    }
+    private void createUser(){
+        Player player = new Player(playerNum-1);
+        player.setSelf();
+        players.add(player);
+        new PlayerScoreView(player, mainView);
+        new PlayerHandView(player, mainView);
+        player.setIcon(userCharacter);
     }
 
     private ParallelTransition getSixCards(){
@@ -633,12 +773,12 @@ public class SinglePlayGameController implements CardObserver, DeckObserver, Log
                         })
                 );
             }
-            giveCard.setCycleCount(6);
+            giveCard.setCycleCount(2);
             pt.getChildren().add(giveCard);
         }
         return pt;
     }
-    private void delaySecond(Runnable action){
+    public void delaySecond(Runnable action){
         PauseTransition delay = new PauseTransition(Duration.seconds(1)); // 1초 딜레이
         delay.setOnFinished(ev -> action.run());
         delay.play();
@@ -647,15 +787,6 @@ public class SinglePlayGameController implements CardObserver, DeckObserver, Log
         PauseTransition delay = new PauseTransition(Duration.millis(500)); // 0.5초 딜레이
         delay.setOnFinished(ev -> action.run());
         delay.play();
-    }
-
-    private void createUser(){
-        Player player = new Player(playerNum-1);
-        player.setSelf();
-        players.add(player);
-        new PlayerScoreView(player, mainView);
-        new PlayerHandView(player, mainView);
-        player.setIcon(userCharacter);
     }
 
     private void removeDeckEffects(){
@@ -693,7 +824,10 @@ public class SinglePlayGameController implements CardObserver, DeckObserver, Log
             game.stop();
         });
         mainView.getSetting().setOnMouseClicked(event -> settingView.generate());
-        mainView.getVolume().setOnMouseClicked(event -> mainView.setMusicVolume());
+        mainView.getRestart().setOnMouseClicked(event -> {
+            mainView.resetGame(scene, mainPane, null);
+            game.stop();
+        });
         mainView.getMessage().setOnAction(event -> {
             String msg = mainView.getMessage().getText();
             if(!msg.isEmpty()){
@@ -702,6 +836,8 @@ public class SinglePlayGameController implements CardObserver, DeckObserver, Log
             }
 
         });
+
+        disableButtons(true);
     }
 
     private void initPage(){
@@ -731,5 +867,12 @@ public class SinglePlayGameController implements CardObserver, DeckObserver, Log
         }
         return false;
     }
+
+    private void disableButtons(boolean disable) {
+        mainView.getBack().setDisable(disable);
+        mainView.getSetting().setDisable(disable);
+        mainView.getRestart().setDisable(disable);
+    }
+
 
 }
