@@ -5,20 +5,16 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="359720e0-8497-48d6-9a4e-8ff9b1ede7bb" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/app/animation/AnimationScoring.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/app/style/StyleScoring.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/app/view/ScoringView.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/button/restart.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/app/animation/AnimationGame.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/animation/AnimationGame.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/app/animation/AnimationScoring.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/animation/AnimationScoring.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/app/animation/AnimationSetting.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/animation/AnimationSetting.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/app/controller/SinglePlayGameController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/controller/SinglePlayGameController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/app/model/Card.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/model/Card.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/app/model/Deck.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/model/Deck.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/app/model/Music.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/model/Music.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/app/model/Player.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/model/Player.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/app/model/Setting.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/model/Setting.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/app/style/StyleGame.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/style/StyleGame.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/app/style/StyleSetting.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/style/StyleSetting.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/app/view/PlayerScoreView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/view/PlayerScoreView.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/app/view/PlayerStatusView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/view/PlayerStatusView.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/app/view/ScoringView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/view/ScoringView.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/app/view/SettingView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/view/SettingView.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/app/view/SinglePlayGameView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/view/SinglePlayGameView.java" afterDir="false" />
     </list>
@@ -125,7 +121,7 @@
       <workItem from="1741709514253" duration="204000" />
       <workItem from="1741709796044" duration="103000" />
       <workItem from="1741718347943" duration="39000" />
-      <workItem from="1741809437800" duration="5606000" />
+      <workItem from="1741809437800" duration="10552000" />
     </task>
     <servers />
   </component>

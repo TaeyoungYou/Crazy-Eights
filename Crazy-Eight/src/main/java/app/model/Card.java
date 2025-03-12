@@ -23,6 +23,13 @@ public class Card {
     public int getRank() {
         return rank;
     }
+    public String getRankString(){
+        if(rank == 0) return "A";
+        if(rank == 10) return "J";
+        if(rank == 11) return "Q";
+        if(rank == 12) return "K";
+        return String.valueOf(rank + 1);
+    }
     public void setRank(int rank) {
         this.rank = rank;
     }
@@ -33,6 +40,13 @@ public class Card {
         if (suit == 2) return "♦";
         if (suit == 3) return "♣";
         return "Empty";
+    }
+    public String getKoreanSuit(){
+        if (suit == 0) return "스페이드";
+        if (suit == 1) return "하트";
+        if (suit == 2) return "다이아몬드";
+        if (suit == 3) return "클로버";
+        return "비어있음";
     }
 
     public String getCardURL(){

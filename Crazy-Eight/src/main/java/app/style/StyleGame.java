@@ -33,6 +33,10 @@ public class StyleGame {
         return getClass().getResource("/font/LilitaOne-Regular.ttf").toExternalForm();
     }
 
+    public String getCookieRunFont(){
+        return getClass().getResource("/font/CookieRun-Regular.ttf").toExternalForm();
+    }
+
     /**
      * Returns the style for side labels in the game UI.
      *
@@ -100,6 +104,15 @@ public class StyleGame {
                 "-fx-background-radius: 20px;" +
                 "-fx-font-family: 'Comic Sans MS';" +
                 "-fx-font-size: 14px;" +
+                "-fx-text-fill: #17171A;" +
+                "-fx-padding: 10px;" +
+                "-fx-focus-color: transparent;" +
+                "-fx-faint-focus-color: transparent;";
+    }
+    public String sideMessageBoxKRVersion() {
+        return "-fx-background-color: #dddddd;" +
+                "-fx-border-radius: 10px;" +
+                "-fx-background-radius: 20px;" +
                 "-fx-text-fill: #17171A;" +
                 "-fx-padding: 10px;" +
                 "-fx-focus-color: transparent;" +

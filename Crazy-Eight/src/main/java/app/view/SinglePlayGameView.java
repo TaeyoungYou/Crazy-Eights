@@ -168,7 +168,12 @@ public class SinglePlayGameView {
         message = new TextField();
         message.setPrefWidth(300);
         message.setPrefHeight(50);
-        message.setStyle(style.sideMessageBox());
+        if(Setting.isEnClicked()) message.setStyle(style.sideMessageBox());
+        else{
+            message.setStyle(style.sideMessageBoxKRVersion());
+            message.setFont(Font.loadFont(style.getCookieRunFont(), 14));
+        }
+
 
         sidebar.getChildren().add(message);
     }
@@ -195,9 +200,16 @@ public class SinglePlayGameView {
         scoreContainer.setSpacing(10);
         scoreContainer.setAlignment(Pos.CENTER);
 
-        scoreTitle = new Label("Score");
-        scoreTitle.setFont(Font.loadFont(style.getLilitaOneFont(), 40));
-        scoreTitle.setStyle(style.sideLabelStyle());
+        if(Setting.isEnClicked()){
+            scoreTitle = new Label("Score");
+            scoreTitle.setFont(Font.loadFont(style.getLilitaOneFont(), 40));
+            scoreTitle.setStyle(style.sideLabelStyle());
+        } else {
+            scoreTitle = new Label("점수");
+            scoreTitle.setFont(Font.loadFont(style.getCookieRunFont(), 40));
+            scoreTitle.setStyle(style.sideLabelStyle());
+        }
+
 
         scoreBox = new VBox();
         scoreBox.setStyle(style.statusScoreBoxStyle());
@@ -413,7 +425,10 @@ public class SinglePlayGameView {
 
     public void addLog(String message, State state){
         Label msg = new Label(message);
-        msg.setFont(Font.font("Comic Sans MS", 16));
+
+        if(Setting.isEnClicked()) msg.setFont(Font.font("Comic Sans MS", 16));
+        else msg.setFont(Font.loadFont(style.getCookieRunFont(), 16));
+
         if(state == State.System) msg.setStyle(style.systemLogStyle());
         if(state == State.Error) msg.setStyle(style.errorLogStyle());
         if(state == State.Log) msg.setStyle(style.sideLabelStyle());
@@ -440,7 +455,13 @@ public class SinglePlayGameView {
         icon.setFitHeight(60);
 
         Label msg = new Label(message);
-        msg.setStyle(style.sideMessageBox());
+        if(Setting.isEnClicked()){
+            msg.setStyle(style.sideMessageBox());
+        } else {
+            msg.setStyle(style.sideMessageBoxKRVersion());
+            msg.setFont(Font.loadFont(style.getCookieRunFont(), 14));
+        }
+
         msg.setWrapText(true);
         msg.setMaxWidth(Double.MAX_VALUE);
 

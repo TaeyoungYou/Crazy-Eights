@@ -69,19 +69,16 @@ public class ScoringView {
             int rank = information.get(player).getKey();
             int score = information.get(player).getValue();
 
-            // 🟢 1. 순위 추가
             Label place = new Label(rank + "");
             place.setFont(Font.loadFont(style.getLilitaOneFont(), 50));
             place.setStyle(style.settingTitleStyle());
             placeBox.getChildren().add(place);
 
-            // 🟢 2. 아이콘 추가
             ImageView icon = new ImageView(getClass().getResource(player.getIcon()).toExternalForm());
             icon.setFitWidth(100);
             icon.setPreserveRatio(true);
             placeIcon.getChildren().add(icon);
 
-            // 🟢 3. 점수 추가
             Label scoreLabel = new Label("+" + score);
             scoreLabel.setFont(Font.loadFont(style.getLilitaOneFont(), 30));
             scoreLabel.setStyle(style.settingTitleStyle());
@@ -112,6 +109,10 @@ public class ScoringView {
     }
     public void fadeOutPane(){
         animation.fadeOutScoring(pane, overlay);
+    }
+    public void buttonAnimation(){
+        animation.buttonAnimation(continueButton);
+        animation.buttonAnimation(exitButton);
     }
 
     public Label getContinueButton(){

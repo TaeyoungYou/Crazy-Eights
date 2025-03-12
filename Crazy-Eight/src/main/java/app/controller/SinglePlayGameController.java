@@ -89,7 +89,8 @@ public class SinglePlayGameController implements CardObserver, DeckObserver, Log
         deck.generateDeck();
         createPlayers();
 
-        log.setLogs("Setting Game..." , State.System);
+        if(Setting.isEnClicked()) log.setLogs("Setting Game..." , State.System);
+        else log.setLogs("게임 설정 중...", State.System);
 
         for(Player player : players) System.out.println(player.getPersonality());
 
@@ -134,7 +135,8 @@ public class SinglePlayGameController implements CardObserver, DeckObserver, Log
 
                         if(playerChatTime == 1) playerDoChat = false;
 
-                        log.setLogs(String.format("Player %d turn", statusManager.getTurn() + 1), State.Log);
+                        if(Setting.isEnClicked()) log.setLogs(String.format("Player %d turn", statusManager.getTurn() + 1), State.Log);
+                        else log.setLogs(String.format("플레이어 %d 차례", statusManager.getTurn() + 1), State.Log);
                     }
                     if(DEBUG) System.out.printf(statusManager.toString());
 
@@ -142,7 +144,9 @@ public class SinglePlayGameController implements CardObserver, DeckObserver, Log
                         Player player = players.get(statusManager.getTurn());
                         if(player.isSelf()){
                             if(statusManager.getTime() == 10 && !statusManager.isUserDid()){    // 이 userDid의 플래그는 다르게 애니메이션이 시작되기 전에 플래그를 바꿔줘야함
-                                log.setLogs("Time out!", State.Error);
+                                if(Setting.isEnClicked()) log.setLogs("Time out!", State.Error);
+                                else log.setLogs("시간 초과!", State.Error);
+
                                 userDrawCard(player);
                             }
                             // 유저는 3가지 상태가 있음.
@@ -191,7 +195,11 @@ public class SinglePlayGameController implements CardObserver, DeckObserver, Log
     private void endGame(){
         game.pause();
         if(DEBUG) System.out.println("Game is done..!");
+        if(Setting.isEnClicked()) log.setLogs("Game Over!", State.System);
+        else log.setLogs("게임 종료!", State.System);
+
         scoringView.generate(players, scoring());
+        scoringView.buttonAnimation();
         scoringView.getContinueButton().setOnMouseClicked(e->{
             scoringView.fadeOutPane();
             mainView.resetGame(scene, mainPane, players);
@@ -299,6 +307,9 @@ public class SinglePlayGameController implements CardObserver, DeckObserver, Log
             Animation getCard = mainView.getCardAnimationToPlayer();
             getCard.setOnFinished(e->{
                 if(DEBUG) System.out.println("Drawing card");
+                if(Setting.isEnClicked()) log.setLogs("Drawing card!", State.Log);
+                else log.setLogs("카드 드로우!", State.Log);
+
                 player.setCard(deck, false);
             });
             getCard.play();
@@ -328,6 +339,8 @@ public class SinglePlayGameController implements CardObserver, DeckObserver, Log
             getCards.setOnFinished(e -> {
                 player.setCard(deck, false);
                 if(DEBUG) System.out.println("Drawing card");
+                if(Setting.isEnClicked()) log.setLogs("Drawing card!", State.Log);
+                else log.setLogs("카드 드로우!", State.Log);
             });
             getCards.play();
         }));
@@ -445,20 +458,11 @@ public class SinglePlayGameController implements CardObserver, DeckObserver, Log
         mainView.setCardDummy(dummyCard);
     }
 
-    public List<Player> emptyDeck(){
-        log.setLogs("Deck is empty!", State.Error);
-        return players;
-    }
-
-    public void resetDeck(){
-        log.setLogs("Resetting Deck", State.Error);
-        putCardDummy(new Card(), true);
-    }
-
     @Override
     public void update(Card card) {
-        log.setLogs(String.format(" - Put %s %d card", card.getImogeSuit(), card.getRank() + 1), State.Log);
         if (DEBUG) System.out.println(String.format(" - Put %s %d card", card.getImogeSuit(), card.getRank() + 1));
+        if(Setting.isEnClicked()) log.setLogs(String.format("Put %s %s card", card.getImogeSuit(), card.getRankString()), State.Log);
+        else log.setLogs(String.format("카드 %s %s 놓음", card.getKoreanSuit(), card.getRankString()), State.Log);
 
         if (card.getRank() == 7) {
             whenCardEight();
@@ -486,6 +490,8 @@ public class SinglePlayGameController implements CardObserver, DeckObserver, Log
     private void whenCardAce(){
         statusManager.setReverseOrder();
         if(DEBUG) System.out.println("Turn is reversed..!");
+        if(Setting.isEnClicked()) log.setLogs("Turn is reversed..!", State.System);
+        else log.setLogs("순서가 바뀜..!", State.System);
         statusManager.doPassTurn();
     }
 
@@ -496,6 +502,8 @@ public class SinglePlayGameController implements CardObserver, DeckObserver, Log
         setTurnEffect();
 
         if(DEBUG) System.out.printf("Skip player %d\n", statusManager.getTurn());
+        if(Setting.isEnClicked()) log.setLogs("Skip next player!", State.System);
+        else log.setLogs("다음 플레이어 스킵!", State.System);
         delayQueen(()->{
             statusManager.doPassTurn();
             statusManager.resetQueenTime();
@@ -516,6 +524,8 @@ public class SinglePlayGameController implements CardObserver, DeckObserver, Log
         updatePlayerTurn();
         setTurnEffect();
         Player player = players.get(statusManager.getTurn());
+        if(Setting.isEnClicked()) log.setLogs(String.format("Player %d gets 4 cards!", player.getScoreId()), State.System);
+        else log.setLogs(String.format("플레이어 %d 4장 카드 드로우!", player.getScoreId()), State.System);
         if(player.isSelf()){
             userDrawCard(player);   // 여기서 cardTimeDid를 호출
             return;
@@ -530,6 +540,8 @@ public class SinglePlayGameController implements CardObserver, DeckObserver, Log
         statusManager.doPassTurn();    // 여기가 마지막 초기화함!
 
         if(DEBUG) System.out.println("Current stack: " + stackGetCard);
+        if(Setting.isEnClicked()) log.setLogs(String.format("Current %d cards are stacked", stackGetCard), State.System);
+        else log.setLogs(String.format("현재 %d개 카드 쌓임", stackGetCard), State.System);
     }
 
     private void whenCardEight(){
@@ -542,36 +554,51 @@ public class SinglePlayGameController implements CardObserver, DeckObserver, Log
                 putCardDummy(new Card(0,7), true);
                 fadeOutPane();
                 if(DEBUG) System.out.println("Change to Space!");
-                log.setLogs("Change to Space!", State.System);
+                if(Setting.isEnClicked()) log.setLogs("Change to Space!", State.System);
+                else log.setLogs("스페이드로 바꿈!", State.System);
             });
             chooseEightView.getHeart().setOnMouseClicked(event -> {
                 event.consume();
                 putCardDummy(new Card(1,7), true);
                 fadeOutPane();
                 if(DEBUG) System.out.println("Change to Heart!!");
-                log.setLogs("Change to Heart!", State.System);
+                if(Setting.isEnClicked()) log.setLogs("Change to Heart!", State.System);
+                else log.setLogs("하트로 바꿈!", State.System);
             });
             chooseEightView.getDiamond().setOnMouseClicked(event -> {
                 event.consume();
                 putCardDummy(new Card(2,7), true);
                 fadeOutPane();
                 if(DEBUG) System.out.println("Change to Diamond!!");
-                log.setLogs("Change to Diamond!", State.System);
+                if(Setting.isEnClicked()) log.setLogs("Change to Diamond!", State.System);
+                else log.setLogs("다이아몬드로 바꿈!", State.System);
             });
             chooseEightView.getClub().setOnMouseClicked(event -> {
                 event.consume();
                 putCardDummy(new Card(3,7), true);
                 fadeOutPane();
-                log.setLogs("Change to Club!", State.System);
                 if(DEBUG) System.out.println("Change to Club!");
+                if(Setting.isEnClicked()) log.setLogs("Change to Club!", State.System);
+                else log.setLogs("크로버로 바꿈!", State.System);
             });
         } else {
             int shape = players.get(statusManager.getTurn()).getMostShape();
             switch(shape){
-                case 0 -> log.setLogs("Change to Space!", State.System);
-                case 1 -> log.setLogs("Change to Heart!", State.System);
-                case 2 -> log.setLogs("Change to Diamond!", State.System);
-                case 3 -> log.setLogs("Change to Club!", State.System);
+                case 0:
+                    if(Setting.isEnClicked()) log.setLogs("Change to Space!", State.System);
+                    else log.setLogs("스페이드로 바꿈!", State.System);
+                    break;
+                case 1:
+                    if(Setting.isEnClicked()) log.setLogs("Change to Heart!", State.System);
+                    else log.setLogs("하트로 바꿈!", State.System);
+                    break;
+                case 2:
+                    if(Setting.isEnClicked()) log.setLogs("Change to Diamond!", State.System);
+                    else log.setLogs("다이아몬드로 바꿈!", State.System);
+                    break;
+                case 3:
+                    if(Setting.isEnClicked()) log.setLogs("Change to Club!", State.System);
+                    else log.setLogs("크로버로 바꿈!", State.System);
             }
             if(DEBUG) System.out.println("Changed the shape!");
             putCardDummy(new Card(shape, 7), true);
@@ -654,7 +681,8 @@ public class SinglePlayGameController implements CardObserver, DeckObserver, Log
 
         timeline.setOnFinished(e -> {
             delaySecond(()->{
-                log.setLogs("Start Game!", State.System);
+                if(Setting.isEnClicked()) log.setLogs("Start Game!", State.System);
+                else log.setLogs("게임 시작!", State.System);
             });
         });
 
@@ -669,7 +697,8 @@ public class SinglePlayGameController implements CardObserver, DeckObserver, Log
         transformPlayers(prevPlayers);
         for(Player player: players) System.out.println(player.getScore());
 
-        log.setLogs("Setting Game..." , State.System);
+        if(Setting.isEnClicked()) log.setLogs("Setting Game...!", State.System);
+        else log.setLogs("게임 설정 중...!" , State.System);
 
         SequentialTransition sequence = new SequentialTransition();
 
@@ -687,6 +716,8 @@ public class SinglePlayGameController implements CardObserver, DeckObserver, Log
             });
         });
         System.out.println("New Game Start");
+        if(Setting.isEnClicked()) log.setLogs("New Game Start...!", State.System);
+        else log.setLogs("새로운 게임 시작...!", State.System);
     }
 
     private void transformPlayers(List<Player> prevPlayers) {
@@ -773,9 +804,12 @@ public class SinglePlayGameController implements CardObserver, DeckObserver, Log
                         })
                 );
             }
-            giveCard.setCycleCount(2);
+            giveCard.setCycleCount(6);
             pt.getChildren().add(giveCard);
         }
+        if(Setting.isEnClicked()) log.setLogs("Give 6 cards to players!", State.System);
+        else log.setLogs("플레이어들에게 6장의 카드 나눠 주는 중!", State.System);
+
         return pt;
     }
     public void delaySecond(Runnable action){
@@ -861,6 +895,8 @@ public class SinglePlayGameController implements CardObserver, DeckObserver, Log
 
         if(stackGetCard == 0){
             if(DEBUG) System.out.println("Player has 12 cards");
+            if(Setting.isEnClicked()) log.setLogs("Player has 12 cards", State.System);
+            else log.setLogs("플레이어 12장의 카드를 가지고 있음", State.System);
             stackGetCard = 1;
             statusManager.doPassTurn();
             return true;

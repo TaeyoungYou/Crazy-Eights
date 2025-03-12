@@ -2,6 +2,7 @@ package app.animation;
 
 import javafx.animation.FadeTransition;
 import javafx.scene.Cursor;
+import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.util.Duration;
@@ -38,5 +39,21 @@ public class AnimationSetting {
         fadeOut.setOnFinished(e -> root.getChildren().remove(pane));
     }
 
+    public void buttonAnimation(Label button) {
+        FadeTransition fadeOut = new FadeTransition(Duration.millis(200), button);
+        FadeTransition fadeIn = new FadeTransition(Duration.millis(200), button);
+
+        fadeOut.setToValue(0.7);
+        fadeIn.setToValue(1.0);
+
+        button.setOnMouseEntered(e -> {
+            button.setCursor(Cursor.HAND);
+            fadeOut.play();
+        });
+        button.setOnMouseExited(e -> {
+            button.setCursor(Cursor.DEFAULT);
+            fadeIn.play();
+        });
+    }
 
 }
