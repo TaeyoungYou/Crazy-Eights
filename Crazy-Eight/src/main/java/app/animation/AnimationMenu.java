@@ -2,7 +2,6 @@ package app.animation;
 
 import app.controller.SinglePlayGameController;
 import app.model.Music;
-import app.view.SinglePlayGameView;
 import javafx.animation.*;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
@@ -175,11 +174,14 @@ public class AnimationMenu {
             });
         }
     }
+
     /**
-     * Applies a fade-out animation to the main menu elements and transitions to the game screen.
+     * Fades out all child elements of the specified VBox container using a fade-out animation
+     * and then initializes a new SinglePlayGameController to begin the character selection process.
      *
-     * @param scene The current scene.
-     * @param pane  The VBox containing menu elements.
+     * @param scene The current Scene where the fade-out animation is applied and
+     *              where the game transition will occur.
+     * @param pane  The VBox container containing the menu elements to be faded out.
      */
     public void fadeOutMainMenu(Scene scene, VBox pane) {
         ParallelTransition fadeOutParallel = new ParallelTransition();
@@ -192,23 +194,26 @@ public class AnimationMenu {
         fadeOutParallel.play();
         fadeOutParallel.setOnFinished(event -> {
             SinglePlayGameController singlePlayGameController = new SinglePlayGameController(scene);
-            singlePlayGameController.selectCharacter(singlePlayGameController::startGame);
+            singlePlayGameController.selectCharacter(() -> {
+                singlePlayGameController.startGame();
+            });
         });
     }
 
     /**
-     * Applies a fade-in effect to the main menu elements.
+     * Applies a fade-in effect to all child elements of the specified VBox container.
+     * Each child element transitions from fully transparent to fully opaque over 1.5 seconds.
      *
-     * @param pane The VBox containing menu elements.
+     * @param pane The VBox container whose child elements will have the fade-in animation applied.
      */
     public void fadeInMainMenu(VBox pane) {
-        ParallelTransition fadeInParallel = new ParallelTransition();
+        ParallelTransition fadeOutParallel = new ParallelTransition();
         for (Node node : pane.getChildren()) {
-            FadeTransition fadeIn = new FadeTransition(Duration.seconds(1.5), node);
-            fadeIn.setFromValue(0.0);
-            fadeIn.setToValue(1.0);
-            fadeInParallel.getChildren().add(fadeIn);
+            FadeTransition fadeOut = new FadeTransition(Duration.seconds(1.5), node);
+            fadeOut.setFromValue(0.0);
+            fadeOut.setToValue(1.0);
+            fadeOutParallel.getChildren().add(fadeOut);
         }
-        fadeInParallel.play();
+        fadeOutParallel.play();
     }
 }

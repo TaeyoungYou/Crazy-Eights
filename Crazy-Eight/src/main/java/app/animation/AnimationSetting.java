@@ -7,8 +7,18 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.util.Duration;
 
+/**
+ * The {@code AnimationSetting} class provides animations for UI components
+ * related to settings, including fade transitions and hover effects.
+ */
 public class AnimationSetting {
-    public void mouseInOutSetting(VBox pane){
+
+    /**
+     * Applies a fade-in and fade-out effect when the mouse enters and exits the given VBox.
+     *
+     * @param pane The VBox to apply the mouse hover effect to.
+     */
+    public void mouseInOutSetting(VBox pane) {
         pane.setOpacity(0.6);
 
         FadeTransition fadeIn = new FadeTransition(Duration.millis(300), pane);
@@ -25,13 +35,26 @@ public class AnimationSetting {
             fadeOut.playFromStart();
         });
     }
-    public void fadeInSetting(StackPane pane){
+
+    /**
+     * Applies a fade-in animation to the specified StackPane.
+     *
+     * @param pane The StackPane to fade in.
+     */
+    public void fadeInSetting(StackPane pane) {
         FadeTransition fadeIn = new FadeTransition(Duration.seconds(0.5), pane);
         fadeIn.setFromValue(0.0);
         fadeIn.setToValue(1.0);
         fadeIn.play();
     }
-    public void fadeOutSetting(StackPane root, StackPane pane){
+
+    /**
+     * Applies a fade-out animation to the specified StackPane and removes it from the root.
+     *
+     * @param root The root StackPane containing the pane.
+     * @param pane The StackPane to fade out and remove.
+     */
+    public void fadeOutSetting(StackPane root, StackPane pane) {
         FadeTransition fadeOut = new FadeTransition(Duration.seconds(0.5), pane);
         fadeOut.setFromValue(1.0);
         fadeOut.setToValue(0.0);
@@ -39,6 +62,11 @@ public class AnimationSetting {
         fadeOut.setOnFinished(e -> root.getChildren().remove(pane));
     }
 
+    /**
+     * Adds a hover animation effect to a button, making it fade slightly when hovered.
+     *
+     * @param button The Label representing the button.
+     */
     public void buttonAnimation(Label button) {
         FadeTransition fadeOut = new FadeTransition(Duration.millis(200), button);
         FadeTransition fadeIn = new FadeTransition(Duration.millis(200), button);
@@ -55,5 +83,4 @@ public class AnimationSetting {
             fadeIn.play();
         });
     }
-
 }

@@ -7,6 +7,10 @@ import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 
+/**
+ * The {@code MenuController} class manages the main menu of the application.
+ * It handles navigation between the menu and settings, as well as initializing the UI components.
+ */
 public class MenuController {
     private Scene scene;
     private StackPane root;
@@ -17,6 +21,11 @@ public class MenuController {
 
     private static boolean started = false;
 
+    /**
+     * Constructs a {@code MenuController} with the specified scene.
+     *
+     * @param _scene The main scene of the application.
+     */
     public MenuController(Scene _scene) {
         scene = _scene;
         root = new StackPane();
@@ -25,18 +34,24 @@ public class MenuController {
         settingView = new SettingView(root);
     }
 
-    private void initPage(){
+    /**
+     * Initializes the page layout and sets up the menu view.
+     */
+    private void initPage() {
         root.getChildren().add(mainPane);
         scene.setRoot(root);
-
         menuView.setPaneStyle();
     }
 
-    public void drawMenu(){
+    /**
+     * Draws the menu interface and sets up event handlers for the menu buttons.
+     * If this is the first time displaying the menu, it initializes the menu view.
+     * Otherwise, it simply displays the existing menu.
+     */
+    public void drawMenu() {
         initPage();
-        if(!started){
+        if (!started) {
             menuView.initDisplayMenu();
-
             started = true;
         } else {
             menuView.displayMenu();
@@ -46,6 +61,4 @@ public class MenuController {
         menuView.getSettingsButton().setOnMouseClicked(event -> settingView.generate());
         menuView.getQuitButton().setOnMouseClicked(event -> Platform.exit());
     }
-
-
 }

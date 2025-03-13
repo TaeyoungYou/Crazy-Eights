@@ -19,6 +19,11 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.util.Duration;
 
+/**
+ * The SettingView class is responsible for displaying and managing the settings interface
+ * for the application. It provides functionalities for customizing user preferences such as
+ * language selection and music volume, as well as applying animations and styles to GUI components.
+ */
 public class SettingView {
     private final StackPane pane;
     private final StyleSetting style;
@@ -27,12 +32,46 @@ public class SettingView {
     private Label enButton;
     private Label krButton;
 
+    /**
+     * Constructs a SettingView instance.
+     * Initializes the given pane, as well as style and animation settings.
+     *
+     * @param pane the StackPane instance that serves as the central pane for the settings view
+     */
     public SettingView(StackPane pane) {
         this.pane = pane;
         style = new StyleSetting();
         animation = new AnimationSetting();
     }
 
+    /**
+     * Generates and displays the settings overlay in the application. This method creates a
+     * semi-transparent overlay with a styled settings pane containing configurable options
+     * such as music volume and language settings. It incorporates animations for a smooth
+     * transition and interactive elements with customized styles.
+     *
+     * Functionality:
+     * - Creates a stack pane styled as a semi-transparent overlay.
+     * - Adds a settings pane with a structured layout for configurable settings.
+     * - Includes a volume slider that adjusts the background music's volume.
+     * - Displays language selection buttons (English and Korean) with toggling functionality
+     *   based on user interaction.
+     * - Applies custom styles to various elements, such as titles, sliders, and buttons.
+     * - Adds animations for the overlay and settings pane.
+     * - Provides event handling for interactions, including button clicks and mouse events.
+     *
+     * Behavior:
+     * - Dynamically binds the overlay's size to the parent pane's dimensions.
+     * - Configures event listeners for slider adjustments to update music volume.
+     * - Sets up language toggle buttons with corresponding styles and actions.
+     * - Allows the overlay to close upon clicking outside the settings pane.
+     *
+     * Infrastructure:
+     * - Utilizes classes and methods from external utility members, including `style`,
+     *   `animation`, and `Music`.
+     * - Relies on JavaFX components for UI and styling.
+     * - Executes certain UI element setup in the JavaFX application thread using `Platform.runLater`.
+     */
     public void generate(){
         StackPane overlay = new StackPane();
         overlay.setStyle(style.overlayStyle());
@@ -151,6 +190,11 @@ public class SettingView {
 
 
 
+    /**
+     * Retrieves the StackPane instance associated with this class.
+     *
+     * @return The StackPane object used as the central pane in the settings view.
+     */
     public StackPane getPane() {
         return pane;
     }

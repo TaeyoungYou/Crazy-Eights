@@ -1,9 +1,9 @@
+package app.style;
+
 /**
  * Provides styling configurations for the main menu components.
  * This class defines various style properties used in the UI.
  */
-package app.style;
-
 public class StyleMenu {
 
     /**

@@ -4,6 +4,10 @@
  */
 package app.style;
 
+/**
+ * Provides styling configurations for the game application.
+ * This class contains various CSS styles used for different UI components.
+ */
 public class StyleGame {
 
     /**
@@ -50,19 +54,6 @@ public class StyleGame {
     }
     public String systemLogStyle() {
         return "-fx-text-fill: green;";
-    }
-
-    /**
-     * Returns the style for the side chat box.
-     *
-     * @return A CSS string defining background color, border color, and radius.
-     */
-    public String sideChatBox() {
-        return "-fx-background-color: #17171A;" +
-                "-fx-border-color: #dddddd;" +
-                "-fx-border-style: solid;" +
-                "-fx-border-width: 2px;" +
-                "-fx-border-radius: 20px;";
     }
 
     /**
@@ -118,16 +109,6 @@ public class StyleGame {
                 "-fx-focus-color: transparent;" +
                 "-fx-faint-focus-color: transparent;";
     }
-
-    /**
-     * Returns the style for the turn effect highlight.
-     *
-     * @return A CSS string defining a linear gradient background.
-     */
-    public String myTurnEffectStyle() {
-        return "-fx-background-color: linear-gradient(to top, #dddddd, transparent);";
-    }
-
     /**
      * Returns the style for the status score box.
      *

@@ -7,14 +7,18 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
 import javafx.util.Duration;
 
+
 /**
- * The {@code AnimationCharacter} class provides various animation effects for UI elements in a JavaFX application.
- * It includes fade-in and fade-out transitions for panes and hover animations for character image views.
+ * The AnimationCharacter class provides methods to add animation effects
+ * to JavaFX UI components such as StackPane and ImageView. These animations
+ * include fade-in, fade-out, and hover effects.
  */
 public class AnimationCharacter {
 
+
     /**
-     * Applies a fade-in effect to the specified StackPane.
+     * Applies a fade-in animation to the specified StackPane.
+     * The animation gradually increases the pane's opacity from 0 to 1 over a duration of 0.5 seconds.
      *
      * @param pane The StackPane to apply the fade-in effect to.
      */
@@ -25,12 +29,10 @@ public class AnimationCharacter {
         fadeIn.play();
     }
 
+
     /**
-     * Creates and returns a fade-out animation for the specified StackPane.
-     *
-     * @param pane The StackPane to apply the fade-out effect to.
-     * @return A {@code FadeTransition} animation that fades the pane out.
-     */
+     * Creates a fade-out animation for the specified StackPane.
+     * The animation reduces the opacity of the pane from 1.0 to 0.0 over*/
     public Animation fadeOutPane(StackPane pane){
         FadeTransition fadeOut = new FadeTransition(Duration.seconds(0.5), pane);
         fadeOut.setFromValue(1.0);
@@ -38,11 +40,13 @@ public class AnimationCharacter {
         return fadeOut;
     }
 
+
     /**
      * Adds a hover animation effect to the specified ImageView.
-     * The image scales up when hovered over and returns to its original size when the mouse exits.
+     * When the cursor hovers over the ImageView, it scales up slightly,
+     * giving a zoom-in effect. When the cursor exits, it scales back to its original size.
      *
-     * @param card The ImageView representing the character card.
+     * @param card The ImageView to which the hover animation will be applied.
      */
     public void characterHoverAnimation(ImageView card){
         ScaleTransition cardUp = new ScaleTransition(Duration.millis(200), card);

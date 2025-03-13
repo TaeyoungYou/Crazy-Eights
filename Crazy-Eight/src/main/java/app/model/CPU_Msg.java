@@ -2,6 +2,11 @@ package app.model;
 
 import java.util.Random;
 
+/**
+ * The CPU_Msg class provides a collection of predefined messages for CPU interactions
+ * in a game, supporting both English and Korean languages. These messages include
+ * greetings, notifications about game states, and responses to chat inputs.
+ */
 public class CPU_Msg {
 
     private static final String[] ENGLISH_GREETINGS = {
@@ -17,6 +22,11 @@ public class CPU_Msg {
             "Get ready! This is going to be a fun match!"
     };
 
+    /**
+     * Provides a random English greeting from the predefined list of greetings.
+     *
+     * @return a randomly selected English greeting as a String.
+     */
     public static String getEnglishGreeting() {
         Random rand = new Random();
         return ENGLISH_GREETINGS[rand.nextInt(ENGLISH_GREETINGS.length)];
@@ -35,6 +45,11 @@ public class CPU_Msg {
             "준비됐지? 이거 엄청 재밌을 거야!"
     };
 
+    /**
+     * Retrieves a random Korean greeting from a predefined list of greetings.
+     *
+     * @return a randomly selected Korean greeting as a String.
+     */
     public static String getKoreanGreeting() {
         Random rand = new Random();
         return KOREAN_GREETINGS[rand.nextInt(KOREAN_GREETINGS.length)];
@@ -53,6 +68,11 @@ public class CPU_Msg {
             "This game just got harder for me!"
     };
 
+    /**
+     * Provides a randomly selected message from the predefined list of bad draw messages in English.
+     *
+     * @return a String containing a randomly chosen English bad draw message.
+     */
     public static String getEnglishBadDraw() {
         Random rand = new Random();
         return ENGLISH_BAD_DRAW[rand.nextInt(ENGLISH_BAD_DRAW.length)];
@@ -71,6 +91,11 @@ public class CPU_Msg {
             "게임이 더 어려워졌어!"
     };
 
+    /**
+     * Retrieves a randomly selected message from a predefined list of bad draw messages in Korean.
+     *
+     * @return a String containing a randomly chosen Korean bad draw message.
+     */
     public static String getKoreanBadDraw() {
         Random rand = new Random();
         return KOREAN_BAD_DRAW[rand.nextInt(KOREAN_BAD_DRAW.length)];
@@ -89,6 +114,11 @@ public class CPU_Msg {
             "That’s what happens when you challenge me!"
     };
 
+    /**
+     * Provides a randomly selected English attack message from a predefined list.
+     *
+     * @return a String containing a randomly chosen English attack message.
+     */
     public static String getEnglishAttack() {
         Random rand = new Random();
         return ENGLISH_ATTACK[rand.nextInt(ENGLISH_ATTACK.length)];
@@ -107,6 +137,11 @@ public class CPU_Msg {
             "나한테 덤비면 이렇게 되는 거야!"
     };
 
+    /**
+     * Provides a randomly selected Korean attack message from a predefined list of messages.
+     *
+     * @return a randomly chosen Korean attack message as a String.
+     */
     public static String getKoreanAttack() {
         Random rand = new Random();
         return KOREAN_ATTACK[rand.nextInt(KOREAN_ATTACK.length)];
@@ -125,6 +160,12 @@ public class CPU_Msg {
             "One step closer to victory!"
     };
 
+    /**
+     * Retrieves a randomly selected message from the predefined list of messages
+     * indicating there are only a few cards left, in English.
+     *
+     * @return a randomly chosen English message about having a few cards left.
+     */
     public static String getEnglishFewCardsLeft() {
         Random rand = new Random();
         return ENGLISH_FEW_CARDS_LEFT[rand.nextInt(ENGLISH_FEW_CARDS_LEFT.length)];
@@ -143,6 +184,12 @@ public class CPU_Msg {
             "승리까지 한 걸음 남았어!"
     };
 
+    /**
+     * Retrieves a randomly selected message from a predefined list of messages
+     * indicating there are only a few cards left, in Korean.
+     *
+     * @return a randomly chosen Korean message about having a few cards left as a String.
+     */
     public static String getKoreanFewCardsLeft() {
         Random rand = new Random();
         return KOREAN_FEW_CARDS_LEFT[rand.nextInt(KOREAN_FEW_CARDS_LEFT.length)];
@@ -161,6 +208,12 @@ public class CPU_Msg {
             "At this rate, I’ll never win!"
     };
 
+    /**
+     * Retrieves a randomly selected message from a predefined list
+     * of English messages indicating that too many cards are present.
+     *
+     * @return a randomly chosen English message about having too many cards.
+     */
     public static String getEnglishTooManyCards() {
         Random rand = new Random();
         return ENGLISH_TOO_MANY_CARDS[rand.nextInt(ENGLISH_TOO_MANY_CARDS.length)];
@@ -179,6 +232,12 @@ public class CPU_Msg {
             "이러다 진짜 끝까지 못 버리겠어!"
     };
 
+    /**
+     * Retrieves a randomly selected Korean message from a predefined list of messages
+     * that indicate too many cards are present.
+     *
+     * @return a randomly selected message in Korean about having too many cards.
+     */
     public static String getKoreanTooManyCards() {
         Random rand = new Random();
         return KOREAN_TOO_MANY_CARDS[rand.nextInt(KOREAN_TOO_MANY_CARDS.length)];
@@ -207,6 +266,11 @@ public class CPU_Msg {
             "I'll chat with you after I win this round!"
     };
 
+    /**
+     * Retrieves a randomly selected English chat response from a predefined list of responses.
+     *
+     * @return a randomly chosen English chat response as a String.
+     */
     public static String getEnglishChatResponse() {
         Random rand = new Random();
         return ENGLISH_CHAT_RESPONSES[rand.nextInt(ENGLISH_CHAT_RESPONSES.length)];
@@ -235,6 +299,11 @@ public class CPU_Msg {
             "게임 끝나면 이야기하자! 일단 내가 이기고!"
     };
 
+    /**
+     * Retrieves a randomly selected Korean chat response from a predefined list of responses.
+     *
+     * @return a randomly chosen Korean chat response as a String.
+     */
     public static String getKoreanChatResponse() {
         Random rand = new Random();
         return KOREAN_CHAT_RESPONSES[rand.nextInt(KOREAN_CHAT_RESPONSES.length)];
