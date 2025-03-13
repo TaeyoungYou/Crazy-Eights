@@ -3,10 +3,13 @@ package app.animation;
 import app.controller.SinglePlayGameController;
 import app.model.Music;
 import javafx.animation.*;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.util.Duration;
@@ -39,14 +42,40 @@ public class AnimationMenu {
             fadeOut.setToValue(0.7);
             fadeIn.setToValue(1.0);
 
-            button.setOnMouseEntered(e -> {
-                button.setCursor(Cursor.HAND);
-                fadeOut.play();
-            });
-            button.setOnMouseExited(e -> {
-                button.setCursor(Cursor.DEFAULT);
-                fadeIn.play();
-            });
+            button.setOnMouseEntered(new FadeAnimationMouseEnteredHandler(button, fadeOut));
+            button.setOnMouseExited(new FadeAnimationMouseExitedHandler(button, fadeIn));
+        }
+    }
+
+    private static class FadeAnimationMouseEnteredHandler implements EventHandler<MouseEvent> {
+        private final Label button;
+        private final FadeTransition fadeOut;
+
+        public FadeAnimationMouseEnteredHandler(Label button, FadeTransition fadeOut) {
+            this.button = button;
+            this.fadeOut = fadeOut;
+        }
+
+        @Override
+        public void handle(MouseEvent event) {
+            button.setCursor(Cursor.HAND);
+            fadeOut.play();
+        }
+    }
+
+    private static class FadeAnimationMouseExitedHandler implements EventHandler<MouseEvent> {
+        private final Label button;
+        private final FadeTransition fadeIn;
+
+        public FadeAnimationMouseExitedHandler(Label button, FadeTransition fadeIn) {
+            this.button = button;
+            this.fadeIn = fadeIn;
+        }
+
+        @Override
+        public void handle(MouseEvent event) {
+            button.setCursor(Cursor.DEFAULT);
+            fadeIn.play();
         }
     }
 
@@ -74,7 +103,7 @@ public class AnimationMenu {
         titleFadeIn.setNode(centerPane.getChildren().get(0));
         titleFadeIn.setFromValue(0);
         titleFadeIn.setToValue(1);
-        titleFadeIn.setOnFinished(e -> Music.play());
+        titleFadeIn.setOnFinished(new TitleFadeInFinishedHandler());
 
         PauseTransition musicLoadPause = new PauseTransition();
         musicLoadPause.setDuration(Duration.seconds(1));
@@ -84,11 +113,7 @@ public class AnimationMenu {
         titleMoveUp.setNode(centerPane.getChildren().get(0));
         titleMoveUp.setDuration(Duration.seconds(2));
         titleMoveUp.setByY(-144);
-        titleMoveUp.setOnFinished(event -> {
-            centerPane.getChildren().addAll(nodes);
-            centerPane.getChildren().get(0).setTranslateY(0);
-        });
-
+        titleMoveUp.setOnFinished(new TitleMoveUpFinishedHandler(centerPane, nodes));
 
         // Menu Fade-In animation
         ParallelTransition buttons_parallel = new ParallelTransition();
@@ -130,6 +155,29 @@ public class AnimationMenu {
         sequence.play();
     }
 
+    private static class TitleFadeInFinishedHandler implements EventHandler<ActionEvent> {
+        @Override
+        public void handle(ActionEvent e) {
+            Music.play();
+        }
+    }
+
+    private static class TitleMoveUpFinishedHandler implements EventHandler<ActionEvent> {
+        private final VBox centerPane;
+        private final Node[] nodes;
+
+        public TitleMoveUpFinishedHandler(VBox centerPane, Node[] nodes) {
+            this.centerPane = centerPane;
+            this.nodes = nodes;
+        }
+
+        @Override
+        public void handle(ActionEvent event) {
+            centerPane.getChildren().addAll(nodes);
+            centerPane.getChildren().get(0).setTranslateY(0);
+        }
+    }
+
     /**
      * Applies a hover effect to menu nodes by adjusting their fade animation.
      * If a node is an HBox, the effect is applied to all its child nodes as well.
@@ -164,16 +212,43 @@ public class AnimationMenu {
             fadeOut.setToValue(0.7);
             fadeIn.setToValue(1.0);
 
-            button.setOnMouseEntered(event -> {
-                fadeOut.playFromStart();
-                button.setCursor(Cursor.HAND);
-            });
-            button.setOnMouseExited(event -> {
-                fadeIn.playFromStart();
-                button.setCursor(Cursor.DEFAULT);
-            });
+            button.setOnMouseEntered(new FadeAnimationMouseEnteredHandler(button, fadeOut));
+            button.setOnMouseExited(new FadeAnimationMouseExitedHandler(button, fadeIn));
         }
     }
+
+    private static class FadeAnimationMouseEnteredHandler2 implements EventHandler<MouseEvent> {
+        private final Label button;
+        private final FadeTransition fadeOut;
+
+        public FadeAnimationMouseEnteredHandler2(Label button, FadeTransition fadeOut) {
+            this.button = button;
+            this.fadeOut = fadeOut;
+        }
+
+        @Override
+        public void handle(MouseEvent event) {
+            fadeOut.playFromStart();
+            button.setCursor(Cursor.HAND);
+        }
+    }
+
+    private static class FadeAnimationMouseExitedHandler2 implements EventHandler<MouseEvent> {
+        private final Label button;
+        private final FadeTransition fadeIn;
+
+        public FadeAnimationMouseExitedHandler2(Label button, FadeTransition fadeIn) {
+            this.button = button;
+            this.fadeIn = fadeIn;
+        }
+
+        @Override
+        public void handle(MouseEvent event) {
+            fadeIn.playFromStart();
+            button.setCursor(Cursor.DEFAULT);
+        }
+    }
+
 
     /**
      * Fades out all child elements of the specified VBox container using a fade-out animation
@@ -192,12 +267,23 @@ public class AnimationMenu {
             fadeOutParallel.getChildren().add(fadeOut);
         }
         fadeOutParallel.play();
-        fadeOutParallel.setOnFinished(event -> {
+        fadeOutParallel.setOnFinished(new FadeOutMainMenuFinishedHandler(scene));
+    }
+
+    private static class FadeOutMainMenuFinishedHandler implements EventHandler<ActionEvent> {
+        private final Scene scene;
+
+        public FadeOutMainMenuFinishedHandler(Scene scene) {
+            this.scene = scene;
+        }
+
+        @Override
+        public void handle(ActionEvent event) {
             SinglePlayGameController singlePlayGameController = new SinglePlayGameController(scene);
             singlePlayGameController.selectCharacter(() -> {
                 singlePlayGameController.startGame();
             });
-        });
+        }
     }
 
     /**

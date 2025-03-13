@@ -3,7 +3,9 @@ package app.animation;
 import javafx.animation.Animation;
 import javafx.animation.FadeTransition;
 import javafx.animation.ScaleTransition;
+import javafx.event.EventHandler;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 import javafx.util.Duration;
 
@@ -44,7 +46,7 @@ public class AnimationEight {
      *
      * @param card The ImageView representing the card.
      */
-    public void cardHoverAnimation(ImageView card){
+    public void cardHoverAnimation(ImageView card) {
         ScaleTransition cardUp = new ScaleTransition(Duration.millis(200), card);
         cardUp.setToX(1.1);
         cardUp.setToY(1.1);
@@ -52,11 +54,33 @@ public class AnimationEight {
         cardDown.setToX(1.0);
         cardDown.setToY(1.0);
 
-        card.setOnMouseEntered(e -> {
+        card.setOnMouseEntered(new CardMouseEnterHandler(cardUp));
+        card.setOnMouseExited(new CardMouseExitHandler(cardDown));
+    }
+
+    private static class CardMouseEnterHandler implements EventHandler<MouseEvent> {
+        private final ScaleTransition cardUp;
+
+        public CardMouseEnterHandler(ScaleTransition cardUp) {
+            this.cardUp = cardUp;
+        }
+
+        @Override
+        public void handle(MouseEvent e) {
             cardUp.playFromStart();
-        });
-        card.setOnMouseExited(e -> {
+        }
+    }
+
+    private static class CardMouseExitHandler implements EventHandler<MouseEvent> {
+        private final ScaleTransition cardDown;
+
+        public CardMouseExitHandler(ScaleTransition cardDown) {
+            this.cardDown = cardDown;
+        }
+
+        @Override
+        public void handle(MouseEvent e) {
             cardDown.playFromStart();
-        });
+        }
     }
 }

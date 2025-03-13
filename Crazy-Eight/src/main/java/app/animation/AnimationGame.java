@@ -4,6 +4,8 @@ import app.controller.MenuController;
 import app.controller.SinglePlayGameController;
 import app.model.Player;
 import javafx.animation.*;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -119,13 +121,24 @@ public class AnimationGame {
         moveBack.setToX(0);
         moveBack.setToX(originCardX - card.getLayoutX());
         moveBack.setToY(originCardY - card.getLayoutY());
-        moveBack.setOnFinished(e -> {
+        moveBack.setOnFinished(new MoveBackEventHandler(card));
+        moveBack.play();
+    }
+
+    private class MoveBackEventHandler implements EventHandler<ActionEvent> {
+        private final ImageView card;
+
+        public MoveBackEventHandler(ImageView card) {
+            this.card = card;
+        }
+
+        @Override
+        public void handle(ActionEvent e) {
             card.setLayoutX(originCardX);
             card.setLayoutY(originCardY);
             card.setTranslateX(0);
             card.setTranslateY(0);
-        });
-        moveBack.play();
+        }
     }
 
     /**
@@ -143,14 +156,40 @@ public class AnimationGame {
         mouseOff.setToY(1.0);
         button.setCursor(Cursor.HAND);
 
-        button.setOnMouseEntered(e -> {
+        button.setOnMouseEntered(new MouseEnteredEventHandler(mouseOn, button));
+        button.setOnMouseExited(new MouseExitedEventHandler(mouseOff, button));
+    }
+
+    private class MouseEnteredEventHandler implements EventHandler<MouseEvent> {
+        private final ScaleTransition mouseOn;
+        private final ImageView button;
+
+        public MouseEnteredEventHandler(ScaleTransition mouseOn, ImageView button) {
+            this.mouseOn = mouseOn;
+            this.button = button;
+        }
+
+        @Override
+        public void handle(MouseEvent e) {
             mouseOn.playFromStart();
             button.setOpacity(0.8);
-        });
-        button.setOnMouseExited(e -> {
+        }
+    }
+
+    private class MouseExitedEventHandler implements EventHandler<MouseEvent> {
+        private final ScaleTransition mouseOff;
+        private final ImageView button;
+
+        public MouseExitedEventHandler(ScaleTransition mouseOff, ImageView button) {
+            this.mouseOff = mouseOff;
+            this.button = button;
+        }
+
+        @Override
+        public void handle(MouseEvent e) {
             mouseOff.playFromStart();
             button.setOpacity(1.0);
-        });
+        }
     }
 
     /**
@@ -167,16 +206,42 @@ public class AnimationGame {
         deckDown.setToX(0.95);
         deckDown.setToY(0.95);
 
-        deck.setOnMouseEntered(event -> {
+        deck.setOnMouseEntered(new DeckMouseEnteredEventHandler(deck, deckDown));
+        deck.setOnMouseExited(new DeckMouseExitedEventHandler(deck, deckUp));
+    }
+
+    private class DeckMouseEnteredEventHandler implements EventHandler<MouseEvent> {
+        private final ImageView deck;
+        private final ScaleTransition deckDown;
+
+        public DeckMouseEnteredEventHandler(ImageView deck, ScaleTransition deckDown) {
+            this.deck = deck;
+            this.deckDown = deckDown;
+        }
+
+        @Override
+        public void handle(MouseEvent event) {
             deck.setCursor(Cursor.HAND);
             deck.setOpacity(0.8);
             deckDown.playFromStart();
-        });
-        deck.setOnMouseExited(event -> {
+        }
+    }
+
+    private class DeckMouseExitedEventHandler implements EventHandler<MouseEvent> {
+        private final ImageView deck;
+        private final ScaleTransition deckUp;
+
+        public DeckMouseExitedEventHandler(ImageView deck, ScaleTransition deckUp) {
+            this.deck = deck;
+            this.deckUp = deckUp;
+        }
+
+        @Override
+        public void handle(MouseEvent event) {
             deck.setCursor(Cursor.DEFAULT);
             deck.setOpacity(1);
             deckUp.playFromStart();
-        });
+        }
     }
 
     /**
@@ -318,10 +383,21 @@ public class AnimationGame {
         ParallelTransition parallelFadeOut = new ParallelTransition();
         addFadeOut(pane, parallelFadeOut);
         parallelFadeOut.play();
-        parallelFadeOut.setOnFinished(e -> {
+        parallelFadeOut.setOnFinished(new FadeOutSinglePlayEventHandler(scene));
+    }
+
+    private class FadeOutSinglePlayEventHandler implements EventHandler<ActionEvent> {
+        private final Scene scene;
+
+        public FadeOutSinglePlayEventHandler(Scene scene) {
+            this.scene = scene;
+        }
+
+        @Override
+        public void handle(ActionEvent e) {
             MenuController menuController = new MenuController(scene);
             menuController.drawMenu();
-        });
+        }
     }
 
     /**
@@ -357,17 +433,55 @@ public class AnimationGame {
             fadeOutParallel.getChildren().add(fadeOut);
         }
         fadeOutParallel.play();
-        fadeOutParallel.setOnFinished(event -> {
+        fadeOutParallel.setOnFinished(new ResetFadeOutGameEventHandler(scene, players));
+    }
+
+    private class ResetFadeOutGameEventHandler implements EventHandler<ActionEvent> {
+        private final Scene scene;
+        private final List<Player> players;
+
+        public ResetFadeOutGameEventHandler(Scene scene, List<Player> players) {
+            this.scene = scene;
+            this.players = players;
+        }
+
+        @Override
+        public void handle(ActionEvent event) {
+            SinglePlayGameController singlePlayGameController = new SinglePlayGameController(scene);
             if (players == null) {
-                SinglePlayGameController singlePlayGameController = new SinglePlayGameController(scene);
-                singlePlayGameController.selectCharacter(() -> {
-                    singlePlayGameController.startGame();
-                });
+                singlePlayGameController.selectCharacter(new StartGameRunnable(singlePlayGameController));
             } else {
-                SinglePlayGameController singlePlayGameController = new SinglePlayGameController(scene);
-                singlePlayGameController.delaySecond(() -> singlePlayGameController.resetGame(players));
+                singlePlayGameController.delaySecond(new ResetGameRunnable(singlePlayGameController, players));
             }
-        });
+        }
+    }
+
+    private class StartGameRunnable implements Runnable {
+        private final SinglePlayGameController singlePlayGameController;
+
+        public StartGameRunnable(SinglePlayGameController singlePlayGameController) {
+            this.singlePlayGameController = singlePlayGameController;
+        }
+
+        @Override
+        public void run() {
+            singlePlayGameController.startGame();
+        }
+    }
+
+    private class ResetGameRunnable implements Runnable {
+        private final SinglePlayGameController singlePlayGameController;
+        private final List<Player> players;
+
+        public ResetGameRunnable(SinglePlayGameController singlePlayGameController, List<Player> players) {
+            this.singlePlayGameController = singlePlayGameController;
+            this.players = players;
+        }
+
+        @Override
+        public void run() {
+            singlePlayGameController.resetGame(players);
+        }
     }
 
 }

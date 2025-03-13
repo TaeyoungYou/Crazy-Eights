@@ -6,44 +6,120 @@
   <component name="ChangeListManager">
     <list default="true" id="359720e0-8497-48d6-9a4e-8ff9b1ede7bb" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/javafx-swt.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/javafx.base.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/javafx.controls.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/javafx.fxml.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/javafx.graphics.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/javafx.media.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/javafx.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/javafx.swing.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/javafx.web.jar" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/app/animation/AnimationCharacter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/animation/AnimationCharacter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/app/animation/AnimationEight.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/animation/AnimationEight.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/app/animation/AnimationGame.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/animation/AnimationGame.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/app/animation/AnimationMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/animation/AnimationMenu.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/app/animation/AnimationScoring.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/animation/AnimationScoring.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/app/animation/AnimationSetting.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/animation/AnimationSetting.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/app/controller/MenuController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/controller/MenuController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/app/controller/SinglePlayGameController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/controller/SinglePlayGameController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/app/model/CPU_Msg.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/model/CPU_Msg.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/app/model/Card.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/model/Card.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/app/model/CardObserver.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/model/CardObserver.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/app/model/Chat.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/model/Chat.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/app/model/ChatObserver.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/model/ChatObserver.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/app/model/Deck.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/model/Deck.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/app/model/DeckObserver.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/model/DeckObserver.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/app/model/DummyCard.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/model/DummyCard.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/app/model/GameStatusManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/model/GameStatusManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/app/model/Log.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/model/Log.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/app/model/LogObserver.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/model/LogObserver.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/app/model/Music.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/model/Music.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/app/model/Player.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/model/Player.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/app/model/PlayerObserver.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/model/PlayerObserver.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/app/model/Setting.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/model/Setting.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/app/model/State.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/model/State.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/app/style/StyleCharacter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/style/StyleCharacter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/app/style/StyleEight.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/style/StyleEight.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/app/style/StyleGame.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/style/StyleGame.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/app/style/StyleMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/style/StyleMenu.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/app/style/StyleScoring.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/style/StyleScoring.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/app/style/StyleSetting.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/style/StyleSetting.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/app/view/CharacterChooseView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/view/CharacterChooseView.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/app/view/ChooseEightView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/view/ChooseEightView.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/app/view/MenuView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/view/MenuView.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/app/view/PlayerHandView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/view/PlayerHandView.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/app/view/PlayerScoreView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/view/PlayerScoreView.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/app/view/PlayerStatusView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/view/PlayerStatusView.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/app/view/ScoringView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/view/ScoringView.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/app/view/SettingView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/view/SettingView.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/app/view/SinglePlayGameView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/view/SinglePlayGameView.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../javafx-sdk-21.0.2/bin/api-ms-win-core-console-l1-1-0.dll" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../javafx-sdk-21.0.2/bin/api-ms-win-core-console-l1-2-0.dll" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../javafx-sdk-21.0.2/bin/api-ms-win-core-datetime-l1-1-0.dll" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../javafx-sdk-21.0.2/bin/api-ms-win-core-debug-l1-1-0.dll" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../javafx-sdk-21.0.2/bin/api-ms-win-core-errorhandling-l1-1-0.dll" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../javafx-sdk-21.0.2/bin/api-ms-win-core-file-l1-1-0.dll" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../javafx-sdk-21.0.2/bin/api-ms-win-core-file-l1-2-0.dll" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../javafx-sdk-21.0.2/bin/api-ms-win-core-file-l2-1-0.dll" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../javafx-sdk-21.0.2/bin/api-ms-win-core-handle-l1-1-0.dll" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../javafx-sdk-21.0.2/bin/api-ms-win-core-heap-l1-1-0.dll" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../javafx-sdk-21.0.2/bin/api-ms-win-core-interlocked-l1-1-0.dll" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../javafx-sdk-21.0.2/bin/api-ms-win-core-libraryloader-l1-1-0.dll" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../javafx-sdk-21.0.2/bin/api-ms-win-core-localization-l1-2-0.dll" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../javafx-sdk-21.0.2/bin/api-ms-win-core-memory-l1-1-0.dll" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../javafx-sdk-21.0.2/bin/api-ms-win-core-namedpipe-l1-1-0.dll" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../javafx-sdk-21.0.2/bin/api-ms-win-core-processenvironment-l1-1-0.dll" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../javafx-sdk-21.0.2/bin/api-ms-win-core-processthreads-l1-1-0.dll" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../javafx-sdk-21.0.2/bin/api-ms-win-core-processthreads-l1-1-1.dll" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../javafx-sdk-21.0.2/bin/api-ms-win-core-profile-l1-1-0.dll" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../javafx-sdk-21.0.2/bin/api-ms-win-core-rtlsupport-l1-1-0.dll" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../javafx-sdk-21.0.2/bin/api-ms-win-core-string-l1-1-0.dll" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../javafx-sdk-21.0.2/bin/api-ms-win-core-synch-l1-1-0.dll" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../javafx-sdk-21.0.2/bin/api-ms-win-core-synch-l1-2-0.dll" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../javafx-sdk-21.0.2/bin/api-ms-win-core-sysinfo-l1-1-0.dll" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../javafx-sdk-21.0.2/bin/api-ms-win-core-timezone-l1-1-0.dll" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../javafx-sdk-21.0.2/bin/api-ms-win-core-util-l1-1-0.dll" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../javafx-sdk-21.0.2/bin/api-ms-win-crt-conio-l1-1-0.dll" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../javafx-sdk-21.0.2/bin/api-ms-win-crt-convert-l1-1-0.dll" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../javafx-sdk-21.0.2/bin/api-ms-win-crt-environment-l1-1-0.dll" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../javafx-sdk-21.0.2/bin/api-ms-win-crt-filesystem-l1-1-0.dll" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../javafx-sdk-21.0.2/bin/api-ms-win-crt-heap-l1-1-0.dll" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../javafx-sdk-21.0.2/bin/api-ms-win-crt-locale-l1-1-0.dll" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../javafx-sdk-21.0.2/bin/api-ms-win-crt-math-l1-1-0.dll" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../javafx-sdk-21.0.2/bin/api-ms-win-crt-multibyte-l1-1-0.dll" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../javafx-sdk-21.0.2/bin/api-ms-win-crt-private-l1-1-0.dll" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../javafx-sdk-21.0.2/bin/api-ms-win-crt-process-l1-1-0.dll" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../javafx-sdk-21.0.2/bin/api-ms-win-crt-runtime-l1-1-0.dll" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../javafx-sdk-21.0.2/bin/api-ms-win-crt-stdio-l1-1-0.dll" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../javafx-sdk-21.0.2/bin/api-ms-win-crt-string-l1-1-0.dll" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../javafx-sdk-21.0.2/bin/api-ms-win-crt-time-l1-1-0.dll" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../javafx-sdk-21.0.2/bin/api-ms-win-crt-utility-l1-1-0.dll" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../javafx-sdk-21.0.2/bin/decora_sse.dll" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../javafx-sdk-21.0.2/bin/fxplugins.dll" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../javafx-sdk-21.0.2/bin/glass.dll" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../javafx-sdk-21.0.2/bin/glib-lite.dll" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../javafx-sdk-21.0.2/bin/gstreamer-lite.dll" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../javafx-sdk-21.0.2/bin/javafx_font.dll" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../javafx-sdk-21.0.2/bin/javafx_iio.dll" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../javafx-sdk-21.0.2/bin/jfxmedia.dll" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../javafx-sdk-21.0.2/bin/jfxwebkit.dll" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../javafx-sdk-21.0.2/bin/msvcp140.dll" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../javafx-sdk-21.0.2/bin/msvcp140_1.dll" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../javafx-sdk-21.0.2/bin/msvcp140_2.dll" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../javafx-sdk-21.0.2/bin/prism_common.dll" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../javafx-sdk-21.0.2/bin/prism_d3d.dll" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../javafx-sdk-21.0.2/bin/prism_sw.dll" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../javafx-sdk-21.0.2/bin/ucrtbase.dll" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../javafx-sdk-21.0.2/bin/vcruntime140.dll" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../javafx-sdk-21.0.2/bin/vcruntime140_1.dll" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../javafx-sdk-21.0.2/legal/javafx.base/ADDITIONAL_LICENSE_INFO" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../javafx-sdk-21.0.2/legal/javafx.base/ASSEMBLY_EXCEPTION" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../javafx-sdk-21.0.2/legal/javafx.base/LICENSE" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../javafx-sdk-21.0.2/legal/javafx.controls/ADDITIONAL_LICENSE_INFO" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../javafx-sdk-21.0.2/legal/javafx.controls/ASSEMBLY_EXCEPTION" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../javafx-sdk-21.0.2/legal/javafx.controls/LICENSE" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../javafx-sdk-21.0.2/legal/javafx.fxml/ADDITIONAL_LICENSE_INFO" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../javafx-sdk-21.0.2/legal/javafx.fxml/ASSEMBLY_EXCEPTION" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../javafx-sdk-21.0.2/legal/javafx.fxml/LICENSE" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../javafx-sdk-21.0.2/legal/javafx.graphics/ADDITIONAL_LICENSE_INFO" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../javafx-sdk-21.0.2/legal/javafx.graphics/ASSEMBLY_EXCEPTION" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../javafx-sdk-21.0.2/legal/javafx.graphics/LICENSE" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../javafx-sdk-21.0.2/legal/javafx.graphics/jpeg_fx.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../javafx-sdk-21.0.2/legal/javafx.graphics/mesa3d.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../javafx-sdk-21.0.2/legal/javafx.media/ADDITIONAL_LICENSE_INFO" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../javafx-sdk-21.0.2/legal/javafx.media/ASSEMBLY_EXCEPTION" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../javafx-sdk-21.0.2/legal/javafx.media/LICENSE" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../javafx-sdk-21.0.2/legal/javafx.media/directshow.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../javafx-sdk-21.0.2/legal/javafx.media/glib.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../javafx-sdk-21.0.2/legal/javafx.media/gstreamer.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../javafx-sdk-21.0.2/legal/javafx.media/libffi.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../javafx-sdk-21.0.2/legal/javafx.swing/ADDITIONAL_LICENSE_INFO" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../javafx-sdk-21.0.2/legal/javafx.swing/ASSEMBLY_EXCEPTION" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../javafx-sdk-21.0.2/legal/javafx.swing/LICENSE" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../javafx-sdk-21.0.2/legal/javafx.web/ADDITIONAL_LICENSE_INFO" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../javafx-sdk-21.0.2/legal/javafx.web/ASSEMBLY_EXCEPTION" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../javafx-sdk-21.0.2/legal/javafx.web/LICENSE" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../javafx-sdk-21.0.2/legal/javafx.web/icu_web.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../javafx-sdk-21.0.2/legal/javafx.web/libxml2.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../javafx-sdk-21.0.2/legal/javafx.web/libxslt.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../javafx-sdk-21.0.2/legal/javafx.web/webkit.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../javafx-sdk-21.0.2/lib/javafx-swt.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../javafx-sdk-21.0.2/lib/javafx.base.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../javafx-sdk-21.0.2/lib/javafx.controls.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../javafx-sdk-21.0.2/lib/javafx.fxml.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../javafx-sdk-21.0.2/lib/javafx.graphics.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../javafx-sdk-21.0.2/lib/javafx.media.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../javafx-sdk-21.0.2/lib/javafx.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../javafx-sdk-21.0.2/lib/javafx.swing.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../javafx-sdk-21.0.2/lib/javafx.web.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../javafx-sdk-21.0.2/src.zip" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -73,27 +149,27 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Application.Generator.executor": "Run",
-    "Application.Run.executor": "Run",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "dev",
-    "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Users/Taeyoung/OneDrive/Documents/GitHub/Crazy-Eights/Crazy-Eight/lib/javafx.web.jar",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "project.structure.last.edited": "Project",
-    "project.structure.proportion": "0.15917969",
-    "project.structure.side.proportion": "0.2",
-    "settings.editor.selected.configurable": "preferences.pluginManager",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Application.Generator.executor&quot;: &quot;Run&quot;,
+    &quot;Application.Run.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;dev&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/Taeyoung/OneDrive/Documents/GitHub/Crazy-Eights/Crazy-Eight/javafx-sdk-21.0.2/lib&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.15917969&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\Taeyoung\OneDrive\Documents\GitHub\Crazy-Eights\Crazy-Eight\src\main\resources\button" />
@@ -106,9 +182,9 @@
   </component>
   <component name="RunManager">
     <configuration name="Run" type="Application" factoryName="Application">
-      <option name="MAIN_CLASS_NAME" value="app.App" />
+      <option name="MAIN_CLASS_NAME" value="app.Generator" />
       <module name="Crazy-Eight" />
-      <option name="VM_PARAMETERS" value="--module-path &quot;$PROJECT_DIR$/../javafx-sdk-21.0.2/lib&quot; --add-modules javafx.base,javafx.controls,javafx.fxml,javafx.graphics,javafx.media,javafx.swing,javafx.web -Dprism.order=d3d -Dprism.text=t2k -Djavafx.animation.fullspeed=true" />
+      <option name="VM_PARAMETERS" value="--module-path &quot;C:\Users\Taeyoung\OneDrive\Documents\GitHub\Crazy-Eights\Crazy-Eight\javafx-sdk-21.0.2\lib&quot; --add-modules javafx.base,javafx.controls,javafx.fxml,javafx.graphics,javafx.media,javafx.swing,javafx.web -Dprism.d3d=false -Dfile.encoding=UTF-8" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -151,7 +227,9 @@
       <workItem from="1741809437800" duration="14760000" />
       <workItem from="1741826991711" duration="331000" />
       <workItem from="1741834717511" duration="1537000" />
-      <workItem from="1741879681128" duration="7156000" />
+      <workItem from="1741879681128" duration="8120000" />
+      <workItem from="1741887912608" duration="3659000" />
+      <workItem from="1741903177042" duration="1751000" />
     </task>
     <servers />
   </component>

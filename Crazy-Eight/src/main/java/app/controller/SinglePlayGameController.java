@@ -36,7 +36,7 @@ public class SinglePlayGameController implements CardObserver, DeckObserver, Log
     private Log log;
     private Chat chat;
 
-    private int playerRanPutTime = ThreadLocalRandom.current().nextInt(2, 10);
+    private int playerRanPutTime = ThreadLocalRandom.current().nextInt(3, 9);
     private boolean playerDoChat = Math.random() < 0.7;
     private int playerChatTime = ThreadLocalRandom.current().nextInt(1, playerRanPutTime);
 
@@ -694,8 +694,10 @@ public class SinglePlayGameController implements CardObserver, DeckObserver, Log
         statusManager.setFourTime();
         stackGetCard += 3;
 
-        if (Setting.isEnClicked()) chat.addMessage(CPU_Msg.getEnglishAttack(), players.get(statusManager.getTurn()));
-        else chat.addMessage(CPU_Msg.getKoreanAttack(), players.get(statusManager.getTurn()));
+        if(!players.get(statusManager.getTurn()).isSelf()) {
+            if (Setting.isEnClicked()) chat.addMessage(CPU_Msg.getEnglishAttack(), players.get(statusManager.getTurn()));
+            else chat.addMessage(CPU_Msg.getKoreanAttack(), players.get(statusManager.getTurn()));
+        }
 
         statusManager.nextTurn();
         updatePlayerTurn();
@@ -733,8 +735,10 @@ public class SinglePlayGameController implements CardObserver, DeckObserver, Log
 
         statusManager.doPassTurn();    // 여기가 마지막 초기화함!
 
-        if (Setting.isEnClicked()) chat.addMessage(CPU_Msg.getEnglishAttack(), players.get(statusManager.getTurn()));
-        else chat.addMessage(CPU_Msg.getKoreanAttack(), players.get(statusManager.getTurn()));
+        if(!players.get(statusManager.getTurn()).isSelf()) {
+            if (Setting.isEnClicked()) chat.addMessage(CPU_Msg.getEnglishAttack(), players.get(statusManager.getTurn()));
+            else chat.addMessage(CPU_Msg.getKoreanAttack(), players.get(statusManager.getTurn()));
+        }
 
         if (DEBUG) System.out.println("Current stack: " + stackGetCard);
         if (Setting.isEnClicked())

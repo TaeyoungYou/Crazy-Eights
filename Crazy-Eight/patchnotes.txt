@@ -1,0 +1,23 @@
+Patch Notes
+
+**Version 1.1.0**
+ - The window standard is 1920 x 1080, but this game uses full screen and therefore relies on the display's window size (you need to set your display to 1920 x 1080 before running the game).
+ - I decided to use only three colors (#dddddd, #e1e1e1, #17171A) to keep the design as minimalist as possible.
+ - I initially planned to change the main menu color from #e1e1e1 to #dddddd, but due to technical limitations in JavaFX, I couldn't make it transition smoothly, so we excluded that change.
+ - I thought it would be better from a UX standpoint to place options like Setting and Quit which used to appear after pressing ESC to pause—at the top of the right sidebar, so I changed it.
+ - I updated the UI to add a Score box and Timer in the bottom-left corner to make it feel more lively.
+
+**Version 2.1.0**  
+- Before starting the game, players can choose their own character, and CPU players use unique icons that don’t overlap with the user’s.  
+- Changed the music icon in the top-right to a restart button. The music icon is now moved into the settings so that you can adjust the volume from a sidebar.  
+- Added an animation for the CPU drawing cards. When the user draws cards, there’s an animation showing the card moving to its next spot, giving a clear indication of drawing a card.  
+- Introduced a 10-second timer. If time runs out, cards are automatically drawn. If there are several cards in the stack, they’re all drawn together.  
+- Applied special abilities to cards A, 2, 4, 8, and Q.  
+- At the end of each game, scores are updated as follows: 1st place receives +5, 2nd place receives +3, 3rd place receives +1, and 4th place receives +0 (based on having the fewest cards). If you continue playing, these scores are applied to the score box, and the game proceeds in order of higher scores.  
+- Enabled chat with the CPU by integrating chatgpt-3.5 turbo into the chat system.  
+- Logs are generated for each main event, with statuses applied (System: green, Error: red, Log: white).
+
+**Version 2.2.0**  
+- Removed chatgpt-3.5 turbo due to JavaFX performance issues (replaced with a random string array).  
+- Added language support for English and Korean. Note that the language must be set before the game starts; it cannot be changed mid-game.  
+- Bug fix: When transitioning on timeout, if cards are played or drawn dramatically, a thread issue may mistakenly register it as the next player's turn. (Not sure if I can fix that with my abilities...)

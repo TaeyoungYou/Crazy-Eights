@@ -3,7 +3,9 @@ package app.animation;
 import javafx.animation.Animation;
 import javafx.animation.FadeTransition;
 import javafx.animation.ScaleTransition;
+import javafx.event.EventHandler;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 import javafx.util.Duration;
 
@@ -48,7 +50,7 @@ public class AnimationCharacter {
      *
      * @param card The ImageView to which the hover animation will be applied.
      */
-    public void characterHoverAnimation(ImageView card){
+    public void characterHoverAnimation(ImageView card) {
         ScaleTransition cardUp = new ScaleTransition(Duration.millis(200), card);
         cardUp.setToX(1.1);
         cardUp.setToY(1.1);
@@ -56,11 +58,33 @@ public class AnimationCharacter {
         cardDown.setToX(1.0);
         cardDown.setToY(1.0);
 
-        card.setOnMouseEntered(e -> {
-            cardUp.playFromStart();
-        });
-        card.setOnMouseExited(e -> {
-            cardDown.playFromStart();
-        });
+        card.setOnMouseEntered(new OnMouseEnteredHandler(cardUp));
+        card.setOnMouseExited(new OnMouseExitedHandler(cardDown));
+    }
+
+    private static class OnMouseEnteredHandler implements EventHandler<MouseEvent> {
+        private final ScaleTransition transition;
+
+        public OnMouseEnteredHandler(ScaleTransition transition) {
+            this.transition = transition;
+        }
+
+        @Override
+        public void handle(MouseEvent e) {
+            transition.playFromStart();
+        }
+    }
+
+    private static class OnMouseExitedHandler implements EventHandler<MouseEvent> {
+        private final ScaleTransition transition;
+
+        public OnMouseExitedHandler(ScaleTransition transition) {
+            this.transition = transition;
+        }
+
+        @Override
+        public void handle(MouseEvent e) {
+            transition.playFromStart();
+        }
     }
 }
