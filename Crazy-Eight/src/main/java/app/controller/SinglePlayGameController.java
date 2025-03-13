@@ -92,7 +92,6 @@ public class SinglePlayGameController implements CardObserver, DeckObserver, Log
         if(Setting.isEnClicked()) log.setLogs("Setting Game..." , State.System);
         else log.setLogs("게임 설정 중...", State.System);
 
-        for(Player player : players) System.out.println(player.getPersonality());
 
         SequentialTransition sequence = new SequentialTransition();
 
@@ -125,11 +124,20 @@ public class SinglePlayGameController implements CardObserver, DeckObserver, Log
                         if(DEBUG) System.out.println("Current deck size: " + deck.deckSize());
 
                         updatePlayerTurn();
-//                        if(playerDoChat && players.get(turn).getHand().size() == 1) conversation("I have only one cards left!", true);
-//                        else if(playerDoChat && players.get(turn).getHand().size() < 3) conversation("I have only two cards left!", true);
-//                        if(playerDoChat && players.get(turn).getHand().size() > 8) conversation("I have too many cards! I need a new strategy", true);
-//
-//                        conversation(chat.getLastMessage(), false);
+
+                        if(!players.get(statusManager.getTurn()).isSelf()){
+                            if(Setting.isEnClicked()){
+                                if(playerDoChat) chat.addMessage(CPU_Msg.getEnglishChatResponse(), players.get(statusManager.getTurn()));
+                                if(players.get(statusManager.getTurn()).getCardLeft() > 9) chat.addMessage(CPU_Msg.getEnglishTooManyCards(), players.get(statusManager.getTurn()));
+                                if(players.get(statusManager.getTurn()).getCardLeft() < 2) chat.addMessage(CPU_Msg.getEnglishFewCardsLeft(), players.get(statusManager.getTurn()));
+                            }
+                            else{
+                                if(playerDoChat) chat.addMessage(CPU_Msg.getKoreanChatResponse(), players.get(statusManager.getTurn()));
+                                if(players.get(statusManager.getTurn()).getCardLeft() > 9) chat.addMessage(CPU_Msg.getKoreanTooManyCards(), players.get(statusManager.getTurn()));
+                                if(players.get(statusManager.getTurn()).getCardLeft() < 2) chat.addMessage(CPU_Msg.getKoreanFewCardsLeft(), players.get(statusManager.getTurn()));
+                            }
+                        }
+
 
                         setTurnEffect();
 
@@ -316,9 +324,9 @@ public class SinglePlayGameController implements CardObserver, DeckObserver, Log
         }));
         drawMotion.setCycleCount(stackGetCard);
         drawMotion.setOnFinished(e -> {
+            if(Setting.isEnClicked()) chat.addMessage(CPU_Msg.getEnglishBadDraw(), player);
+            else chat.addMessage(CPU_Msg.getKoreanBadDraw(), player);
             delaySecond(()->{
-                if(playerDoChat) conversation("I have no playable cards and must draw a new one", true);
-
                 // 여기선 옵저버가 call 경우가 없으니 여기서 초기화!
                 stackGetCard = 1;
                 statusManager.doPassTurn();
@@ -520,6 +528,9 @@ public class SinglePlayGameController implements CardObserver, DeckObserver, Log
         statusManager.setFourTime();
         stackGetCard += 3;
 
+        if(Setting.isEnClicked()) chat.addMessage(CPU_Msg.getEnglishAttack(), players.get(statusManager.getTurn()));
+        else chat.addMessage(CPU_Msg.getKoreanAttack(), players.get(statusManager.getTurn()));
+
         statusManager.nextTurn();
         updatePlayerTurn();
         setTurnEffect();
@@ -538,6 +549,9 @@ public class SinglePlayGameController implements CardObserver, DeckObserver, Log
         else stackGetCard += 2;
 
         statusManager.doPassTurn();    // 여기가 마지막 초기화함!
+
+        if(Setting.isEnClicked()) chat.addMessage(CPU_Msg.getEnglishAttack(), players.get(statusManager.getTurn()));
+        else chat.addMessage(CPU_Msg.getKoreanAttack(), players.get(statusManager.getTurn()));
 
         if(DEBUG) System.out.println("Current stack: " + stackGetCard);
         if(Setting.isEnClicked()) log.setLogs(String.format("Current %d cards are stacked", stackGetCard), State.System);
@@ -636,43 +650,6 @@ public class SinglePlayGameController implements CardObserver, DeckObserver, Log
         }
 
     }
-    private void conversation(String msg, boolean sayself){
-        Player player = players.get(new Random().nextInt(4));
-        while(player.isSelf()){
-            player = players.get(new Random().nextInt(4));
-        }
-
-        if (Arrays.stream(chat.getRecentMessage().split(" ")).toList().contains(msg.toLowerCase())) return;
-
-        if(sayself){
-            String context = chat.getRecentMessage();
-            boolean shouldAskQuestion = Math.random() < 0.2;
-
-            String prompt = "Here is the recent conversation:\n" + context +
-                    "\nSay to " + msg +
-                    (shouldAskQuestion ? " Also, ask a relevant question to keep the conversation going." : "");
-            String responds = AI.generate(prompt, players.get(statusManager.getTurn()));
-
-            chat.addMessage(responds, player);
-
-            if(Math.random() < 0.2) conversation(responds, false);
-        }else{
-            double baseResponseChance = 0.5;
-            if(Math.random() < baseResponseChance) {
-                String context = chat.getRecentMessage();
-                boolean shouldAskQuestion = Math.random() < 0.2;
-
-                String prompt = "Here is the recent conversation:\n" + context +
-                        "\nRespond to " + msg +
-                        (shouldAskQuestion ? " Also, ask a relevant question to keep the conversation going." : "");
-                String responds = AI.generate(prompt, player);
-
-                chat.addMessage(responds, player);
-
-                if(Math.random() < 0.3) conversation(responds, false);
-            }
-        }
-    }
 
     private Timeline putStartDummyCard(){
         Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(1), event -> {
@@ -683,6 +660,12 @@ public class SinglePlayGameController implements CardObserver, DeckObserver, Log
             delaySecond(()->{
                 if(Setting.isEnClicked()) log.setLogs("Start Game!", State.System);
                 else log.setLogs("게임 시작!", State.System);
+                for(Player player: players) {
+                    if(new Random().nextBoolean() && !player.isSelf()){
+                        if(Setting.isEnClicked()) chat.addMessage(CPU_Msg.getEnglishGreeting(), player);
+                        else chat.addMessage(CPU_Msg.getKoreanGreeting(), player);
+                    }
+                }
             });
         });
 
@@ -693,6 +676,7 @@ public class SinglePlayGameController implements CardObserver, DeckObserver, Log
         drawGamePage();
 
         deck.generateDeck();
+        Collections.sort(prevPlayers, Collections.reverseOrder());
 
         transformPlayers(prevPlayers);
         for(Player player: players) System.out.println(player.getScore());
@@ -887,6 +871,11 @@ public class SinglePlayGameController implements CardObserver, DeckObserver, Log
         }
     }
 
+    /**
+     * IDK
+     * @param player
+     * @return
+     */
     private boolean clamping(Player player){
         int maxCanDraw = 12 - player.getCardLeft();
         if(stackGetCard > maxCanDraw) {

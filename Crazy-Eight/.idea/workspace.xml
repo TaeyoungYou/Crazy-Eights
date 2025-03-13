@@ -6,16 +6,32 @@
   <component name="ChangeListManager">
     <list default="true" id="359720e0-8497-48d6-9a4e-8ff9b1ede7bb" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/app/animation/AnimationScoring.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/animation/AnimationScoring.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/app/animation/AnimationSetting.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/animation/AnimationSetting.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/adapter-rxjava2-2.9.0.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/api-0.18.2.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/client-0.18.2.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/converter-gson-2.9.0.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/converter-jackson-2.9.0.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/jackson-annotations-2.15.2.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/jackson-core-2.15.2.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/jackson-databind-2.15.2.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/kotlin-stdlib-1.8.22.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/okhttp-4.9.3.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/okio-2.10.0.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/reactive-streams-1.0.3.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/retrofit-2.9.0.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/rxjava-2.2.21.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/service-0.18.2.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/app/App.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/App.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/app/animation/AnimationCharacter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/animation/AnimationCharacter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/app/animation/AnimationEight.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/animation/AnimationEight.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/app/animation/AnimationGame.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/animation/AnimationGame.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/app/animation/AnimationMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/animation/AnimationMenu.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/app/controller/SinglePlayGameController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/controller/SinglePlayGameController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/app/model/Card.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/model/Card.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/app/model/Deck.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/model/Deck.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/app/model/Setting.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/model/Setting.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/app/style/StyleGame.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/style/StyleGame.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/app/style/StyleSetting.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/style/StyleSetting.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/app/view/ScoringView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/view/ScoringView.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/app/view/SettingView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/view/SettingView.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/app/model/AI.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/app/model/CPU_Msg.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/model/CPU_Msg.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/app/model/Chat.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/model/Chat.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/app/model/Personality.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/app/model/Player.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/model/Player.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/app/view/SinglePlayGameView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/view/SinglePlayGameView.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -46,27 +62,27 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Application.Generator.executor": "Run",
-    "Application.Run.executor": "Run",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "dev",
-    "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Users/Taeyoung/OneDrive/Documents/GitHub/Crazy-Eights/Crazy-Eight/lib/javafx.web.jar",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "project.structure.last.edited": "Libraries",
-    "project.structure.proportion": "0.15917969",
-    "project.structure.side.proportion": "0.2",
-    "settings.editor.selected.configurable": "preferences.general",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Application.Generator.executor&quot;: &quot;Run&quot;,
+    &quot;Application.Run.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;dev&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/Taeyoung/OneDrive/Documents/GitHub/Crazy-Eights/Crazy-Eight/lib/javafx.web.jar&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Libraries&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.15917969&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.general&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\Taeyoung\OneDrive\Documents\GitHub\Crazy-Eights\Crazy-Eight\src\main\resources\button" />
@@ -121,11 +137,37 @@
       <workItem from="1741709514253" duration="204000" />
       <workItem from="1741709796044" duration="103000" />
       <workItem from="1741718347943" duration="39000" />
-      <workItem from="1741809437800" duration="10552000" />
+      <workItem from="1741809437800" duration="14760000" />
+      <workItem from="1741826991711" duration="331000" />
+      <workItem from="1741834717511" duration="1537000" />
+      <workItem from="1741879681128" duration="3414000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State>
+              <option name="FILTERS">
+                <map>
+                  <entry key="branch">
+                    <value>
+                      <list>
+                        <option value="origin/dev" />
+                      </list>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+            </State>
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
 </project>

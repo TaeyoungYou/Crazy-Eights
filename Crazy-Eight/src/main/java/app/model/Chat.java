@@ -23,18 +23,6 @@ public class Chat {
         messages.add(message);
         notifyMessage(message, player);
     }
-    public String getRecentMessage(){
-        if(messages.size() < 3) return getLastMessage();
-        String message="";
-        for(int i = messages.size() - 3; i <messages.size(); i++){
-            message += messages.get(i)+" ";
-        }
-        return message;
-    }
-    public String getLastMessage(){
-        if(messages.isEmpty()) return "Start Game!";
-        return messages.getLast();
-    }
 
     private  void notifyMessage(String message){
         controller.updateChat(message, null);

@@ -175,10 +175,15 @@ public class AnimationMenu {
             });
         }
     }
-
+    /**
+     * Applies a fade-out animation to the main menu elements and transitions to the game screen.
+     *
+     * @param scene The current scene.
+     * @param pane  The VBox containing menu elements.
+     */
     public void fadeOutMainMenu(Scene scene, VBox pane) {
         ParallelTransition fadeOutParallel = new ParallelTransition();
-        for(Node node : pane.getChildren()) {
+        for (Node node : pane.getChildren()) {
             FadeTransition fadeOut = new FadeTransition(Duration.seconds(1.5), node);
             fadeOut.setFromValue(1.0);
             fadeOut.setToValue(0.0);
@@ -187,20 +192,23 @@ public class AnimationMenu {
         fadeOutParallel.play();
         fadeOutParallel.setOnFinished(event -> {
             SinglePlayGameController singlePlayGameController = new SinglePlayGameController(scene);
-            singlePlayGameController.selectCharacter(()->{
-                singlePlayGameController.startGame();
-            });
+            singlePlayGameController.selectCharacter(singlePlayGameController::startGame);
         });
     }
 
+    /**
+     * Applies a fade-in effect to the main menu elements.
+     *
+     * @param pane The VBox containing menu elements.
+     */
     public void fadeInMainMenu(VBox pane) {
-        ParallelTransition fadeOutParallel = new ParallelTransition();
-        for(Node node : pane.getChildren()) {
-            FadeTransition fadeOut = new FadeTransition(Duration.seconds(1.5), node);
-            fadeOut.setFromValue(0.0);
-            fadeOut.setToValue(1.0);
-            fadeOutParallel.getChildren().add(fadeOut);
+        ParallelTransition fadeInParallel = new ParallelTransition();
+        for (Node node : pane.getChildren()) {
+            FadeTransition fadeIn = new FadeTransition(Duration.seconds(1.5), node);
+            fadeIn.setFromValue(0.0);
+            fadeIn.setToValue(1.0);
+            fadeInParallel.getChildren().add(fadeIn);
         }
-        fadeOutParallel.play();
+        fadeInParallel.play();
     }
 }

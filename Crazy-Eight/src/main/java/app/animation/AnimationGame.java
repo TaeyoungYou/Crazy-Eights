@@ -3,10 +3,7 @@ package app.animation;
 import app.controller.MenuController;
 import app.controller.SinglePlayGameController;
 import app.model.Player;
-import app.style.StyleGame;
-import app.view.MenuView;
 import javafx.animation.*;
-import javafx.collections.ObservableList;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -17,15 +14,13 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
 import javafx.util.Duration;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Handles various animations for the game, such as card interactions,
- * hover effects, and transitions.
+ * hover effects, and scene transitions.
  */
 public class AnimationGame {
     private double mouseOffsetX, mouseOffsetY;
@@ -34,12 +29,23 @@ public class AnimationGame {
     private final double DELETE_Y = 400;
     private final double DELETE_X = 480;
 
+    /**
+     * Scales up the card when hovered.
+     *
+     * @param card The ImageView representing the card.
+     */
     public void cardHoverEffectScaleUp(ImageView card) {
         ScaleTransition scaleUp = new ScaleTransition(Duration.millis(100), card);
         scaleUp.setToX(1.1);
         scaleUp.setToY(1.1);
         scaleUp.playFromStart();
     }
+
+    /**
+     * Scales down the card when hover ends.
+     *
+     * @param card The ImageView representing the card.
+     */
     public void cardHoverEffectScaleDown(ImageView card) {
         ScaleTransition scaleDown = new ScaleTransition(Duration.millis(100), card);
         scaleDown.setToX(1.0);
@@ -47,6 +53,12 @@ public class AnimationGame {
         scaleDown.playFromStart();
     }
 
+    /**
+     * Initializes card dragging by setting offset and lowering opacity.
+     *
+     * @param event The MouseEvent that triggered the drag.
+     * @param card The ImageView being dragged.
+     */
     public void cardDragPressed(MouseEvent event, ImageView card) {
         mouseOffsetX = event.getSceneX() - card.getLayoutX();
         mouseOffsetY = event.getSceneY() - card.getLayoutY();
@@ -56,20 +68,32 @@ public class AnimationGame {
         card.toFront();
     }
 
+    /**
+     * Moves the card while being dragged within the allowed bounds.
+     *
+     * @param event The MouseEvent that moves the card.
+     * @param card The ImageView being dragged.
+     */
     public void cardDragDragged(MouseEvent event, ImageView card){
         double newX = event.getSceneX() - mouseOffsetX;
         double newY = event.getSceneY() - mouseOffsetY;
         if (newX >= 0 && newX <= 865) {
             card.setLayoutX(newX);
         }
-        if (newY >= 0 && newY <= 1080-292) {
+        if (newY >= 0 && newY <= 788) {
             card.setLayoutY(newY);
         }
     }
 
+    /**
+     * Determines whether the card should fade out upon release or remain.
+     *
+     * @param event The MouseEvent that triggered the release.
+     * @param card The ImageView being dragged.
+     * @return A FadeTransition animation if the card should fade out, otherwise null.
+     */
     public Animation cardDragReleased(MouseEvent event, ImageView card){
         card.setOpacity(1.0);
-
         if (card.getLayoutY() < DELETE_Y && card.getLayoutX() > DELETE_X) {
             FadeTransition fadeOut = new FadeTransition(Duration.millis(500), card);
             fadeOut.setToValue(0.0);
@@ -79,139 +103,27 @@ public class AnimationGame {
     }
 
     /**
-     * Animates the card moving back to its original position if it was dragged but not placed in a valid area.
+     * Moves the card back to its original position when dropped outside a valid area.
      *
-     * @param card      The ImageView representing the card.
-     * @param cardPlace The Pane where the card is displayed.
+     * @param card The ImageView being moved.
+     * @param cardPlace The pane containing the card.
      */
     public void cardMoveBackEffect(ImageView card, Pane cardPlace) {
         TranslateTransition moveBack = new TranslateTransition(Duration.millis(200), card);
-        moveBack.setFromX(0);
-        moveBack.setToX(0);
         moveBack.setToX(originCardX - card.getLayoutX());
         moveBack.setToY(originCardY - card.getLayoutY());
         moveBack.setOnFinished(e -> {
             card.setLayoutX(originCardX);
             card.setLayoutY(originCardY);
-            card.setTranslateX(0);
-            card.setTranslateY(0);
         });
         moveBack.play();
     }
 
     /**
-     * Applies a hover animation effect to a button, scaling it down slightly when hovered
-     * and restoring its original size when the mouse exits.
+     * Fades in all children of the given pane.
      *
-     * @param button The ImageView representing the button.
+     * @param pane The pane whose children should fade in.
      */
-    public void buttonAnimation(ImageView button) {
-        ScaleTransition mouseOn = new ScaleTransition(Duration.millis(200), button);
-        mouseOn.setToX(0.85);
-        mouseOn.setToY(0.85);
-        ScaleTransition mouseOff = new ScaleTransition(Duration.millis(200), button);
-        mouseOff.setToX(1.0);
-        mouseOff.setToY(1.0);
-        button.setCursor(Cursor.HAND);
-
-        button.setOnMouseEntered(e -> {
-            mouseOn.playFromStart();
-            button.setOpacity(0.8);
-        });
-        button.setOnMouseExited(e -> {
-            mouseOff.playFromStart();
-            button.setOpacity(1.0);
-        });
-    }
-
-    /**
-     * Applies a hover animation effect to the deck, slightly scaling it down when hovered
-     * and restoring its original size when the mouse exits.
-     *
-     * @param deck The ImageView representing the deck.
-     */
-    public void deckHoverAnimation(ImageView deck) {
-        ScaleTransition deckUp = new ScaleTransition(Duration.millis(200), deck);
-        deckUp.setToX(1.0);
-        deckUp.setToY(1.0);
-        ScaleTransition deckDown = new ScaleTransition(Duration.millis(200), deck);
-        deckDown.setToX(0.95);
-        deckDown.setToY(0.95);
-
-        deck.setOnMouseEntered(event -> {
-            deck.setCursor(Cursor.HAND);
-            deck.setOpacity(0.8);
-            deckDown.playFromStart();
-        });
-        deck.setOnMouseExited(event -> {
-            deck.setCursor(Cursor.DEFAULT);
-            deck.setOpacity(1);
-            deckUp.playFromStart();
-        });
-    }
-
-    public ImageView getCardAnimation(AnchorPane deckPlace) {
-        ImageView card = new ImageView(new Image(getClass().getResource("/card/Card-Back.png").toExternalForm()));
-        card.setFitWidth(220);
-        card.setPreserveRatio(true);
-        card.setOpacity(0.5);
-        card.setLayoutX(300);
-        card.setLayoutY(200);
-        deckPlace.getChildren().add(card);
-
-        return card;
-    }
-
-    public Animation getCardTranslateAnimation(ImageView card, int count) {
-        TranslateTransition moveToHand = new TranslateTransition(Duration.millis(500), card);
-        moveToHand.setToX((count - 4) * 75);
-        moveToHand.setToY(1080 - 300 - 200);
-        moveToHand.play();
-
-        return moveToHand;
-    }
-
-    public Animation putCardTranslateWithPlayerAnimation(ImageView card){
-        TranslateTransition moveToDummy = new TranslateTransition(Duration.millis(500), card);
-        moveToDummy.setFromX(-500);
-        moveToDummy.setToX(300);
-
-        FadeTransition fadeIn = new FadeTransition(Duration.millis(500), card);
-        fadeIn.setFromValue(0.0);
-        fadeIn.setToValue(1.0);
-
-        ParallelTransition pt = new ParallelTransition(moveToDummy, fadeIn);
-
-        pt.play();
-
-        return pt;
-    }
-
-    public Animation getCardTranslateToPlayersAnimation(ImageView card) {
-        TranslateTransition moveToPlayer = new TranslateTransition(Duration.millis(500), card);
-        moveToPlayer.setToX(-500);
-
-        FadeTransition fadeOut = new FadeTransition(Duration.millis(500), card);
-        fadeOut.setFromValue(1.0);
-        fadeOut.setToValue(0.0);
-
-        ParallelTransition pt = new ParallelTransition(moveToPlayer, fadeOut);
-
-        pt.play();
-
-        return pt;
-    }
-
-    public void addLeftCardAnimation(Label left){
-        ScaleTransition scale = new ScaleTransition(Duration.millis(200), left);
-        scale.setToX(1.2);
-        scale.setToY(1.2);
-        scale.setAutoReverse(true);
-        scale.setCycleCount(2);
-        scale.play();
-    }
-
-
     public void fadeInSinglePlay(Pane pane){
         ParallelTransition parallelFadeIn = new ParallelTransition();
         addFadeIn(pane, parallelFadeIn);
@@ -227,6 +139,12 @@ public class AnimationGame {
         }
     }
 
+    /**
+     * Fades out all children of the given pane and transitions back to the main menu.
+     *
+     * @param scene The current scene.
+     * @param pane The pane to fade out.
+     */
     public void fadeOutSinglePlay(Scene scene, Pane pane){
         ParallelTransition parallelFadeOut = new ParallelTransition();
         addFadeOut(pane, parallelFadeOut);
@@ -245,27 +163,4 @@ public class AnimationGame {
             parallelFadeOut.getChildren().add(fadeOut);
         }
     }
-
-    public void resetFadeOutGame(Scene scene, BorderPane pane, List<Player> players) {
-        ParallelTransition fadeOutParallel = new ParallelTransition();
-        for(Node node : pane.getChildren()) {
-            FadeTransition fadeOut = new FadeTransition(Duration.seconds(1.5), node);
-            fadeOut.setFromValue(1.0);
-            fadeOut.setToValue(0.0);
-            fadeOutParallel.getChildren().add(fadeOut);
-        }
-        fadeOutParallel.play();
-        fadeOutParallel.setOnFinished(event -> {
-            if(players == null){
-                SinglePlayGameController singlePlayGameController = new SinglePlayGameController(scene);
-                singlePlayGameController.selectCharacter(()->{
-                    singlePlayGameController.startGame();
-                });
-            } else {
-                SinglePlayGameController singlePlayGameController = new SinglePlayGameController(scene);
-                singlePlayGameController.delaySecond(()->singlePlayGameController.resetGame(players));
-            }
-        });
-    }
-
 }

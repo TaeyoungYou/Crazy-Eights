@@ -441,7 +441,12 @@ public class SinglePlayGameView {
         Label msg = new Label(message);
         msg.setWrapText(true);
         msg.setMaxWidth(300);
-        msg.setStyle(style.sideMessageBox());
+        if(Setting.isEnClicked()){
+            msg.setStyle(style.sideMessageBox());
+        } else {
+            msg.setStyle(style.sideMessageBoxKRVersion());
+            msg.setFont(Font.loadFont(style.getCookieRunFont(), 14));
+        }
         box.getChildren().add(msg);
         box.setAlignment(Pos.CENTER_RIGHT);
         chats.getChildren().add(box);
