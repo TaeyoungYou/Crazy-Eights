@@ -1,7 +1,6 @@
 package app;
 
 import app.controller.MenuController;
-import app.model.Player;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
@@ -24,6 +23,7 @@ public class App extends Application {    /**
     @Override
     public void start(Stage primaryStage) throws Exception {
         StackPane root = new StackPane();
+        root.setPrefSize(1920, 1080);
         Scene scene = new Scene(root);
         configStage(primaryStage);
         primaryStage.setScene(scene);
@@ -50,7 +50,7 @@ public class App extends Application {    /**
     private void configStage(Stage primaryStage) throws AWTException {
         primaryStage.setTitle("Crazy Eights");
         primaryStage.setResizable(false);
-        primaryStage.setFullScreen(true);
+        primaryStage.setFullScreen(false);
         primaryStage.setFullScreenExitHint("");
         primaryStage.setFullScreenExitKeyCombination(KeyCombination.NO_MATCH);
         primaryStage.getIcons().add(new Image(getClass().getResource("/icon/icon.png").toExternalForm()));

@@ -2,8 +2,11 @@ package app.controller;
 
 import app.view.MenuView;
 import app.view.SettingView;
+import app.view.multi.MultiMenuView;
 import javafx.application.Platform;
+import javafx.event.EventHandler;
 import javafx.scene.Scene;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 
@@ -18,6 +21,7 @@ public class MenuController {
 
     private MenuView menuView;
     private SettingView settingView;
+    private MultiMenuView multiMenuView;
 
     private static boolean started = false;
 
@@ -32,6 +36,7 @@ public class MenuController {
         mainPane = new BorderPane();
         menuView = new MenuView(mainPane);
         settingView = new SettingView(root);
+        multiMenuView = new MultiMenuView(root);
     }
 
     /**
@@ -57,8 +62,37 @@ public class MenuController {
             menuView.displayMenu();
         }
 
-        menuView.getSinglePlayButton().setOnMouseClicked(event -> menuView.fadeOutMenuAnimation(scene));
-        menuView.getSettingsButton().setOnMouseClicked(event -> settingView.generate());
-        menuView.getQuitButton().setOnMouseClicked(event -> Platform.exit());
+        menuView.getSinglePlayButton().setOnMouseClicked(new SinglePlayButtonHandler());
+        menuView.getMultiPlayButton().setOnMouseClicked(new MultiPlayButtonHandler());
+        menuView.getSettingsButton().setOnMouseClicked(new SettingsButtonHandler());
+        menuView.getQuitButton().setOnMouseClicked(new QuitButtonHandler());
+    }
+
+    private class SinglePlayButtonHandler implements EventHandler<MouseEvent> {
+        @Override
+        public void handle(MouseEvent event) {
+            menuView.fadeOutMenuAnimation(scene);
+        }
+    }
+
+    private class MultiPlayButtonHandler implements EventHandler<MouseEvent> {
+        @Override
+        public void handle(MouseEvent event) {
+            multiMenuView.generate();
+        }
+    }
+
+    private class SettingsButtonHandler implements EventHandler<MouseEvent> {
+        @Override
+        public void handle(MouseEvent event) {
+            settingView.generate();
+        }
+    }
+
+    private class QuitButtonHandler implements EventHandler<MouseEvent> {
+        @Override
+        public void handle(MouseEvent event) {
+            Platform.exit();
+        }
     }
 }

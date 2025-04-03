@@ -11,9 +11,8 @@ import javafx.util.Duration;
 
 
 /**
- * The AnimationCharacter class provides methods to add animation effects
- * to JavaFX UI components such as StackPane and ImageView. These animations
- * include fade-in, fade-out, and hover effects.
+ * The AnimationCharacter class provides animation effects for JavaFX components such as StackPane
+ * and ImageView. It includes fade-in, fade-out, and hover effects to enhance user interaction and visual appeal.
  */
 public class AnimationCharacter {
 

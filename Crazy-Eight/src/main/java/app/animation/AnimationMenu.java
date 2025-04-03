@@ -1,7 +1,7 @@
 package app.animation;
 
 import app.controller.SinglePlayGameController;
-import app.model.Music;
+import app.model.single.Music;
 import javafx.animation.*;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -280,9 +280,7 @@ public class AnimationMenu {
         @Override
         public void handle(ActionEvent event) {
             SinglePlayGameController singlePlayGameController = new SinglePlayGameController(scene);
-            singlePlayGameController.selectCharacter(() -> {
-                singlePlayGameController.startGame();
-            });
+            singlePlayGameController.selectCharacter(singlePlayGameController::startGame);
         }
     }
 

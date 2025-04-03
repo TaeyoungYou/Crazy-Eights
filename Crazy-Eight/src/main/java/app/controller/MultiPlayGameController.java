@@ -1,8 +1,9 @@
 package app.controller;
 
-import app.model.single.*;
+import app.model.multi.*;
 import app.view.SettingView;
-import app.view.single.*;
+import app.view.multi.MultiPlayGameView;
+import app.view.multi.*;
 import javafx.animation.*;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -22,12 +23,12 @@ import java.util.concurrent.ThreadLocalRandom;
  * The SinglePlayGameController class handles the main logic and state of a single-player game.
  * It manages the game flow, UI interactions, and game state updates for a turn-based card game.
  */
-public class SinglePlayGameController implements CardObserver, DeckObserver, LogObserver, ChatObserver {
+public class MultiPlayGameController implements CardObserver, DeckObserver, LogObserver, ChatObserver {
     private Scene scene;
     private StackPane root;
     private BorderPane mainPane;
 
-    private SinglePlayGameView mainView;
+    private MultiPlayGameView mainView;
     private SettingView settingView;
     private ChooseEightView chooseEightView;
     private CharacterChooseView characterChooseView;
@@ -59,11 +60,11 @@ public class SinglePlayGameController implements CardObserver, DeckObserver, Log
     /**
      * Constructs a SinglePlayGameController
      */
-    public SinglePlayGameController(Scene _scene) {
+    public MultiPlayGameController(Scene _scene) {
         scene = _scene;
         root = new StackPane();
         mainPane = new BorderPane();
-        mainView = new SinglePlayGameView(mainPane);
+        mainView = new MultiPlayGameView(mainPane);
         settingView = new SettingView(root);
         chooseEightView = new ChooseEightView(root);
         characterChooseView = new CharacterChooseView(root);
@@ -89,7 +90,7 @@ public class SinglePlayGameController implements CardObserver, DeckObserver, Log
         }
     }
 
-    private class CharacterSelectHandler implements javafx.event.EventHandler<javafx.scene.input.MouseEvent> {
+    private class CharacterSelectHandler implements EventHandler<MouseEvent> {
         private final Pair<ImageView, String> pair;
         private final Runnable function;
 
@@ -99,7 +100,7 @@ public class SinglePlayGameController implements CardObserver, DeckObserver, Log
         }
 
         @Override
-        public void handle(javafx.scene.input.MouseEvent e) {
+        public void handle(MouseEvent e) {
             e.consume();
             userCharacter = pair.getValue();
             Animation fadeOut = characterChooseView.getFadeOutPaneAnimation();
@@ -132,7 +133,7 @@ public class SinglePlayGameController implements CardObserver, DeckObserver, Log
      * - Initiates the core game logic and enables gameplay actions.
      */
     public void startGame() {
-        if(DEBUG) System.out.println("Single Play Game Start!");
+        if(DEBUG) System.out.println("Multi Play Game Start!");
         drawGamePage();
 
         deck.generateDeck();
@@ -291,18 +292,18 @@ public class SinglePlayGameController implements CardObserver, DeckObserver, Log
         scoringView.getExitButton().setOnMouseClicked(new ExitButtonHandler());
     }
 
-    private class ContinueButtonHandler implements EventHandler<javafx.scene.input.MouseEvent> {
+    private class ContinueButtonHandler implements EventHandler<MouseEvent> {
         @Override
-        public void handle(javafx.scene.input.MouseEvent e) {
+        public void handle(MouseEvent e) {
             scoringView.fadeOutPane();
             mainView.resetGame(scene, mainPane, players);
             game.stop();
         }
     }
 
-    private class ExitButtonHandler implements EventHandler<javafx.scene.input.MouseEvent> {
+    private class ExitButtonHandler implements EventHandler<MouseEvent> {
         @Override
-        public void handle(javafx.scene.input.MouseEvent e) {
+        public void handle(MouseEvent e) {
             scoringView.fadeOutPane();
             mainView.setFadeOutSinglePlay(scene);
             game.stop();
@@ -612,7 +613,7 @@ public class SinglePlayGameController implements CardObserver, DeckObserver, Log
             public void handle(MouseEvent event) {
                 mainView.getDeck().setDisable(true);
 
-                if (SinglePlayGameController.this.clamping(player)) return;
+                if (MultiPlayGameController.this.clamping(player)) return;
 
                 statusManager.doUserDid();  // 플래그 바꿈! - Time out이 안됨
 

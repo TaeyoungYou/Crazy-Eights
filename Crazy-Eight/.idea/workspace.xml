@@ -5,21 +5,296 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="359720e0-8497-48d6-9a4e-8ff9b1ede7bb" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/src/main/java/app/animation/AnimationMultiMenu.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/app/animation/multi/AnimationGame.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/app/controller/MultiPlayGameController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/app/model/multi/Chat.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/app/model/multi/Deck.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/app/model/multi/DummyCard.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/app/model/multi/Log.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/app/model/single/CPU_Msg.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/app/model/single/Card.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/app/model/single/CardObserver.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/app/model/single/ChatObserver.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/app/model/single/DeckObserver.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/app/model/single/GameStatusManager.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/app/model/single/LogObserver.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/app/model/single/Music.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/app/model/single/Player.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/app/model/single/PlayerObserver.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/app/model/single/Setting.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/app/model/single/State.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/app/style/StyleMultiMenu.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/app/view/multi/CharacterChooseView.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/app/view/multi/ChooseEightView.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/app/view/multi/MultiMenuView.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/app/view/multi/MultiPlayGameView.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/app/view/multi/PlayerHandView.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/app/view/multi/PlayerScoreView.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/app/view/multi/PlayerStatusView.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/app/view/multi/ScoringView.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/javafx-swt.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/javafx.base.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/javafx.controls.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/javafx.fxml.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/javafx.graphics.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/javafx.media.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/javafx.properties" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/javafx.swing.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/javafx.web.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/Crazy-Eights.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/META-INF/MANIFEST.MF" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/main/java/app/App.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/main/java/app/Generator.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/main/java/app/animation/AnimationCharacter.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/main/java/app/animation/AnimationEight.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/main/java/app/animation/AnimationGame.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/main/java/app/animation/AnimationMenu.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/main/java/app/animation/AnimationScoring.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/main/java/app/animation/AnimationSetting.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/main/java/app/controller/MenuController.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/main/java/app/controller/SinglePlayGameController.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/main/java/app/model/CPU_Msg.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/main/java/app/model/Card.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/main/java/app/model/CardObserver.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/main/java/app/model/Chat.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/main/java/app/model/ChatObserver.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/main/java/app/model/Deck.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/main/java/app/model/DeckObserver.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/main/java/app/model/DummyCard.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/main/java/app/model/GameStatusManager.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/main/java/app/model/Log.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/main/java/app/model/LogObserver.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/main/java/app/model/Music.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/main/java/app/model/Player.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/main/java/app/model/PlayerObserver.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/main/java/app/model/Setting.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/main/java/app/model/State.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/main/java/app/style/StyleCharacter.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/main/java/app/style/StyleEight.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/main/java/app/style/StyleGame.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/main/java/app/style/StyleMenu.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/main/java/app/style/StyleScoring.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/main/java/app/style/StyleSetting.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/main/java/app/view/CharacterChooseView.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/main/java/app/view/ChooseEightView.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/main/java/app/view/MenuView.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/main/java/app/view/PlayerHandView.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/main/java/app/view/PlayerScoreView.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/main/java/app/view/PlayerStatusView.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/main/java/app/view/ScoringView.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/main/java/app/view/SettingView.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/main/java/app/view/SinglePlayGameView.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/resources/META-INF/MANIFEST.MF" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/resources/avatar/User-01.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/resources/avatar/User-02.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/resources/avatar/User-03.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/resources/avatar/User-04.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/resources/avatar/User-05.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/resources/avatar/User-06.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/resources/avatar/User-07.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/resources/background/menu_background.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/resources/button/back.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/resources/button/restart.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/resources/button/settings.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/resources/button/volume-off.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/resources/button/volume-on.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/resources/card/Card-0-0.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/resources/card/Card-0-1.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/resources/card/Card-0-10.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/resources/card/Card-0-11.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/resources/card/Card-0-12.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/resources/card/Card-0-2.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/resources/card/Card-0-3.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/resources/card/Card-0-4.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/resources/card/Card-0-5.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/resources/card/Card-0-6.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/resources/card/Card-0-7.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/resources/card/Card-0-8.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/resources/card/Card-0-9.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/resources/card/Card-1-0.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/resources/card/Card-1-1.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/resources/card/Card-1-10.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/resources/card/Card-1-11.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/resources/card/Card-1-12.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/resources/card/Card-1-2.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/resources/card/Card-1-3.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/resources/card/Card-1-4.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/resources/card/Card-1-5.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/resources/card/Card-1-6.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/resources/card/Card-1-7.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/resources/card/Card-1-8.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/resources/card/Card-1-9.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/resources/card/Card-2-0.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/resources/card/Card-2-1.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/resources/card/Card-2-10.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/resources/card/Card-2-11.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/resources/card/Card-2-12.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/resources/card/Card-2-2.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/resources/card/Card-2-3.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/resources/card/Card-2-4.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/resources/card/Card-2-5.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/resources/card/Card-2-6.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/resources/card/Card-2-7.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/resources/card/Card-2-8.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/resources/card/Card-2-9.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/resources/card/Card-3-0.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/resources/card/Card-3-1.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/resources/card/Card-3-10.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/resources/card/Card-3-11.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/resources/card/Card-3-12.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/resources/card/Card-3-2.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/resources/card/Card-3-3.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/resources/card/Card-3-4.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/resources/card/Card-3-5.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/resources/card/Card-3-6.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/resources/card/Card-3-7.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/resources/card/Card-3-8.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/resources/card/Card-3-9.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/resources/card/Card-Back.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/resources/card/Card-Deck.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/resources/card/Card-Empty.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/resources/font/CookieRun-Regular.ttf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/resources/font/LilitaOne-Regular.ttf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/resources/icon/icon.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/resources/sound/music.mp3" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/doc/allclasses-index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/doc/allpackages-index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/doc/app/App.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/doc/app/Generator.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/doc/app/animation/AnimationCharacter.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/doc/app/animation/AnimationEight.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/doc/app/animation/AnimationGame.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/doc/app/animation/AnimationMenu.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/doc/app/animation/AnimationScoring.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/doc/app/animation/AnimationSetting.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/doc/app/animation/package-summary.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/doc/app/animation/package-tree.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/doc/app/controller/MenuController.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/doc/app/controller/SinglePlayGameController.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/doc/app/controller/package-summary.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/doc/app/controller/package-tree.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/doc/app/model/CPU_Msg.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/doc/app/model/Card.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/doc/app/model/CardObserver.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/doc/app/model/Chat.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/doc/app/model/ChatObserver.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/doc/app/model/Deck.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/doc/app/model/DeckObserver.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/doc/app/model/DummyCard.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/doc/app/model/GameStatusManager.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/doc/app/model/Log.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/doc/app/model/LogObserver.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/doc/app/model/Music.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/doc/app/model/Player.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/doc/app/model/PlayerObserver.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/doc/app/model/Setting.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/doc/app/model/State.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/doc/app/model/package-summary.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/doc/app/model/package-tree.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/doc/app/package-summary.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/doc/app/package-tree.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/doc/app/style/StyleCharacter.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/doc/app/style/StyleEight.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/doc/app/style/StyleGame.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/doc/app/style/StyleMenu.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/doc/app/style/StyleScoring.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/doc/app/style/StyleSetting.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/doc/app/style/package-summary.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/doc/app/style/package-tree.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/doc/app/view/CharacterChooseView.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/doc/app/view/ChooseEightView.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/doc/app/view/MenuView.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/doc/app/view/PlayerHandView.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/doc/app/view/PlayerScoreView.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/doc/app/view/PlayerStatusView.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/doc/app/view/ScoringView.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/doc/app/view/SettingView.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/doc/app/view/SinglePlayGameView.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/doc/app/view/package-summary.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/doc/app/view/package-tree.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/doc/element-list" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/doc/help-doc.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/doc/index-all.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/doc/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/doc/legal/COPYRIGHT" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/doc/legal/LICENSE" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/doc/legal/dejavufonts.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/doc/legal/jquery.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/doc/legal/jqueryUI.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/doc/member-search-index.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/doc/module-search-index.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/doc/overview-summary.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/doc/overview-tree.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/doc/package-search-index.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/doc/resource-files/copy.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/doc/resource-files/fonts/DejaVuLGCSans-Bold.woff" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/doc/resource-files/fonts/DejaVuLGCSans-Bold.woff2" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/doc/resource-files/fonts/DejaVuLGCSans-BoldOblique.woff" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/doc/resource-files/fonts/DejaVuLGCSans-BoldOblique.woff2" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/doc/resource-files/fonts/DejaVuLGCSans-Oblique.woff" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/doc/resource-files/fonts/DejaVuLGCSans-Oblique.woff2" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/doc/resource-files/fonts/DejaVuLGCSans.woff" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/doc/resource-files/fonts/DejaVuLGCSans.woff2" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/doc/resource-files/fonts/DejaVuLGCSansMono-Bold.woff" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/doc/resource-files/fonts/DejaVuLGCSansMono-Bold.woff2" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/doc/resource-files/fonts/DejaVuLGCSansMono-BoldOblique.woff" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/doc/resource-files/fonts/DejaVuLGCSansMono-BoldOblique.woff2" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/doc/resource-files/fonts/DejaVuLGCSansMono-Oblique.woff" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/doc/resource-files/fonts/DejaVuLGCSansMono-Oblique.woff2" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/doc/resource-files/fonts/DejaVuLGCSansMono.woff" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/doc/resource-files/fonts/DejaVuLGCSansMono.woff2" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/doc/resource-files/fonts/DejaVuLGCSerif-Bold.woff" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/doc/resource-files/fonts/DejaVuLGCSerif-Bold.woff2" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/doc/resource-files/fonts/DejaVuLGCSerif-BoldItalic.woff" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/doc/resource-files/fonts/DejaVuLGCSerif-BoldItalic.woff2" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/doc/resource-files/fonts/DejaVuLGCSerif-Italic.woff" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/doc/resource-files/fonts/DejaVuLGCSerif-Italic.woff2" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/doc/resource-files/fonts/DejaVuLGCSerif.woff" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/doc/resource-files/fonts/DejaVuLGCSerif.woff2" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/doc/resource-files/fonts/dejavu.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/doc/resource-files/glass.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/doc/resource-files/jquery-ui.min.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/doc/resource-files/link.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/doc/resource-files/stylesheet.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/doc/resource-files/x.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/doc/script-files/jquery-3.7.1.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/doc/script-files/jquery-ui.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/doc/script-files/script.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/doc/script-files/search-page.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/doc/script-files/search.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/doc/search.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/doc/tag-search-index.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/doc/type-search-index.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/labs-jar.err" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/labs-jar.out" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/labs-javac.err" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/labs-javadoc.err" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/app/App.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/App.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/app/animation/AnimationCharacter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/animation/AnimationCharacter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/app/animation/AnimationEight.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/animation/AnimationEight.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/app/animation/AnimationGame.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/animation/AnimationGame.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/app/animation/AnimationGame.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/animation/single/AnimationGame.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/app/animation/AnimationMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/animation/AnimationMenu.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/app/animation/AnimationScoring.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/animation/AnimationScoring.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/app/animation/AnimationSetting.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/animation/AnimationSetting.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/app/controller/MenuController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/controller/MenuController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/app/controller/SinglePlayGameController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/controller/SinglePlayGameController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/app/model/CPU_Msg.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/model/multi/CPU_Msg.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/app/model/Card.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/model/multi/Card.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/app/model/CardObserver.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/model/multi/CardObserver.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/app/model/Chat.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/model/single/Chat.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/app/model/ChatObserver.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/model/multi/ChatObserver.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/app/model/Deck.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/model/single/Deck.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/app/model/DeckObserver.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/model/multi/DeckObserver.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/app/model/DummyCard.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/model/single/DummyCard.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/app/model/GameStatusManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/model/multi/GameStatusManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/app/model/Log.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/model/single/Log.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/app/model/LogObserver.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/model/multi/LogObserver.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/app/model/Music.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/model/multi/Music.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/app/model/Player.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/model/multi/Player.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/app/model/PlayerObserver.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/model/multi/PlayerObserver.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/app/model/Setting.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/model/multi/Setting.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/app/model/State.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/model/multi/State.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/app/view/CharacterChooseView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/view/single/CharacterChooseView.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/app/view/ChooseEightView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/view/single/ChooseEightView.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/app/view/MenuView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/view/MenuView.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/app/view/PlayerHandView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/view/single/PlayerHandView.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/app/view/PlayerScoreView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/view/single/PlayerScoreView.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/app/view/PlayerStatusView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/view/single/PlayerStatusView.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/app/view/ScoringView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/view/single/ScoringView.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/app/view/SettingView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/view/SettingView.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/app/view/SinglePlayGameView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/view/single/SinglePlayGameView.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../javafx-sdk-21.0.2/bin/api-ms-win-core-console-l1-1-0.dll" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/../javafx-sdk-21.0.2/bin/api-ms-win-core-console-l1-2-0.dll" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/../javafx-sdk-21.0.2/bin/api-ms-win-core-datetime-l1-1-0.dll" beforeDir="false" />
@@ -146,42 +421,60 @@
 }</component>
   <component name="ProjectId" id="2tvfRQJtUl3dkHeygPXFc4JbtjF" />
   <component name="ProjectViewState">
-    <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Application.Generator.executor&quot;: &quot;Run&quot;,
-    &quot;Application.Run.executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;dev&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/Taeyoung/OneDrive/Documents/GitHub/Crazy-Eights/Crazy-Eight/javafx-sdk-21.0.2/lib&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.15917969&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Application.Client01.executor": "Run",
+    "Application.Generator.executor": "Run",
+    "Application.Run.executor": "Run",
+    "Application.Server.executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "git-widget-placeholder": "dev",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "C:/Users/Taeyoung/OneDrive/Documents/GitHub/Crazy-Eights/Crazy-Eight/src/main/java/app/view/multi",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "project.structure.last.edited": "Modules",
+    "project.structure.proportion": "0.15917969",
+    "project.structure.side.proportion": "0.2",
+    "settings.editor.selected.configurable": "preferences.pluginManager",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\Taeyoung\OneDrive\Documents\GitHub\Crazy-Eights\Crazy-Eight\src\main\java\app\view\multi" />
+      <recent name="C:\Users\Taeyoung\OneDrive\Documents\GitHub\Crazy-Eights\Crazy-Eight\src\main\java\app\model_multi" />
+      <recent name="C:\Users\Taeyoung\OneDrive\Documents\GitHub\Crazy-Eights\Crazy-Eight\src\main\java\app" />
+    </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\Taeyoung\OneDrive\Documents\GitHub\Crazy-Eights\Crazy-Eight\src\main\resources\button" />
     </key>
-    <key name="CopyClassDialog.RECENTS_KEY">
-      <recent name="app.style" />
-      <recent name="app.animation" />
+    <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
       <recent name="app.view" />
     </key>
+    <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="app.animation.multi" />
+      <recent name="app.controller" />
+      <recent name="app.view" />
+      <recent name="app.style" />
+      <recent name="app.animation" />
+    </key>
   </component>
-  <component name="RunManager">
-    <configuration name="Run" type="Application" factoryName="Application">
+  <component name="RunManager" selected="Application.Server">
+    <configuration name="Client01" type="Application" factoryName="Application">
+      <option name="MAIN_CLASS_NAME" value="app.Generator" />
+      <module name="Crazy-Eight" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Server" type="Application" factoryName="Application">
       <option name="MAIN_CLASS_NAME" value="app.Generator" />
       <module name="Crazy-Eight" />
       <option name="VM_PARAMETERS" value="--module-path &quot;C:\Users\Taeyoung\OneDrive\Documents\GitHub\Crazy-Eights\Crazy-Eight\javafx-sdk-21.0.2\lib&quot; --add-modules javafx.base,javafx.controls,javafx.fxml,javafx.graphics,javafx.media,javafx.swing,javafx.web -Dprism.d3d=false -Dfile.encoding=UTF-8" />
@@ -189,12 +482,16 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <list>
+      <item itemvalue="Application.Server" />
+      <item itemvalue="Application.Client01" />
+    </list>
   </component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-jdk-9823dce3aa75-a94e463ab2e7-intellij.indexing.shared.core-IU-243.25659.59" />
-        <option value="bundled-js-predefined-d6986cc7102b-1632447f56bf-JavaScript-IU-243.25659.59" />
+        <option value="bundled-jdk-9823dce3aa75-a94e463ab2e7-intellij.indexing.shared.core-IU-243.26053.27" />
+        <option value="bundled-js-predefined-d6986cc7102b-1632447f56bf-JavaScript-IU-243.26053.27" />
       </set>
     </attachedChunks>
   </component>
@@ -229,7 +526,14 @@
       <workItem from="1741834717511" duration="1537000" />
       <workItem from="1741879681128" duration="8120000" />
       <workItem from="1741887912608" duration="3659000" />
-      <workItem from="1741903177042" duration="1751000" />
+      <workItem from="1741903177042" duration="5403000" />
+      <workItem from="1742563846145" duration="445000" />
+      <workItem from="1742763074862" duration="142000" />
+      <workItem from="1742777604827" duration="116000" />
+      <workItem from="1743116164289" duration="207000" />
+      <workItem from="1743455549234" duration="365000" />
+      <workItem from="1743631894491" duration="460000" />
+      <workItem from="1743635707352" duration="16217000" />
     </task>
     <servers />
   </component>

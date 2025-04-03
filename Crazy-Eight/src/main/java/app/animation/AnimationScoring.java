@@ -1,6 +1,8 @@
 package app.animation;
 
 import javafx.animation.FadeTransition;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.scene.Cursor;
 import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
@@ -31,7 +33,22 @@ public class AnimationScoring {
         fadeOut.setFromValue(1.0);
         fadeOut.setToValue(0.0);
         fadeOut.play();
-        fadeOut.setOnFinished(e -> root.getChildren().remove(pane));
+        fadeOut.setOnFinished(new FadeOutEventHandler(root, pane));
+    }
+
+    private static class FadeOutEventHandler implements EventHandler<ActionEvent> {
+        private final StackPane root;
+        private final StackPane pane;
+
+        public FadeOutEventHandler(StackPane root, StackPane pane) {
+            this.root = root;
+            this.pane = pane;
+        }
+
+        @Override
+        public void handle(ActionEvent event) {
+            root.getChildren().remove(pane);
+        }
     }
 
     /**
@@ -48,13 +65,39 @@ public class AnimationScoring {
         fadeOut.setToValue(0.7);
         fadeIn.setToValue(1.0);
 
-        button.setOnMouseEntered(e -> {
+        button.setOnMouseEntered(new MouseEnterHandler(button, fadeOut));
+        button.setOnMouseExited(new MouseExitHandler(button, fadeIn));
+    }
+
+    private static class MouseEnterHandler implements EventHandler<javafx.scene.input.MouseEvent> {
+        private final Label button;
+        private final FadeTransition fadeOut;
+
+        public MouseEnterHandler(Label button, FadeTransition fadeOut) {
+            this.button = button;
+            this.fadeOut = fadeOut;
+        }
+
+        @Override
+        public void handle(javafx.scene.input.MouseEvent event) {
             button.setCursor(Cursor.HAND);
             fadeOut.play();
-        });
-        button.setOnMouseExited(e -> {
+        }
+    }
+
+    private static class MouseExitHandler implements EventHandler<javafx.scene.input.MouseEvent> {
+        private final Label button;
+        private final FadeTransition fadeIn;
+
+        public MouseExitHandler(Label button, FadeTransition fadeIn) {
+            this.button = button;
+            this.fadeIn = fadeIn;
+        }
+
+        @Override
+        public void handle(javafx.scene.input.MouseEvent event) {
             button.setCursor(Cursor.DEFAULT);
             fadeIn.play();
-        });
+        }
     }
 }

@@ -1,23 +1,19 @@
 package app.view;
 
 import app.animation.AnimationSetting;
-import app.model.Music;
-import app.model.Setting;
+import app.model.single.Music;
+import app.model.single.Setting;
 import app.style.StyleSetting;
-import javafx.animation.TranslateTransition;
 import javafx.application.Platform;
 import javafx.event.Event;
+import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
-import javafx.scene.control.ToggleButton;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
-import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
-import javafx.util.Duration;
 
 /**
  * The SettingView class is responsible for displaying and managing the settings interface
@@ -109,14 +105,17 @@ public class SettingView {
 
         volumeSlider.setStyle(style.setSliderStyle());
 
-        Platform.runLater(() -> {
-            var thumb = volumeSlider.lookup(".thumb");
-            if (thumb != null) {
-                thumb.setStyle(style.setThumbStyle());
-            }
-            var track = volumeSlider.lookup(".track");
-            if(track != null) {
-                track.setStyle(style.setTrackStyle());
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                var thumb = volumeSlider.lookup(".thumb");
+                if (thumb != null) {
+                    thumb.setStyle(style.setThumbStyle());
+                }
+                var track = volumeSlider.lookup(".track");
+                if (track != null) {
+                    track.setStyle(style.setTrackStyle());
+                }
             }
         });
         volumeSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
@@ -168,23 +167,29 @@ public class SettingView {
         overlay.setOnMouseClicked(event -> {
             animation.fadeOutSetting(pane, overlay);
         });
-        enButton.setOnMouseClicked(e->{
-            System.out.println("ENGLISH BUTTON CLICKED");
-            Setting.setEnClicked(true);
-            Setting.setKrClicked(false);
+        enButton.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent e) {
+                System.out.println("ENGLISH BUTTON CLICKED");
+                Setting.setEnClicked(true);
+                Setting.setKrClicked(false);
 
-            enButton.setStyle(style.enButtonPressedStyle());
-            krButton.setStyle(style.krButtonCommonStyle());
-            krButton.setFont(Font.loadFont(style.getCookieRunFont(), 20));
+                enButton.setStyle(style.enButtonPressedStyle());
+                krButton.setStyle(style.krButtonCommonStyle());
+                krButton.setFont(Font.loadFont(style.getCookieRunFont(), 20));
+            }
         });
-        krButton.setOnMouseClicked(e->{
-            System.out.println("KOREAN BUTTON CLICKED");
-            Setting.setEnClicked(false);
-            Setting.setKrClicked(true);
+        krButton.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent e) {
+                System.out.println("KOREAN BUTTON CLICKED");
+                Setting.setEnClicked(false);
+                Setting.setKrClicked(true);
 
-            enButton.setStyle(style.enButtonCommonStyle());
-            krButton.setStyle(style.krButtonPressedStyle());
-            krButton.setFont(Font.loadFont(style.getCookieRunFont(), 20));
+                enButton.setStyle(style.enButtonCommonStyle());
+                krButton.setStyle(style.krButtonPressedStyle());
+                krButton.setFont(Font.loadFont(style.getCookieRunFont(), 20));
+            }
         });
     }
 

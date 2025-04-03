@@ -145,6 +145,10 @@ public class MenuView {
         return singlePlayButton;
     }
 
+    public Label getMultiPlayButton(){
+        return multiPlayButton;
+    }
+
     /**
      * Retrieves the settings button label, which represents the "Settings" option
      * in the menu.
