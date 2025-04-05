@@ -1,6 +1,6 @@
 package app.model.single;
 
-import app.controller.SinglePlayGameController;
+import app.controller.single.SinglePlayGameController;
 
 import java.util.ArrayList;
 import java.util.List;

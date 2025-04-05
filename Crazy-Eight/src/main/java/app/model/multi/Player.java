@@ -15,6 +15,7 @@ import java.util.Random;
  * Implements the Comparable interface to enable comparison based on score.
  */
 public class Player implements Comparable<Player>{
+    private int networkId;
     private int scoreId;
     private int statusId;
     private String icon;    // status와 score에 사용될
@@ -26,6 +27,7 @@ public class Player implements Comparable<Player>{
     private boolean self;   // 자기 자신인지
     private boolean myTurn;
     private boolean handleCard;
+    private boolean player;     // 나중에 실제 플레이어인지 CPU 구분할 용도
 
     /**
      * Constructs a Player instance with the given index.
@@ -35,6 +37,7 @@ public class Player implements Comparable<Player>{
      * @param index the index used to initialize both the scoreId and statusId of the player
      */
     public Player(int index){
+        networkId = index;
         scoreId = index;
         statusId = index;
         icon = "/avatar/User-01.png";
@@ -44,6 +47,9 @@ public class Player implements Comparable<Player>{
         handleCard = false;
         hand = new ArrayList<>();
         observers = new ArrayList<>();
+    }
+    public String toString(){
+        return networkId+":"+icon;
     }
     /**
      * Copies the attributes of the given Player object to this Player object.
@@ -74,16 +80,16 @@ public class Player implements Comparable<Player>{
      *
      * @return the integer value representing the player's score ID.
      */
-    public int getScoreId(){
-        return scoreId;
+    public int getNetworkId(){
+        return networkId;
     }
     /**
      * Sets the score ID of the player.
      *
-     * @param scoreId the integer value representing the player's new score ID
+     * @param networkId the integer value representing the player's new score ID
      */
-    public void setScoreId(int scoreId){
-        this.scoreId = scoreId;
+    public void setNetworkId(int networkId){
+        this.networkId = networkId;
     }
     /**
      * Sets the status ID of the player.
@@ -300,6 +306,13 @@ public class Player implements Comparable<Player>{
             }
         }
         handleCard = false;
+    }
+
+    public void setPlayer(boolean player){
+        this.player = player;
+    }
+    public boolean isPlayer(){
+        return player;
     }
 
     /**

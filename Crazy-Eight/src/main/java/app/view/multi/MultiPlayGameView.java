@@ -2,6 +2,8 @@ package app.view.multi;
 
 import app.animation.multi.AnimationGame;
 import app.model.multi.*;
+import app.model.multi.Card;
+import app.model.multi.DummyCard;
 import app.style.StyleGame;
 import javafx.animation.Animation;
 import javafx.collections.ObservableList;
@@ -595,7 +597,7 @@ public class MultiPlayGameView {
      * @param player the player whose score box needs to be updated
      */
     public void setScoreBox(HBox newScoreBox, Player player) {
-        scoreBox.getChildren().set(player.getScoreId(), newScoreBox);
+        scoreBox.getChildren().set(player.getNetworkId(), newScoreBox);
     }
 
     /**

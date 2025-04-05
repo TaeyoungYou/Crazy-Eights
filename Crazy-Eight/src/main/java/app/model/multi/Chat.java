@@ -1,6 +1,8 @@
 package app.model.multi;
 
-import app.controller.MultiPlayGameController;
+import app.controller.multi.BaseGameController;
+import app.controller.multi.GameClientController;
+import app.controller.multi.GameController;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,7 +12,7 @@ import java.util.List;
  * when a new message is added.
  */
 public class Chat {
-    private MultiPlayGameController controller;
+    private BaseGameController controller;
     private List<String> messages;
 
     /**
@@ -18,7 +20,12 @@ public class Chat {
      *
      * @param controller the game controller used to handle updates related to chat messages
      */
-    public Chat(MultiPlayGameController controller) {
+    public Chat(GameController controller) {
+        this.controller = controller;
+        messages = new ArrayList<>();
+    }
+
+    public Chat(GameClientController controller) {
         this.controller = controller;
         messages = new ArrayList<>();
     }

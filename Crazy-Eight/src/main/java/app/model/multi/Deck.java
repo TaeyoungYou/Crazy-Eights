@@ -1,6 +1,7 @@
 package app.model.multi;
 
-import app.controller.MultiPlayGameController;
+import app.controller.multi.BaseGameController;
+import app.controller.multi.GameController;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -12,7 +13,7 @@ import java.util.Collections;
  */
 public class Deck {
     private ArrayList<Card> deck;
-    private MultiPlayGameController controller;
+    private BaseGameController controller;
 
     /**
      * Constructs a new Deck object and initializes it with the specified game controller.
@@ -21,7 +22,7 @@ public class Deck {
      * @param controller the SinglePlayGameController instance used to interact with the deck
      *                   and notify about changes in its state
      */
-    public Deck(MultiPlayGameController controller) {
+    public Deck(BaseGameController controller) {
         this.controller = controller;
         deck = new ArrayList<>();
     }
@@ -84,5 +85,13 @@ public class Deck {
      */
     private void notification(){
         controller.update();
+    }
+
+    public String toString(){
+        String str = "";
+        for(Card card : deck){
+            str += card.toString() + " ";
+        }
+        return str;
     }
 }

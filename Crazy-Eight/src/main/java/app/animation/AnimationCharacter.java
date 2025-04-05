@@ -1,9 +1,8 @@
 package app.animation;
 
-import javafx.animation.Animation;
-import javafx.animation.FadeTransition;
-import javafx.animation.ScaleTransition;
+import javafx.animation.*;
 import javafx.event.EventHandler;
+import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
@@ -23,7 +22,7 @@ public class AnimationCharacter {
      *
      * @param pane The StackPane to apply the fade-in effect to.
      */
-    public void fadeInPane(StackPane pane){
+    public void fadeInPane(StackPane pane) {
         FadeTransition fadeIn = new FadeTransition(Duration.seconds(0.5), pane);
         fadeIn.setFromValue(0.0);
         fadeIn.setToValue(1.0);
@@ -33,8 +32,9 @@ public class AnimationCharacter {
 
     /**
      * Creates a fade-out animation for the specified StackPane.
-     * The animation reduces the opacity of the pane from 1.0 to 0.0 over*/
-    public Animation fadeOutPane(StackPane pane){
+     * The animation reduces the opacity of the pane from 1.0 to 0.0 over
+     */
+    public Animation fadeOutPane(StackPane pane) {
         FadeTransition fadeOut = new FadeTransition(Duration.seconds(0.5), pane);
         fadeOut.setFromValue(1.0);
         fadeOut.setToValue(0.0);
@@ -86,4 +86,33 @@ public class AnimationCharacter {
             transition.playFromStart();
         }
     }
+
+    public Animation countDownAnimation(Label count) {
+        SequentialTransition seq = new SequentialTransition();
+
+        count.setScaleX(1.0);
+        count.setScaleY(1.0);
+
+        FadeTransition fadeIn = new FadeTransition(Duration.seconds(0.3), count);
+        fadeIn.setFromValue(0.0);
+        fadeIn.setToValue(1.0);
+
+        ScaleTransition scaleDown = new ScaleTransition(Duration.seconds(1), count);
+        scaleDown.setFromX(1.0);
+        scaleDown.setFromY(1.0);
+        scaleDown.setToX(0.5);
+        scaleDown.setToY(0.5);
+
+        FadeTransition fadeOut = new FadeTransition(Duration.seconds(1), count);
+        fadeOut.setFromValue(1.0);
+        fadeOut.setToValue(0.0);
+
+        ParallelTransition parallel = new ParallelTransition(scaleDown, fadeOut);
+
+        SequentialTransition sequence = new SequentialTransition(fadeIn, parallel);
+        seq.getChildren().add(sequence);
+
+        return seq;
+    }
+
 }

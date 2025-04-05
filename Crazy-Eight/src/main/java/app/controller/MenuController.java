@@ -71,7 +71,7 @@ public class MenuController {
     private class SinglePlayButtonHandler implements EventHandler<MouseEvent> {
         @Override
         public void handle(MouseEvent event) {
-            menuView.fadeOutMenuAnimation(scene);
+            menuView.fadeOutMenuAnimation(scene, true);
         }
     }
 
@@ -79,6 +79,9 @@ public class MenuController {
         @Override
         public void handle(MouseEvent event) {
             multiMenuView.generate();
+            multiMenuView.setRunnable( () -> {
+                menuView.fadeOutMenuAnimation(scene, false);
+            });
         }
     }
 

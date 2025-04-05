@@ -1,4 +1,4 @@
-package app.controller;
+package app.controller.single;
 
 import app.model.single.*;
 import app.view.SettingView;

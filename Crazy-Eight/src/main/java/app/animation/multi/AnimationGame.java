@@ -1,7 +1,7 @@
 package app.animation.multi;
 
 import app.controller.MenuController;
-import app.controller.MultiPlayGameController;
+import app.controller.multi.GameController;
 import app.model.multi.Player;
 import javafx.animation.*;
 import javafx.event.ActionEvent;
@@ -447,40 +447,40 @@ public class AnimationGame {
 
         @Override
         public void handle(ActionEvent event) {
-            MultiPlayGameController multiPlayGameController = new MultiPlayGameController(scene);
+            GameController gameController = new GameController(scene);
             if (players == null) {
-                multiPlayGameController.selectCharacter(new StartGameRunnable(multiPlayGameController));
+                //multiPlayGameController.selectCharacter(new StartGameRunnable(multiPlayGameController));
             } else {
-                multiPlayGameController.delaySecond(new ResetGameRunnable(multiPlayGameController, players));
+                gameController.delaySecond(new ResetGameRunnable(gameController, players));
             }
         }
     }
 
     private class StartGameRunnable implements Runnable {
-        private final MultiPlayGameController singlePlayGameController;
+        private final GameController gameController;
 
-        public StartGameRunnable(MultiPlayGameController multiPlayGameController) {
-            this.singlePlayGameController = multiPlayGameController;
+        public StartGameRunnable(GameController gameController) {
+            this.gameController = gameController;
         }
 
         @Override
         public void run() {
-            singlePlayGameController.startGame();
+            gameController.startGame();
         }
     }
 
     private class ResetGameRunnable implements Runnable {
-        private final MultiPlayGameController multiPlayGameController;
+        private final GameController gameController;
         private final List<Player> players;
 
-        public ResetGameRunnable(MultiPlayGameController multiPlayGameController, List<Player> players) {
-            this.multiPlayGameController = multiPlayGameController;
+        public ResetGameRunnable(GameController gameController, List<Player> players) {
+            this.gameController = gameController;
             this.players = players;
         }
 
         @Override
         public void run() {
-            multiPlayGameController.resetGame(players);
+            gameController.resetGame(players);
         }
     }
 

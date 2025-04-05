@@ -1,6 +1,8 @@
 package app.model.multi;
 
-import app.controller.MultiPlayGameController;
+import app.controller.multi.BaseGameController;
+import app.controller.multi.GameClientController;
+import app.controller.multi.GameController;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,13 +14,16 @@ import java.util.List;
  */
 public class Log {
     private List<String> logs = new ArrayList<>();
-    private MultiPlayGameController controller;
+    private BaseGameController controller;
     /**
      * Constructs a Log instance with the given game controller.
      *
      * @param controller the SinglePlayGameController responsible for handling log updates
      */
-    public Log(MultiPlayGameController controller) {
+    public Log(GameController controller) {
+        this.controller = controller;
+    }
+    public Log(GameClientController controller) {
         this.controller = controller;
     }
 

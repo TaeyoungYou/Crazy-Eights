@@ -1,4 +1,4 @@
-package app.controller;
+package app.controller.multi;
 
 import app.model.multi.*;
 import app.view.SettingView;
@@ -15,6 +15,7 @@ import javafx.scene.layout.StackPane;
 import javafx.util.Duration;
 import javafx.util.Pair;
 
+import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -23,44 +24,12 @@ import java.util.concurrent.ThreadLocalRandom;
  * The SinglePlayGameController class handles the main logic and state of a single-player game.
  * It manages the game flow, UI interactions, and game state updates for a turn-based card game.
  */
-public class MultiPlayGameController implements CardObserver, DeckObserver, LogObserver, ChatObserver {
-    private Scene scene;
-    private StackPane root;
-    private BorderPane mainPane;
-
-    private MultiPlayGameView mainView;
-    private SettingView settingView;
-    private ChooseEightView chooseEightView;
-    private CharacterChooseView characterChooseView;
-    private ScoringView scoringView;
-
-    private List<Player> players = new ArrayList<>();
-    private final int playerNum = 4;
-    private Deck deck;
-    private DummyCard dummyCard;
-    private Log log;
-    private Chat chat;
-
-    private int playerRanPutTime = ThreadLocalRandom.current().nextInt(3, 9);
-    private boolean playerDoChat = Math.random() < 0.7;
-    private int playerChatTime = ThreadLocalRandom.current().nextInt(1, playerRanPutTime);
-
-    private String userCharacter;
-    private GameStatusManager statusManager;
-
-    private final boolean DEBUG = true;
-
-    private int stackGetCard = 1;
-
-    private Timeline game = null;
-
-    private final int[] scoreTable = {5, 3, 1, 0};
-
+public class GameController extends BaseGameController {
 
     /**
      * Constructs a SinglePlayGameController
      */
-    public MultiPlayGameController(Scene _scene) {
+    public GameController(Scene _scene) {
         scene = _scene;
         root = new StackPane();
         mainPane = new BorderPane();
@@ -76,46 +45,38 @@ public class MultiPlayGameController implements CardObserver, DeckObserver, LogO
         statusManager = new GameStatusManager(playerNum);
     }
 
+    public void handleServerMessage(String message) {
+        try {
+            MessageParser.ParsedMessage parsed = MessageParser.parse(message);
 
-    /**
-     * Handles the selection of a character and executes
-     */
-    public void selectCharacter(Runnable function) {
-        initPage();
-        characterChooseView.generate();
+            switch (parsed.getMsgType()) {
+                case INIT_DECK:
+                case INIT_PLAYERS:
+                case INIT_PAGE:
+                case CREATE_PLAYERS:
+                    System.out.println("서버로부터 온 메시지 - 스킵");
+                    break;
+                default:
+                    System.err.println("알 수 없는 메시지 타입: " + parsed.getMsgType());
+            }
 
-        for (Pair<ImageView, String> pair : characterChooseView.getCharacters()) {
-            ImageView character = pair.getKey();
-            character.setOnMouseClicked(new CharacterSelectHandler(pair, function));
+        } catch (MessageParser.InvalidMessageFormatException e) {
+            System.err.println("메시지 파싱 실패: " + e.getMessage());
         }
     }
 
-    private class CharacterSelectHandler implements EventHandler<MouseEvent> {
-        private final Pair<ImageView, String> pair;
-        private final Runnable function;
-
-        public CharacterSelectHandler(Pair<ImageView, String> pair, Runnable function) {
-            this.pair = pair;
-            this.function = function;
+    public void saveInfo(int playerId, Map<Integer, String> playerCharacterInfo) {
+        this.playerId = playerId;
+        for (Map.Entry<Integer, String> entry : playerCharacterInfo.entrySet()) {
+            int id = entry.getKey();
+            String character = entry.getValue();
+            Player player = new Player(id);
+            player.setIcon(character);
+            users.add(player);
+            players.add(player);
         }
-
-        @Override
-        public void handle(MouseEvent e) {
-            e.consume();
-            userCharacter = pair.getValue();
-            Animation fadeOut = characterChooseView.getFadeOutPaneAnimation();
-            fadeOut.play();
-
-            fadeOut.setOnFinished(new EventHandler<ActionEvent>() {
-                @Override
-                public void handle(ActionEvent ev) {
-                    root.getChildren().remove(characterChooseView.getOverlay());
-                    function.run();
-                }
-            });
-        }
+        Client.send(playerId + "#INIT_PLAYERS#" + userToString());
     }
-
 
     /**
      * Initializes and starts the game.
@@ -133,11 +94,16 @@ public class MultiPlayGameController implements CardObserver, DeckObserver, LogO
      * - Initiates the core game logic and enables gameplay actions.
      */
     public void startGame() {
-        if(DEBUG) System.out.println("Multi Play Game Start!");
+        if (DEBUG) System.out.println("Multi Play Game Start!");
+        initPage();
         drawGamePage();
+        Client.send(playerId + "#INIT_PAGE#NULL");
 
         deck.generateDeck();
+        Client.send(playerId + "#INIT_DECK#" + deck.toString());
+
         createPlayers();
+        System.out.println("플레이어 생성 완료!");
 
         if (Setting.isEnClicked()) log.setLogs("Setting Game...", State.System);
         else log.setLogs("게임 설정 중...", State.System);
@@ -513,6 +479,18 @@ public class MultiPlayGameController implements CardObserver, DeckObserver, LogO
     }
 
     /**
+     * Adds a card to the deck and shuffles the deck to ensure randomness.
+     *
+     * @param card The {@code Card} instance to be added to the deck. This card will be
+     *             included in the deck's card collection and the deck will be reshuffled.
+     */
+    @Override
+    public void updateAddToDeck(Card card) {
+        deck.add(card);
+    }
+
+
+    /**
      * Allows the user to draw a card by executing the following steps:
      * - Verifies if the player is eligible to draw cards using the {@code clamping} method.
      * - Updates the status to indicate the user's action.
@@ -613,7 +591,7 @@ public class MultiPlayGameController implements CardObserver, DeckObserver, LogO
             public void handle(MouseEvent event) {
                 mainView.getDeck().setDisable(true);
 
-                if (MultiPlayGameController.this.clamping(player)) return;
+                if (GameController.this.clamping(player)) return;
 
                 statusManager.doUserDid();  // 플래그 바꿈! - Time out이 안됨
 
@@ -782,17 +760,6 @@ public class MultiPlayGameController implements CardObserver, DeckObserver, LogO
         removeCardEffects();
     }
 
-    /**
-     * Adds a card to the deck and shuffles the deck to ensure randomness.
-     *
-     * @param card The {@code Card} instance to be added to the deck. This card will be
-     *             included in the deck's card collection and the deck will be reshuffled.
-     */
-    @Override
-    public void updateAddToDeck(Card card) {
-        deck.add(card);
-    }
-
     private void whenCardAce() {
         statusManager.setReverseOrder();
         if (DEBUG) System.out.println("Turn is reversed..!");
@@ -862,8 +829,9 @@ public class MultiPlayGameController implements CardObserver, DeckObserver, LogO
         statusManager.setFourTime();
         stackGetCard += 3;
 
-        if(!players.get(statusManager.getTurn()).isSelf()) {
-            if (Setting.isEnClicked()) chat.addMessage(CPU_Msg.getEnglishAttack(), players.get(statusManager.getTurn()));
+        if (!players.get(statusManager.getTurn()).isSelf()) {
+            if (Setting.isEnClicked())
+                chat.addMessage(CPU_Msg.getEnglishAttack(), players.get(statusManager.getTurn()));
             else chat.addMessage(CPU_Msg.getKoreanAttack(), players.get(statusManager.getTurn()));
         }
 
@@ -872,8 +840,8 @@ public class MultiPlayGameController implements CardObserver, DeckObserver, LogO
         setTurnEffect();
         Player player = players.get(statusManager.getTurn());
         if (Setting.isEnClicked())
-            log.setLogs(String.format("Player %d gets 4 cards!", player.getScoreId()), State.System);
-        else log.setLogs(String.format("플레이어 %d 4장 카드 드로우!", player.getScoreId()), State.System);
+            log.setLogs(String.format("Player %d gets 4 cards!", player.getNetworkId()), State.System);
+        else log.setLogs(String.format("플레이어 %d 4장 카드 드로우!", player.getNetworkId()), State.System);
         if (player.isSelf()) {
             userDrawCard(player);   // 여기서 cardTimeDid를 호출
             return;
@@ -903,8 +871,9 @@ public class MultiPlayGameController implements CardObserver, DeckObserver, LogO
 
         statusManager.doPassTurn();    // 여기가 마지막 초기화함!
 
-        if(!players.get(statusManager.getTurn()).isSelf()) {
-            if (Setting.isEnClicked()) chat.addMessage(CPU_Msg.getEnglishAttack(), players.get(statusManager.getTurn()));
+        if (!players.get(statusManager.getTurn()).isSelf()) {
+            if (Setting.isEnClicked())
+                chat.addMessage(CPU_Msg.getEnglishAttack(), players.get(statusManager.getTurn()));
             else chat.addMessage(CPU_Msg.getKoreanAttack(), players.get(statusManager.getTurn()));
         }
 
@@ -1168,12 +1137,12 @@ public class MultiPlayGameController implements CardObserver, DeckObserver, LogO
             player.copyPlayer(prevPlayer);
             if (prevPlayer.isSelf()) {
                 player.setSelf();
-                player.setScoreId(scoreId++);
+                player.setNetworkId(scoreId++);
                 player.setStatusId(3);
                 new PlayerHandView(player, mainView);
                 new PlayerScoreView(player, mainView);
             } else {
-                player.setScoreId(scoreId++);
+                player.setNetworkId(scoreId++);
                 player.setStatusId(statusId++);
                 new PlayerStatusView(player, mainView);
                 new PlayerScoreView(player, mainView);
@@ -1196,10 +1165,15 @@ public class MultiPlayGameController implements CardObserver, DeckObserver, LogO
      * - Invokes the `createUser` method to handle user-specific setup.
      */
     private void createPlayers() {
-        Random random = new Random();
+        createUser();
+
         List<String> chosenPlayers = new ArrayList<>();
-        chosenPlayers.add(userCharacter);
-        for (int i = 0; i < playerNum - 1; i++) {
+        for (Player player : players) {
+            chosenPlayers.add(player.getIcon());
+        }
+
+        Random random = new Random();
+        for (int i = players.size(); i < 4; i++) {
             Player player = new Player(i);
             players.add(player);
             new PlayerStatusView(player, mainView);
@@ -1211,9 +1185,10 @@ public class MultiPlayGameController implements CardObserver, DeckObserver, LogO
             } while (chosenPlayers.contains(url));
 
             player.setIcon(url);
+            player.setPlayer(false);
             chosenPlayers.add(url);
         }
-        createUser();
+        Client.send(playerId + "#CREATE_PLAYERS#" + playerToString());
     }
 
     /**
@@ -1228,12 +1203,20 @@ public class MultiPlayGameController implements CardObserver, DeckObserver, LogO
      * 6. Sets the player's icon using the predefined userCharacter.
      */
     private void createUser() {
-        Player player = new Player(playerNum - 1);
-        player.setSelf();
-        players.add(player);
-        new PlayerScoreView(player, mainView);
-        new PlayerHandView(player, mainView);
-        player.setIcon(userCharacter);
+        for (Player player : players) {
+            if (player.getNetworkId() == playerId) {
+                player.setSelf();
+                player.setPlayer(true);
+                new PlayerScoreView(player, mainView);
+                new PlayerHandView(player, mainView);
+                player.setIcon(player.getIcon());
+            } else {
+                player.setPlayer(true);
+                new PlayerStatusView(player, mainView);
+                new PlayerScoreView(player, mainView);
+                player.setIcon(player.getIcon());
+            }
+        }
     }
 
     /**
@@ -1525,5 +1508,12 @@ public class MultiPlayGameController implements CardObserver, DeckObserver, LogO
         mainView.getRestart().setDisable(disable);
     }
 
+    public List<Player> getPlayers() {
+        return players;
+    }
+
+    public void addPlayer(Player player) {
+        players.add(player);
+    }
 
 }

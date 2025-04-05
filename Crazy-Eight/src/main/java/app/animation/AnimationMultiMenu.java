@@ -1,5 +1,6 @@
 package app.animation;
 
+import javafx.animation.Animation;
 import javafx.animation.FadeTransition;
 import javafx.scene.Cursor;
 import javafx.scene.control.Label;
@@ -121,5 +122,12 @@ public class AnimationMultiMenu {
         public void handle(javafx.event.ActionEvent event) {
             root.getChildren().remove(pane);
         }
+    }
+
+    public Animation closeMultiMenu(StackPane pane) {
+        FadeTransition fadeOut = new FadeTransition(Duration.seconds(0.5), pane);
+        fadeOut.setFromValue(1.0);
+        fadeOut.setToValue(0.0);
+        return fadeOut;
     }
 }

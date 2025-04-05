@@ -3,11 +3,19 @@ package app.view.multi;
 import app.animation.AnimationCharacter;
 import app.style.StyleCharacter;
 import javafx.animation.Animation;
+import javafx.animation.PauseTransition;
+import javafx.animation.SequentialTransition;
 import javafx.geometry.Pos;
+import javafx.scene.control.Label;
+import javafx.scene.effect.DropShadow;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.util.Duration;
 import javafx.util.Pair;
 
 import java.util.ArrayList;
@@ -26,6 +34,8 @@ public class CharacterChooseView {
     private AnimationCharacter animation;
 
     private List<Pair<ImageView, String>> characters;
+    
+    private Label ready;
 
     /**
      * Constructs a CharacterChooseView object, initializing its components for creating
@@ -60,12 +70,15 @@ public class CharacterChooseView {
         overlay.setStyle(style.overlayStyle());
         overlay.prefWidthProperty().bind(pane.widthProperty());
         overlay.prefHeightProperty().bind(pane.heightProperty());
-        overlay.setAlignment(Pos.CENTER);
+        overlay.setAlignment(Pos.TOP_CENTER);
 
         for(int i=1; i<8; ++i){
             String url = "/avatar/User-0" + i + ".png";
             characters.add(new Pair<>(new ImageView(getClass().getResource(url).toExternalForm()), url));
         }
+
+        Region padding = new Region();
+        padding.setPrefHeight(150);
 
         VBox charactersContainer = new VBox(40);
         HBox charactersLayer01 = new HBox(20);
@@ -82,7 +95,14 @@ public class CharacterChooseView {
             charactersLayer02.getChildren().add(characters.get(i).getKey());
         }
 
-        charactersContainer.getChildren().addAll(charactersLayer01, charactersLayer02);
+        Region space = new Region();
+        space.setPrefHeight(100);
+
+        ready = new Label("READY");
+        ready.setPrefSize(250, 80);
+        ready.setStyle(style.setButtonStyle());
+
+        charactersContainer.getChildren().addAll(padding, charactersLayer01, charactersLayer02, space, ready);
         overlay.getChildren().add(charactersContainer);
         pane.getChildren().add(overlay);
 
@@ -143,5 +163,89 @@ public class CharacterChooseView {
      */
     public List<Pair<ImageView, String>> getCharacters() {
         return characters;
+    }
+
+    public void setTempSelect(ImageView character){
+        DropShadow edgeGlow = new DropShadow();
+        edgeGlow.setRadius(20);
+        edgeGlow.setSpread(0.5);
+        edgeGlow.setColor(Color.WHITE);
+        edgeGlow.setOffsetX(0);
+        edgeGlow.setOffsetY(0);
+        character.setEffect(edgeGlow);
+    }
+
+    public void setSelect(ImageView character){
+        DropShadow edgeGlow = new DropShadow();
+        edgeGlow.setRadius(20);
+        edgeGlow.setSpread(0.5);
+        edgeGlow.setColor(Color.GREEN);
+        edgeGlow.setOffsetX(0);
+        edgeGlow.setOffsetY(0);
+        character.setEffect(edgeGlow);
+    }
+
+    public void removeEffect(ImageView character){
+        character.setEffect(null);
+    }
+
+    public Label getReady() {
+        return ready;
+    }
+
+    public void setReadyStyle(){
+        ready.setStyle(style.readyPressedStyle());
+    }
+    public void setUnReadyStyle(){
+        ready.setStyle(style.setButtonStyle());
+    }
+
+    public void startGameCountDown(Runnable function){
+        SequentialTransition seq = new SequentialTransition();
+        // 3부터 0까지 순차적으로 진행
+        for (int i = 3; i >= 0; i--) {
+            seq.getChildren().add(createNumberTransition(i));
+        }
+        seq.play();
+        seq.setOnFinished(e->{
+            animation.fadeOutPane(overlay);
+            function.run();
+        });
+    }
+
+    // 각 숫자 하나에 대한 Transition을 만드는 헬퍼 메서드
+    private SequentialTransition createNumberTransition(int number) {
+        // 새로운 Label을 생성하고, 해당 숫자로 설정
+        Label countDown = createCountLabel();
+        if(number == 0){
+            countDown.setText("Start");
+        }else {
+            countDown.setText(String.valueOf(number));
+        }
+
+
+        SequentialTransition step = new SequentialTransition();
+
+        // 0초짜리 PauseTransition을 이용해, Label을 화면에 추가
+        PauseTransition addLabel = new PauseTransition(Duration.ZERO);
+        addLabel.setOnFinished(e -> overlay.getChildren().add(countDown));
+
+        // countDownAnimation()은 해당 Label에 대한 애니메이션을 반환한다고 가정
+        Animation anim = animation.countDownAnimation(countDown);
+        // 애니메이션이 끝나면 Label을 제거
+        anim.setOnFinished(e -> overlay.getChildren().remove(countDown));
+
+        // addLabel 후에 anim을 실행하도록 순차적으로 연결
+        step.getChildren().addAll(addLabel, anim);
+        return step;
+    }
+
+
+    public Label createCountLabel(){
+        Label countDown = new Label("3");
+        countDown.setFont(Font.loadFont(style.getLilitaOneFont(),800));
+        countDown.setStyle(style.countDownStyle());
+        countDown.setOpacity(0);
+        return countDown;
     }
 }

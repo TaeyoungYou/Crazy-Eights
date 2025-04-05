@@ -1,7 +1,7 @@
 package app.animation.single;
 
 import app.controller.MenuController;
-import app.controller.SinglePlayGameController;
+import app.controller.single.SinglePlayGameController;
 import app.model.single.Player;
 import javafx.animation.*;
 import javafx.event.ActionEvent;

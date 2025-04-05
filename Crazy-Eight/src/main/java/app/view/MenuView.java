@@ -131,8 +131,8 @@ public class MenuView {
      *
      * @param scene The current scene where the fade-out animation is applied.
      */
-    public void fadeOutMenuAnimation(Scene scene){
-        animation.fadeOutMainMenu(scene, menuPane);
+    public void fadeOutMenuAnimation(Scene scene, boolean isSingle){
+        animation.fadeOutMainMenu(scene, menuPane, isSingle);
     }
 
     /**

@@ -1,6 +1,7 @@
 package app.animation;
 
-import app.controller.SinglePlayGameController;
+import app.controller.single.SinglePlayGameController;
+import app.controller.multi.CharacterChooseController;
 import app.model.single.Music;
 import javafx.animation.*;
 import javafx.event.ActionEvent;
@@ -258,7 +259,7 @@ public class AnimationMenu {
      *              where the game transition will occur.
      * @param pane  The VBox container containing the menu elements to be faded out.
      */
-    public void fadeOutMainMenu(Scene scene, VBox pane) {
+    public void fadeOutMainMenu(Scene scene, VBox pane, boolean isSingle) {
         ParallelTransition fadeOutParallel = new ParallelTransition();
         for (Node node : pane.getChildren()) {
             FadeTransition fadeOut = new FadeTransition(Duration.seconds(1.5), node);
@@ -267,20 +268,27 @@ public class AnimationMenu {
             fadeOutParallel.getChildren().add(fadeOut);
         }
         fadeOutParallel.play();
-        fadeOutParallel.setOnFinished(new FadeOutMainMenuFinishedHandler(scene));
+        fadeOutParallel.setOnFinished(new FadeOutMainMenuFinishedHandler(scene, isSingle));
     }
 
     private static class FadeOutMainMenuFinishedHandler implements EventHandler<ActionEvent> {
         private final Scene scene;
+        private final boolean isSingle;
 
-        public FadeOutMainMenuFinishedHandler(Scene scene) {
+        public FadeOutMainMenuFinishedHandler(Scene scene, boolean isSingle) {
             this.scene = scene;
+            this.isSingle = isSingle;
         }
 
         @Override
         public void handle(ActionEvent event) {
-            SinglePlayGameController singlePlayGameController = new SinglePlayGameController(scene);
-            singlePlayGameController.selectCharacter(singlePlayGameController::startGame);
+            if(isSingle){
+                SinglePlayGameController singlePlayGameController = new SinglePlayGameController(scene);
+                singlePlayGameController.selectCharacter(singlePlayGameController::startGame);
+            }else{
+                CharacterChooseController controller = new CharacterChooseController(scene);
+                controller.drawPane();
+            }
         }
     }
 

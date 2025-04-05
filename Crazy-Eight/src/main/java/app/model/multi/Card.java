@@ -133,4 +133,8 @@ public class Card {
         Card card = (Card) o;
         return this.suit == card.suit && this.rank == card.rank;
     }
+
+    public String toString() {
+        return String.format("%s:%s", getSuit(), getRank());
+    }
 }

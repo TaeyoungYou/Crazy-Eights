@@ -1,6 +1,8 @@
 package app.model.multi;
 
-import app.controller.MultiPlayGameController;
+import app.controller.multi.BaseGameController;
+import app.controller.multi.GameClientController;
+import app.controller.multi.GameController;
 import javafx.scene.image.Image;
 
 /**
@@ -14,7 +16,7 @@ public class DummyCard {
     private Image image;
     private Card card;
     private CardObserver observer;
-    private MultiPlayGameController controller;
+    private BaseGameController controller;
 
     /**
      * Constructs a DummyCard object, which serves as a placeholder or proxy
@@ -23,7 +25,10 @@ public class DummyCard {
      * @param controller the SinglePlayGameController instance responsible for
      *                    managing the interactions and updates related to this DummyCard
      */
-    public DummyCard(MultiPlayGameController controller) {
+    public DummyCard(GameController controller) {
+        this.controller = controller;
+    }
+    public DummyCard(GameClientController controller) {
         this.controller = controller;
     }
     /**

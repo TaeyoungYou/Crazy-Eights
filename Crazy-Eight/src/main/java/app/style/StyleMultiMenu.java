@@ -32,7 +32,7 @@ public class StyleMultiMenu {
                 "-fx-border-radius: 10px;" +
                 "-fx-background-radius: 20px;" +
                 "-fx-font-family: 'Comic Sans MS';" +
-                "-fx-font-size: 14px;" +
+                "-fx-font-size: 18px;" +
                 "-fx-text-fill: #17171A;" +
                 "-fx-padding: 10px;" +
                 "-fx-focus-color: transparent;" +
@@ -61,7 +61,7 @@ public class StyleMultiMenu {
     }
 
     public String setPreStyle() {
-        return "-fx-font-size: 12px;" +
+        return "-fx-font-size: 14px;" +
                 "-fx-font-family: 'Comic Sans MS';" +
                 "-fx-text-fill: #999999";
     }
