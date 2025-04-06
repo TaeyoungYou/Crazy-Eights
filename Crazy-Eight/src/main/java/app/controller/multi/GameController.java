@@ -5,6 +5,7 @@ import app.view.SettingView;
 import app.view.multi.MultiPlayGameView;
 import app.view.multi.*;
 import javafx.animation.*;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
@@ -15,6 +16,7 @@ import javafx.scene.layout.StackPane;
 import javafx.util.Duration;
 import javafx.util.Pair;
 
+import javax.swing.*;
 import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
@@ -54,7 +56,48 @@ public class GameController extends BaseGameController {
                 case INIT_PLAYERS:
                 case INIT_PAGE:
                 case CREATE_PLAYERS:
+                case TIME_SET:
+                case TIME_OUT:
                     System.out.println("서버로부터 온 메시지 - 스킵");
+                    break;
+                case DRAW_CARD:
+                    if (parsed.getSenderPlayerId() == playerId) {
+                        System.out.println("서버로부터 온 메세지 - 드로우");
+                        break;
+                    }
+                    break;
+                case REQUEST_DRAW_CARD:
+                    int id = Integer.parseInt(parsed.getData());
+                    drawCards(players.get(id));
+                    break;
+                case PUT_DUMMY:
+                    if (parsed.getSenderPlayerId() == playerId) {
+                        System.out.println("서버로부터 온 메세지 - 더미카드 추가");
+                        break;
+                    }
+                    break;
+                case UPDATE_TURN:
+                    if (parsed.getSenderPlayerId() == playerId) {
+                        System.out.println("서버로부터 온 메세지 - 턴 업데이트");
+                        ;
+                        break;
+                    }
+                    break;
+                case PUT_CARD:
+                    if (parsed.getSenderPlayerId() == playerId || !players.get(parsed.getSenderPlayerId()).isPlayer()) {
+                        System.out.println("서버로부터 온 메세지 - 카드 놓음");
+                        break;
+                    }
+                    Pair<Integer, Card> infoPut = GameDTO.putCard(parsed.getData());
+                    Platform.runLater(() -> {
+                        Animation animation = mainView.putCardAnimationWithPlayer();
+                        animation.play();
+                        animation.setOnFinished(e -> {
+                            players.get(infoPut.getKey()).removeCard(infoPut.getValue());
+                            putCardDummy(infoPut.getValue(), false);
+                            statusManager.doPassTurn();
+                        });
+                    });
                     break;
                 default:
                     System.err.println("알 수 없는 메시지 타입: " + parsed.getMsgType());
@@ -71,11 +114,10 @@ public class GameController extends BaseGameController {
             int id = entry.getKey();
             String character = entry.getValue();
             Player player = new Player(id);
-            player.setIcon(character);
+            player.setIcon(character, true);
             users.add(player);
             players.add(player);
         }
-        Client.send(playerId + "#INIT_PLAYERS#" + userToString());
     }
 
     /**
@@ -102,6 +144,7 @@ public class GameController extends BaseGameController {
         deck.generateDeck();
         Client.send(playerId + "#INIT_DECK#" + deck.toString());
 
+        Client.send(playerId + "#INIT_PLAYERS#" + userToString());
         createPlayers();
         System.out.println("플레이어 생성 완료!");
 
@@ -160,23 +203,23 @@ public class GameController extends BaseGameController {
 
                 updatePlayerTurn();
 
-                if (!players.get(statusManager.getTurn()).isSelf()) {
-                    if (Setting.isEnClicked()) {
-                        if (playerDoChat)
-                            chat.addMessage(CPU_Msg.getEnglishChatResponse(), players.get(statusManager.getTurn()));
-                        if (players.get(statusManager.getTurn()).getCardLeft() > 9)
-                            chat.addMessage(CPU_Msg.getEnglishTooManyCards(), players.get(statusManager.getTurn()));
-                        if (players.get(statusManager.getTurn()).getCardLeft() < 2)
-                            chat.addMessage(CPU_Msg.getEnglishFewCardsLeft(), players.get(statusManager.getTurn()));
-                    } else {
-                        if (playerDoChat)
-                            chat.addMessage(CPU_Msg.getKoreanChatResponse(), players.get(statusManager.getTurn()));
-                        if (players.get(statusManager.getTurn()).getCardLeft() > 9)
-                            chat.addMessage(CPU_Msg.getKoreanTooManyCards(), players.get(statusManager.getTurn()));
-                        if (players.get(statusManager.getTurn()).getCardLeft() < 2)
-                            chat.addMessage(CPU_Msg.getKoreanFewCardsLeft(), players.get(statusManager.getTurn()));
-                    }
-                }
+//                if (!players.get(statusManager.getTurn()).isSelf()) {
+//                    if (Setting.isEnClicked()) {
+//                        if (playerDoChat)
+//                            chat.addMessage(CPU_Msg.getEnglishChatResponse(), players.get(statusManager.getTurn()));
+//                        if (players.get(statusManager.getTurn()).getCardLeft() > 9)
+//                            chat.addMessage(CPU_Msg.getEnglishTooManyCards(), players.get(statusManager.getTurn()));
+//                        if (players.get(statusManager.getTurn()).getCardLeft() < 2)
+//                            chat.addMessage(CPU_Msg.getEnglishFewCardsLeft(), players.get(statusManager.getTurn()));
+//                    } else {
+//                        if (playerDoChat)
+//                            chat.addMessage(CPU_Msg.getKoreanChatResponse(), players.get(statusManager.getTurn()));
+//                        if (players.get(statusManager.getTurn()).getCardLeft() > 9)
+//                            chat.addMessage(CPU_Msg.getKoreanTooManyCards(), players.get(statusManager.getTurn()));
+//                        if (players.get(statusManager.getTurn()).getCardLeft() < 2)
+//                            chat.addMessage(CPU_Msg.getKoreanFewCardsLeft(), players.get(statusManager.getTurn()));
+//                    }
+//                }
 
 
                 setTurnEffect();
@@ -191,12 +234,20 @@ public class GameController extends BaseGameController {
 
             if (statusManager.isFourTime() && statusManager.isQueenTime()) {
                 Player player = players.get(statusManager.getTurn());
-                if (player.isSelf()) {
-                    if (statusManager.getTime() == 10 && !statusManager.isUserDid()) {    // 이 userDid의 플래그는 다르게 애니메이션이 시작되기 전에 플래그를 바꿔줘야함
-                        if (Setting.isEnClicked()) log.setLogs("Time out!", State.Error);
-                        else log.setLogs("시간 초과!", State.Error);
+                if (player.isPlayer()) {
+                    if (player.isSelf()) {
+                        System.out.println("내 차례");
+                        if (statusManager.getTime() == 10 && !statusManager.isUserDid()) {    // 이 userDid의 플래그는 다르게 애니메이션이 시작되기 전에 플래그를 바꿔줘야함
+                            if (Setting.isEnClicked()) log.setLogs("Time out!", State.Error);
+                            else log.setLogs("시간 초과!", State.Error);
 
-                        userDrawCard(player);
+                            userDrawCard(player);
+                        }
+                    } else {  // 다른 플레이어 일때
+                        if(statusManager.getTime() == 10){
+                            Client.send(playerId + "#TIME_OUT#"+player.getScoreId());
+                            statusManager.doPassTurn();
+                        }
                     }
                     // 유저는 3가지 상태가 있음.
                     // 1. 핸드의 카드가 release될때
@@ -218,6 +269,7 @@ public class GameController extends BaseGameController {
                 mainView.setTimer(10 - statusManager.getTime());
                 if (statusManager.getTime() < 10) {
                     statusManager.addTime();
+                    Client.send(playerId + "#TIME_SET#" + statusManager.getTime());
                 }
             }
 
@@ -228,10 +280,10 @@ public class GameController extends BaseGameController {
                     endGame();
                 }
 
-
                 statusManager.resetTime();
+                Client.send(playerId + "#TIME_SET#" + statusManager.getTime());
 
-                playerRanPutTime = ThreadLocalRandom.current().nextInt(2, 10);
+                playerRanPutTime = ThreadLocalRandom.current().nextInt(3, 8);
                 playerDoChat = Math.random() < 0.7;
                 playerChatTime = ThreadLocalRandom.current().nextInt(1, playerRanPutTime);
             }
@@ -386,6 +438,7 @@ public class GameController extends BaseGameController {
         // Normal case: No stacking effect, check for valid moves
         for (Card card : player.getHand()) {
             if (dummyCard.getCard().getSuit() == card.getSuit() || dummyCard.getCard().getRank() == card.getRank()) {
+                Client.send(playerId + "#PUT_CARD#" + statusManager.getTurn() + " " + card.toString());
                 Animation putCard = mainView.putCardAnimationWithPlayer();
                 putCard.setOnFinished(new PutCardHandler(card, player, false));
                 putCard.play();
@@ -449,7 +502,10 @@ public class GameController extends BaseGameController {
                     if (Setting.isEnClicked()) log.setLogs("Drawing card!", State.Log);
                     else log.setLogs("카드 드로우!", State.Log);
 
-                    player.setCard(deck, false);
+                    Card card = player.setCard(deck, false);
+                    // CPU draw > client
+                    // client request > client, CPU draw card > client
+                    Client.send(playerId + "#DRAW_CARD#" + player.getScoreId() + " " + card.toString());
                 }
             });
             getCard.play();
@@ -574,9 +630,13 @@ public class GameController extends BaseGameController {
         Player player = players.get(statusManager.getTurn());
         player.setMyTurn(true);
         if (statusManager.isFourTime() && player.isSelf()) {
-            addCardEffects(player);
-            addDeckEffects(player);
+            Platform.runLater(() -> {
+                addCardEffects(player);
+                addDeckEffects(player);
+            });
         }
+
+        Client.send(playerId + "#UPDATE_TURN#" + statusManager.getTurn());
     }
 
     /**
@@ -648,7 +708,9 @@ public class GameController extends BaseGameController {
         @Override
         public void handle(ActionEvent ev) {
             mainView.removeAnimationCard();
-            player.setCard(deck, false);
+            Card card = player.setCard(deck, false);
+            // server draw card > client
+            Client.send(playerId + "#DRAW_CARD#" + playerId + " " + card.toString());
             removeDeckEffects();
             mainView.getDeck().setDisable(false);
         }
@@ -700,7 +762,9 @@ public class GameController extends BaseGameController {
                     } else {
                         if (dummy.getSuit() == card.getSuit() || dummy.getRank() == card.getRank()) {
                             statusManager.doUserDid();
-                            mainView.setDragReleased(ev, cardImg, player, dummyCard, true);
+                            if(mainView.setDragReleased(ev, cardImg, player, dummyCard, true)){
+                                Client.send(playerId + "#PUT_CARD#" + player.getScoreId() + " " + card.toString());
+                            }
                         } else {
                             mainView.setDragReleased(ev, cardImg, player, dummyCard, false);
                         }
@@ -1044,7 +1108,9 @@ public class GameController extends BaseGameController {
      */
     private Timeline putStartDummyCard() {
         Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(1), event -> {
-            putCardDummy(deck.drawCard(), true);
+            Card card = deck.drawCard();
+            putCardDummy(card, true);
+            Client.send(playerId + "#PUT_DUMMY#" + card.toString());
         }));
 
         timeline.setOnFinished(e -> {
@@ -1053,12 +1119,6 @@ public class GameController extends BaseGameController {
                 public void run() {
                     if (Setting.isEnClicked()) log.setLogs("Start Game!", State.System);
                     else log.setLogs("게임 시작!", State.System);
-                    for (Player player : players) {
-                        if (new Random().nextBoolean() && !player.isSelf()) {
-                            if (Setting.isEnClicked()) chat.addMessage(CPU_Msg.getEnglishGreeting(), player);
-                            else chat.addMessage(CPU_Msg.getKoreanGreeting(), player);
-                        }
-                    }
                 }
             });
         });
@@ -1184,11 +1244,12 @@ public class GameController extends BaseGameController {
                 url = String.format("/avatar/User-0%d.png", intUser);
             } while (chosenPlayers.contains(url));
 
-            player.setIcon(url);
+            player.setIcon(url, false);
             player.setPlayer(false);
             chosenPlayers.add(url);
         }
         Client.send(playerId + "#CREATE_PLAYERS#" + playerToString());
+        System.out.println(players.size() + " " + users.size());
     }
 
     /**
@@ -1209,12 +1270,12 @@ public class GameController extends BaseGameController {
                 player.setPlayer(true);
                 new PlayerScoreView(player, mainView);
                 new PlayerHandView(player, mainView);
-                player.setIcon(player.getIcon());
+                player.setIcon(player.getIcon(), false);
             } else {
                 player.setPlayer(true);
                 new PlayerStatusView(player, mainView);
                 new PlayerScoreView(player, mainView);
-                player.setIcon(player.getIcon());
+                player.setIcon(player.getIcon(), false);
             }
         }
     }
@@ -1263,7 +1324,8 @@ public class GameController extends BaseGameController {
                 @Override
                 public void handle(ActionEvent ev) {
                     mainView.removeAnimationCard();
-                    player.setCard(deck, false);
+                    Card card = player.setCard(deck, false);
+                    Client.send(playerId + "#DRAW_CARD#" + player.getNetworkId() + " " + card.toString());
                 }
             });
 
@@ -1285,7 +1347,8 @@ public class GameController extends BaseGameController {
                 @Override
                 public void handle(ActionEvent ev) {
                     mainView.removeAnimationCard();
-                    player.setCard(deck, false);
+                    Card card = player.setCard(deck, false);
+                    Client.send(playerId + "#DRAW_CARD#" + player.getNetworkId() + " " + card.toString());
                 }
             });
 

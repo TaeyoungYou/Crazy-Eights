@@ -25,7 +25,7 @@ import java.util.concurrent.ThreadLocalRandom;
  * It manages the game flow, UI interactions, and game state updates for a turn-based card game.
  */
 public class GameClientController extends BaseGameController implements CardObserver, DeckObserver, LogObserver, ChatObserver {
-
+    private int serverId;
 
     /**
      * Constructs a SinglePlayGameController
@@ -52,10 +52,15 @@ public class GameClientController extends BaseGameController implements CardObse
 
             switch (parsed.getMsgType()) {
                 case INIT_PAGE:
-                    if(DEBUG) System.out.println("Multi Play Game Start!");
+                    if (DEBUG) System.out.println("Multi Play Game Start!");
                     Platform.runLater(() -> {
-                        initPage();
+                        try {
+                            initPage();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
                     });
+                    serverId = parsed.getSenderPlayerId();
                     break;
                 case INIT_DECK:
                     GameDTO.initDeck(parsed.getData(), deck);
@@ -65,10 +70,96 @@ public class GameClientController extends BaseGameController implements CardObse
                     break;
                 case CREATE_PLAYERS:
                     GameDTO.createPlayers(parsed.getData(), players);
-                    Platform.runLater(() -> {
-                        createPlayers();
-                    });
+                    createPlayers();
                     System.out.println("플레이어 생성완료!");
+                    break;
+                case DRAW_CARD:
+                    Pair<Integer, Card> info = GameDTO.drawCard(parsed.getData());
+                    if (info.getKey() == playerId) {
+                        Platform.runLater(() -> {
+                            Animation animation = mainView.getCardAnimationToUser();
+                            animation.play();
+                            animation.setOnFinished(e -> {
+                                mainView.removeAnimationCard();
+                                players.get(playerId).addCard(info.getValue());
+                            });
+                        });
+
+                    } else {
+                        Platform.runLater(() -> {
+                            Animation animation = mainView.getCardAnimationToPlayer();
+                            animation.play();
+                            animation.setOnFinished(e -> {
+                                mainView.removeAnimationCard();
+                                players.get(info.getKey()).addCard(info.getValue());
+                            });
+                        });
+
+                    }
+                    System.out.println("드로우 완료!");
+                    break;
+                case PUT_DUMMY:
+                    Platform.runLater(() -> {
+                        Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(1), event -> {
+                            Card card = GameDTO.putDummy(parsed.getData());
+                            putCardDummy(card, true);
+                        }));
+                        timeline.play();
+                        timeline.setOnFinished(e -> {
+                            if (Setting.isEnClicked()) log.setLogs("Put Dummy Card!", State.Log);
+                            else log.setLogs("게임 시작!", State.System);
+                        });
+                    });
+                    break;
+                case UPDATE_TURN:
+                    int turn = Integer.parseInt(parsed.getData());
+                    for (Player player : players) {
+                        player.setMyTurn(false);
+                        removeCardEffects();
+                        removeDeckEffects();
+                    }
+                    Player player = players.get(turn);
+                    player.setMyTurn(true);
+
+                    if (players.get(turn).isSelf()) {
+                        Platform.runLater(() -> {
+                            addCardEffects(player);
+                            addDeckEffects(player);
+                            mainView.setTimerEffect();
+                        });
+                        // 로직 추가
+                    } else {
+                        mainView.delTimerEffect();
+                    }
+                    break;
+                case TIME_SET:
+                    Platform.runLater(() -> {
+                        int time = Integer.parseInt(parsed.getData());
+                        mainView.setTimer(10 - time);
+                    });
+                    break;
+                case PUT_CARD:
+                    if(playerId == parsed.getSenderPlayerId()) break;
+
+                    Pair<Integer, Card> infoPut = GameDTO.putCard(parsed.getData());
+                    Platform.runLater(() -> {
+                        Animation animation = mainView.putCardAnimationWithPlayer();
+                        animation.play();
+                        animation.setOnFinished(e -> {
+                            // server put card > do animation, update hand count
+                            // CPU(server) put card > do animation, update hand count
+                            players.get(infoPut.getKey()).removeCard(infoPut.getValue());
+                            putCardDummy(infoPut.getValue(), false);
+                        });
+                    });
+                    break;
+                case REQUEST_DRAW_CARD:
+                    break;
+                case TIME_OUT:
+                    int id = Integer.parseInt(parsed.getData());
+                    if(id == playerId) {
+                        Client.send(playerId+"#REQUEST_DRAW_CARD#"+playerId);   // draw card request to server
+                    }
                     break;
                 default:
                     System.err.println("알 수 없는 메시지 타입: " + parsed.getMsgType());
@@ -83,59 +174,6 @@ public class GameClientController extends BaseGameController implements CardObse
         this.playerId = playerId;
     }
 
-    /**
-     * Initializes and starts the game.
-     * <p>
-     * This method sets up the game environment, including drawing the game page,
-     * generating the deck, and creating players. It manages the sequential
-     * animations for dealing cards and placing the starting dummy card. Once the
-     * setup is complete, it begins the main game loop and enables user interaction.
-     * <p>
-     * Key functionalities:
-     * - Draws the main game page on the interface.
-     * - Generates the deck and initializes player roles.
-     * - Logs the game setup process in the specified system language.
-     * - Executes a sequence of animations for dealing cards and placing a starting card.
-     * - Initiates the core game logic and enables gameplay actions.
-     */
-    public void startGame() {
-        if (Setting.isEnClicked()) log.setLogs("Setting Game...", State.System);
-        else log.setLogs("게임 설정 중...", State.System);
-
-        SequentialTransition sequence = new SequentialTransition();
-
-        sequence.getChildren().add(getSixCards());
-
-        sequence.getChildren().add(putStartDummyCard());
-
-        sequence.play();
-
-        sequence.setOnFinished(new GameStartHandler());
-    }
-
-    private class GameStartHandler implements EventHandler<ActionEvent> {
-        @Override
-        public void handle(ActionEvent event) {
-            delaySecond(() -> {
-                gameLoop();
-                game.play();
-                disableButtons(false);
-            });
-        }
-    }
-
-
-    /**
-     * Represents the main game loop
-     */
-    private void gameLoop() {
-        Timeline gameLoop = new Timeline(
-                new KeyFrame(Duration.seconds(1), new GameLoopHandler())
-        );
-        gameLoop.setCycleCount(Timeline.INDEFINITE);
-
-        game = gameLoop;
-    }
 
     private class GameLoopHandler implements EventHandler<ActionEvent> {
         @Override
@@ -571,6 +609,7 @@ public class GameClientController extends BaseGameController implements CardObse
             @Override
             public void handle(MouseEvent event) {
                 mainView.getDeck().setDisable(true);
+                Client.send(playerId+"#REQUEST_DRAW_CARD#"+playerId);   // draw card request to server
 
                 if (GameClientController.this.clamping(player)) return;
 
@@ -629,7 +668,6 @@ public class GameClientController extends BaseGameController implements CardObse
         @Override
         public void handle(ActionEvent ev) {
             mainView.removeAnimationCard();
-            player.setCard(deck, false);
             removeDeckEffects();
             mainView.getDeck().setDisable(false);
         }
@@ -681,7 +719,9 @@ public class GameClientController extends BaseGameController implements CardObse
                     } else {
                         if (dummy.getSuit() == card.getSuit() || dummy.getRank() == card.getRank()) {
                             statusManager.doUserDid();
-                            mainView.setDragReleased(ev, cardImg, player, dummyCard, true);
+                            if(mainView.setDragReleased(ev, cardImg, player, dummyCard, true)){
+                                Client.send(playerId + "#PUT_CARD#" + player.getScoreId() + " " + card.toString());
+                            }
                         } else {
                             mainView.setDragReleased(ev, cardImg, player, dummyCard, false);
                         }
@@ -821,8 +861,9 @@ public class GameClientController extends BaseGameController implements CardObse
         statusManager.setFourTime();
         stackGetCard += 3;
 
-        if(!players.get(statusManager.getTurn()).isSelf()) {
-            if (Setting.isEnClicked()) chat.addMessage(CPU_Msg.getEnglishAttack(), players.get(statusManager.getTurn()));
+        if (!players.get(statusManager.getTurn()).isSelf()) {
+            if (Setting.isEnClicked())
+                chat.addMessage(CPU_Msg.getEnglishAttack(), players.get(statusManager.getTurn()));
             else chat.addMessage(CPU_Msg.getKoreanAttack(), players.get(statusManager.getTurn()));
         }
 
@@ -862,8 +903,9 @@ public class GameClientController extends BaseGameController implements CardObse
 
         statusManager.doPassTurn();    // 여기가 마지막 초기화함!
 
-        if(!players.get(statusManager.getTurn()).isSelf()) {
-            if (Setting.isEnClicked()) chat.addMessage(CPU_Msg.getEnglishAttack(), players.get(statusManager.getTurn()));
+        if (!players.get(statusManager.getTurn()).isSelf()) {
+            if (Setting.isEnClicked())
+                chat.addMessage(CPU_Msg.getEnglishAttack(), players.get(statusManager.getTurn()));
             else chat.addMessage(CPU_Msg.getKoreanAttack(), players.get(statusManager.getTurn()));
         }
 
@@ -1056,59 +1098,6 @@ public class GameClientController extends BaseGameController implements CardObse
         return timeline;
     }
 
-    /**
-     * Resets the game state and initializes a new game session.
-     * This method performs the following operations:
-     * 1. Initializes and draws the game page.
-     * 2. Resets the deck and transforms the list of players.
-     * 3. Sets up a sequence of animations and transitions.
-     * 4. Starts the game loop and enables game interactions.
-     *
-     * @param prevPlayers The list of players from the previous game session,
-     *                    sorted in descending order and transformed for the new game.
-     */
-    public void resetGame(List<Player> prevPlayers) {
-        initPage();
-        drawGamePage();
-
-        deck.generateDeck();
-        Collections.sort(prevPlayers, Collections.reverseOrder());
-
-        transformPlayers(prevPlayers);
-        for (Player player : players) System.out.println(player.getScore());
-
-        if (Setting.isEnClicked()) log.setLogs("Setting Game...!", State.System);
-        else log.setLogs("게임 설정 중...!", State.System);
-
-        SequentialTransition sequence = new SequentialTransition();
-
-        sequence.getChildren().add(getSixCards());
-
-        sequence.getChildren().add(putStartDummyCard());
-
-        sequence.play();
-
-        sequence.setOnFinished(new SequenceFinishedHandler());
-        System.out.println("New Game Start");
-        if (Setting.isEnClicked()) log.setLogs("New Game Start...!", State.System);
-        else log.setLogs("새로운 게임 시작...!", State.System);
-    }
-
-    private class SequenceFinishedHandler implements EventHandler<ActionEvent> {
-        @Override
-        public void handle(ActionEvent event) {
-            delaySecond(new StartGameHandler());
-        }
-    }
-
-    private class StartGameHandler implements Runnable {
-        @Override
-        public void run() {
-            gameLoop();
-            game.play();
-            disableButtons(false);
-        }
-    }
 
     /**
      * Transforms the list of previous players into a new list of players, initializes their states
@@ -1155,16 +1144,16 @@ public class GameClientController extends BaseGameController implements CardObse
      * - Invokes the `createUser` method to handle user-specific setup.
      */
     private void createPlayers() {
-        for(Player player : players) {
-            if(player.getNetworkId() == playerId) {
+        for (Player player : players) {
+            if (player.getNetworkId() == playerId) {
                 player.setSelf();
                 new PlayerScoreView(player, mainView);
                 new PlayerHandView(player, mainView);
-                player.setIcon(player.getIcon());
-            }else{
+                player.setIcon(player.getIcon(), false);
+            } else {
                 new PlayerStatusView(player, mainView);
                 new PlayerScoreView(player, mainView);
-                player.setIcon(player.getIcon());
+                player.setIcon(player.getIcon(), false);
             }
         }
     }
@@ -1464,7 +1453,8 @@ public class GameClientController extends BaseGameController implements CardObse
     public List<Player> getPlayers() {
         return players;
     }
-    public void addPlayer(Player player){
+
+    public void addPlayer(Player player) {
         players.add(player);
     }
 

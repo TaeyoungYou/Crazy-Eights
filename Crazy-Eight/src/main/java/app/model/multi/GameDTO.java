@@ -1,5 +1,7 @@
 package app.model.multi;
 
+import javafx.util.Pair;
+
 import java.util.List;
 
 public class GameDTO {
@@ -22,7 +24,7 @@ public class GameDTO {
 
             Player temp = new Player(id);
             temp.setPlayer(true);
-            temp.setIcon(icon);
+            temp.setIcon(icon, true);
             players.add(temp);
             users.add(temp);
         }
@@ -43,9 +45,29 @@ public class GameDTO {
             if(!exists){
                 Player temp = new Player(id);
                 temp.setPlayer(false);
-                temp.setIcon(icon);
+                temp.setIcon(icon, true);
                 players.add(temp);
             }
         }
+    }
+
+    public static Pair<Integer, Card> drawCard(String data){
+        String[] info = data.split(" ");
+        int id = Integer.parseInt(info[0]);
+        String[] card = info[1].split(":");
+
+        return new Pair<>(id, new Card(Integer.parseInt(card[0]), Integer.parseInt(card[1])));
+    }
+
+    public static Card putDummy(String data){
+        String[] info = data.split(":");
+        return new Card(Integer.parseInt(info[0]), Integer.parseInt(info[1]));
+    }
+
+    public static Pair<Integer, Card> putCard(String data){
+        String[] info = data.split(" ");
+        int id = Integer.parseInt(info[0]);
+        String[] card = info[1].split(":");
+        return new Pair<>(id, new Card(Integer.parseInt(card[0]), Integer.parseInt(card[1])));
     }
 }

@@ -23,7 +23,7 @@ public class App extends Application {    /**
     @Override
     public void start(Stage primaryStage) throws Exception {
         StackPane root = new StackPane();
-        root.setPrefSize(1920, 1080);
+        root.setPrefSize(1920, 1090);
         Scene scene = new Scene(root);
         configStage(primaryStage);
         primaryStage.setScene(scene);

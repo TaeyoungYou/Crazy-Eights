@@ -34,7 +34,7 @@ public abstract class BaseGameController implements CardObserver, DeckObserver, 
     protected Log log;
     protected Chat chat;
 
-    protected int playerRanPutTime = ThreadLocalRandom.current().nextInt(3, 9);
+    protected int playerRanPutTime = ThreadLocalRandom.current().nextInt(3, 8);
     protected boolean playerDoChat = Math.random() < 0.7;
     protected int playerChatTime = ThreadLocalRandom.current().nextInt(1, playerRanPutTime);
 

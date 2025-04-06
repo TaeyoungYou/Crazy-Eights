@@ -11,4 +11,11 @@ public enum MsgType {
     INIT_DECK,
     INIT_PLAYERS,
     CREATE_PLAYERS,
+    DRAW_CARD,
+    PUT_DUMMY,
+    UPDATE_TURN,
+    TIME_SET,
+    PUT_CARD,
+    REQUEST_DRAW_CARD,
+    TIME_OUT,
 }

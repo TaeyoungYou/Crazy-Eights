@@ -1,7 +1,9 @@
 package app.model.multi;
 
+import app.view.multi.PlayerScoreView;
 import app.view.single.PlayerHandView;
 import app.view.single.PlayerStatusView;
+import javafx.application.Platform;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -112,9 +114,9 @@ public class Player implements Comparable<Player>{
      *
      * @param url the URL of the new icon to be set for the player
      */
-    public void setIcon(String url){
+    public void setIcon(String url, boolean skipObserver){
         icon = url;
-        notifyObservers();
+        if(!skipObserver) notifyObservers();
     }
     /**
      * Sets the turn status of the player and notifies all registered observers
@@ -179,10 +181,13 @@ public class Player implements Comparable<Player>{
      * @param skipObserver  a boolean indicating whether to skip notifying observers;
      *                      {@code true} to skip notification, {@code false} to notify all observers
      */
-    public void setCard(Deck deck, boolean skipObserver){
-        hand.add(deck.drawCard());
+    public Card setCard(Deck deck, boolean skipObserver){
+        Card temp = deck.drawCard();
+        hand.add(temp);
         handleCard = true;
         if(!skipObserver) notifyObservers();
+
+        return temp;
     }
     /**
      * Retrieves the current score of the player.
@@ -297,13 +302,17 @@ public class Player implements Comparable<Player>{
      */
     public void notifyObservers(){
         for(PlayerObserver observer : observers){
-            if(observer instanceof PlayerStatusView){
-                observer.update(this, handleCard);
-            } else if(observer instanceof PlayerHandView && isSelf()){
-                observer.update(this, false);
-            }else {
-                observer.update(this, false);
-            }
+            Platform.runLater(() -> {
+                if(observer instanceof PlayerStatusView && !isSelf()){
+                    observer.update(this, handleCard);
+                } else if(observer instanceof PlayerHandView && isSelf()){
+                    observer.update(this, false);
+                }else if(observer instanceof PlayerScoreView){
+                    observer.update(this, false);
+                }else{
+                    observer.update(this, false);
+                }
+            });
         }
         handleCard = false;
     }
@@ -313,6 +322,13 @@ public class Player implements Comparable<Player>{
     }
     public boolean isPlayer(){
         return player;
+    }
+
+    public int getScoreId(){
+        return scoreId;
+    }
+    public void setScoreId(int id){
+        this.scoreId = id;
     }
 
     /**
@@ -327,5 +343,11 @@ public class Player implements Comparable<Player>{
     @Override
     public int compareTo(Player o) {
         return this.score - o.getScore();
+    }
+
+
+    public void addCard(Card card){
+        hand.add(card);
+        notifyObservers();
     }
 }

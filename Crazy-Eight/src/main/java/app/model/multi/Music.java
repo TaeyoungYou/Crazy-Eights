@@ -52,6 +52,7 @@ public class Music {
     public static void play(){
         initMusic();
         mediaPlayer.play();
+        mediaPlayer.stop();
     }
 
     /**

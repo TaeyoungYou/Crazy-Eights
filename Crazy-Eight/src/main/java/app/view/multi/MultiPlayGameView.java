@@ -268,7 +268,10 @@ public class MultiPlayGameView {
      *                  placeholders and containers to initialize.
      */
     private void gamePlayerStatusConfig(int playerNum) {
-        for(int i = 0; i < playerNum - 1; ++i) {
+        // 이유를 씨발 모르겠어요. 현재 유저는 status공간이 필요없고, 할당도 안하는데 왜 플레이어 수만큼 공간을 할당해야하는지
+        // 근데 또 싱글플레이어에서는 현재플레이어-1 해도 잘만 되요 씨발
+        // 일단 고쳐지긴 했으니 나둡니다 - 이거 찾는데 2틀이나 꼬박 밤을 샛어요 시발
+        for(int i = 0; i < playerNum; ++i) {    
             HBox playerPlace = new HBox();
             gamePlayerStatus.getChildren().add(playerPlace);    // empty box, it will be initialized by PlayerStatusView, subview
         }
@@ -308,7 +311,6 @@ public class MultiPlayGameView {
             scoreTitle.setStyle(style.sideLabelStyle());
         }
 
-
         scoreBox = new VBox();
         scoreBox.setStyle(style.statusScoreBoxStyle());
         scoreBox.setPrefSize(250, 300);
@@ -316,7 +318,7 @@ public class MultiPlayGameView {
         scoreBox.setPadding(new Insets(10, 10, 10, 20));
         scoreBox.setSpacing(10);
 
-        for(int i = 0; i < playerNum; ++i){
+        for(int i = 0; i < 4; ++i){
             HBox playerScoreBox = new HBox();
             scoreBox.getChildren().add(playerScoreBox);     // Empty Box, it will be initialized by PlayerScoreView, subView
         }
@@ -528,7 +530,7 @@ public class MultiPlayGameView {
      * @param dummyCard The dummy card used to update the state of the game after a valid release.
      * @param correct   A boolean indicating whether the drag release is valid and correct.
      */
-    public void setDragReleased(MouseEvent event, ImageView card, Player player, DummyCard dummyCard, boolean correct) {
+    public boolean setDragReleased(MouseEvent event, ImageView card, Player player, DummyCard dummyCard, boolean correct) {
         Animation removed = animation.cardDragReleased(event, card);
         if (removed != null && correct) {
             int index = curCards.indexOf(card);
@@ -536,8 +538,10 @@ public class MultiPlayGameView {
             removed.setOnFinished(new DragReleaseHandler(card, player, dummyCard, index));
 
             removed.play();
+            return true;
         } else {
             getBackAnimation(card);
+            return false;
         }
     }
 
@@ -597,7 +601,7 @@ public class MultiPlayGameView {
      * @param player the player whose score box needs to be updated
      */
     public void setScoreBox(HBox newScoreBox, Player player) {
-        scoreBox.getChildren().set(player.getNetworkId(), newScoreBox);
+        scoreBox.getChildren().set(player.getScoreId(), newScoreBox);
     }
 
     /**
