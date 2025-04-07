@@ -1,64 +1,102 @@
 @echo off
-CLS
-setlocal EnableDelayedExpansion
+cls
+SETLOCAL ENABLEDELAYEDEXPANSION
 
-REM JavaFX 관련 환경 변수 설정
-SET MODULE_PATH=javafx-sdk-21.0.2\lib
-SET MODULES=javafx.base,javafx.controls,javafx.fxml,javafx.graphics,javafx.media,javafx.swing,javafx.web
-SET OUT_DIR=bin\main\java
+REM === Set environment variables using relative paths ===
+SET "JAVA_FX_PATH=javafx-sdk-21.0.2\lib"
+SET "MODULES=javafx.base,javafx.controls,javafx.fxml,javafx.graphics,javafx.media,javafx.swing,javafx.web"
+SET "BIN_DIR=bin\classes"
 
+ECHO Java version:
 java -version
+ECHO Javac version:
 javac -version
 
 ECHO "[LABS SCRIPT ---------------------]"
 ECHO "0. Cleaning previous build files..."
-
 IF EXIST "bin" RD /S /Q "bin"
 IF EXIST "doc" RD /S /Q "doc"
-IF EXIST "labs-javac.err" DEL "labs-javac.err"
-IF EXIST "labs-jar.out" DEL "labs-jar.out"
-IF EXIST "labs-jar.err" DEL "labs-jar.err"
-IF EXIST "labs-javadoc.err" DEL "labs-javadoc.err"
+IF EXIST "*.err" DEL /F /Q "*.err"
+IF EXIST "*.out" DEL /F /Q "*.out"
+IF EXIST "*.txt" DEL /F /Q "*.txt"
 
-ECHO "1. Creating necessary directories..."
-mkdir "bin\main\java"
-mkdir "doc"
+ECHO "1. Creating new directories..."
+mkdir "%BIN_DIR%"
 
-ECHO "2. Accumulating Java source files..."
-set "FILES="
-for /R "src\main\java\app" %%F in (*.java) do (
-    set "FILES=!FILES! %%F"
-)
-echo Files to compile: !FILES!
+REM === Generate list of Java source files ===
+ECHO "2. Generating Java source file list..."
+(
+    for /R "src\main\java" %%F in (*.java) do (
+        echo %%F
+    )
+) > files_to_compile.txt
+echo "[files_to_compile.txt] has been created."
 
-ECHO "3. Compiling Java source files..."
-javac --module-path "%MODULE_PATH%" ^
+REM === Compile Java source files ===
+ECHO "3. Compiling source code..."
+ECHO. > "labs-javac.err"
+javac -encoding UTF-8 ^
+      --module-path "%JAVA_FX_PATH%" ^
       --add-modules %MODULES% ^
-      -encoding UTF-8 ^
-      -sourcepath "src\main\java" ^
-      -d "%OUT_DIR%" !FILES! 2>> "labs-javac.err"
+      -d "%BIN_DIR%" @files_to_compile.txt 2>> "labs-javac.err"
+IF NOT EXIST "%BIN_DIR%\app\Generator.class" (
+    echo "Compilation failed: Please check labs-javac.err."
+    type labs-jar.err
+    GOTO END_BATCH
+) ELSE (
+    echo "Compilation succeeded!"
+)
 
-ECHO "4. Creating META-INF/MANIFEST.MF..."
-mkdir "bin\META-INF"
-ECHO Main-Class: app.Generator > "bin\META-INF\MANIFEST.MF"
+REM === Copy resources to the class directory ===
+ECHO "4. Copying resources..."
+xcopy /E /I /Y "src\main\resources\*" "%BIN_DIR%\" >NUL 2>&1
+IF ERRORLEVEL 1 (
+    echo "Resource copying failed."
+) ELSE (
+    echo "Resource copying succeeded!"
+)
 
-ECHO "5. Copying Resources..."
-xcopy /E /I /Y "src\main\resources" "bin\resources"
+REM === Create MANIFEST and generate the JAR file ===
+ECHO "5. Creating JAR file..."
+REM MANIFEST file must include a blank line at the end.
+(
+    echo Main-Class: app.Generator
+    echo.
+) > "%BIN_DIR%\MANIFEST.MF"
+jar cvfe Crazy-Eights.jar app.Generator -C "%BIN_DIR%" . > labs-jar.out 2> labs-jar.err
+IF NOT EXIST Crazy-Eights.jar (
+    echo "JAR creation failed: Please check labs-jar.err."
+    type labs-jar.err
+    GOTO END_BATCH
+) ELSE (
+    echo "JAR creation succeeded!"
+)
 
-ECHO "6. Creating JAR..."
-cd bin
-jar cvfe "Crazy-Eights.jar" "app.Generator" -C "main\java" . -C "resources" . > ../labs-jar.out 2> ../labs-jar.err
-cd ..
+REM === Generate Javadoc ===
+ECHO "6. Generating Javadoc..."
+javadoc --module-path "%JAVA_FX_PATH%" --add-modules %MODULES% -d "doc" -sourcepath "src\main\java" -subpackages "app" 2> "labs-javadoc.err"
+IF ERRORLEVEL 1 (
+    echo "Javadoc generation failed: Please check labs-javadoc.err."
+    type labs-javadoc.err
+) ELSE (
+    echo "Javadoc generation succeeded!"
+)
 
-ECHO "6. Creating Javadoc..."
-javadoc --module-path "%MODULE_PATH%" --add-modules %MODULES% -d "doc" -sourcepath "src/main/java" -subpackages "app" 2> "labs-javadoc.err"
+REM === Run the JAR file ===
+ECHO "7. Running JAR file..."
+java -Dprism.d3d=false -Dfile.encoding=UTF-8 ^
+     --module-path "%JAVA_FX_PATH%" ^
+     --add-modules %MODULES% ^
+     -jar Crazy-Eights.jar
+IF ERRORLEVEL 1 (
+    echo "JAR execution failed. Please check if app.Generator is correctly configured."
+    pause
+    GOTO END_BATCH
+) ELSE (
+    echo "JAR executed successfully!"
+)
 
-ECHO "8. Running JAR..."
-cd bin
-java --module-path "..\%MODULE_PATH%" --add-modules %MODULES% -jar "Crazy-Eights.jar"
-cd ..
-
-ECHO "JAR execution finished."
-ECHO "[END OF SCRIPT -------------------]"
-endlocal
+:END_BATCH
+ECHO "✅ Process completed successfully."
 pause
+ENDLOCAL

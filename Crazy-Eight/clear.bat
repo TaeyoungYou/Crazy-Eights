@@ -39,4 +39,20 @@ FOR %%F IN (%BINERR% %JAROUT% %JARERR% %DOCERR%) DO (
     )
 )
 
+:: Crazy-Eights.jar 파일 삭제
+IF EXIST "Crazy-Eights.jar" (
+    DEL "Crazy-Eights.jar"
+    ECHO "Deleted: Crazy-Eights.jar"
+) ELSE (
+    ECHO "File not found: Crazy-Eights.jar"
+)
+
+:: files_to_compile.txt 파일 삭제
+IF EXIST "files_to_compile.txt" (
+    DEL "files_to_compile.txt"
+    ECHO "Deleted: files_to_compile.txt"
+) ELSE (
+    ECHO "File not found: files_to_compile.txt"
+)
+
 ECHO "Cleanup completed."

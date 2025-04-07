@@ -6,36 +6,12 @@
   <component name="ChangeListManager">
     <list default="true" id="359720e0-8497-48d6-9a4e-8ff9b1ede7bb" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/app/App.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/App.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/app/animation/AnimationCharacter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/animation/AnimationCharacter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/app/animation/AnimationEight.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/animation/AnimationEight.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/app/animation/AnimationMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/animation/AnimationMenu.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/app/animation/AnimationMultiMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/animation/AnimationMultiMenu.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/app/animation/multi/AnimationGame.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/animation/multi/AnimationGame.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/app/controller/multi/BaseGameController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/controller/multi/BaseGameController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/app/controller/multi/CharacterChooseController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/controller/multi/CharacterChooseController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/app/controller/multi/GameClientController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/controller/multi/GameClientController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/app/controller/multi/GameController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/controller/multi/GameController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/app/model/multi/CPU_Msg.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/model/multi/CPU_Msg.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/app/model/multi/Card.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/model/multi/Card.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/app/model/multi/CardObserver.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/model/multi/CardObserver.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/app/model/multi/Chat.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/model/multi/Chat.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/app/model/multi/Client.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/model/multi/Client.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/app/model/multi/ClientHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/model/multi/ClientHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/app/model/multi/Deck.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/model/multi/Deck.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/app/model/multi/DummyCard.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/model/multi/DummyCard.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/app/model/multi/GameDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/model/multi/GameDTO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/app/model/multi/GameStatusManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/model/multi/GameStatusManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/app/model/multi/Log.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/model/multi/Log.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/app/model/multi/MessageHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/model/multi/MessageHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/app/model/multi/MessageParser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/model/multi/MessageParser.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/app/model/multi/MsgType.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/model/multi/MsgType.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/app/model/multi/Player.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/model/multi/Player.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/app/model/multi/Server.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/model/multi/Server.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/app/style/StyleCharacter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/style/StyleCharacter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/app/view/multi/CharacterChooseView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/view/multi/CharacterChooseView.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/app/view/multi/MultiMenuView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/view/multi/MultiMenuView.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/app/view/multi/MultiPlayGameView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/view/multi/MultiPlayGameView.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/clear.bat" beforeDir="false" afterPath="$PROJECT_DIR$/clear.bat" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/copyright.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/patchnotes.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/run.bat" beforeDir="false" afterPath="$PROJECT_DIR$/run.bat" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/screenshot.docx" beforeDir="false" afterPath="$PROJECT_DIR$/screenshot.docx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/META-INF/MANIFEST.MF" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/../javafx-sdk-21.0.2/bin/api-ms-win-core-console-l1-1-0.dll" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/../javafx-sdk-21.0.2/bin/api-ms-win-core-console-l1-2-0.dll" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/../javafx-sdk-21.0.2/bin/api-ms-win-core-datetime-l1-1-0.dll" beforeDir="false" />
@@ -280,7 +256,7 @@
       <workItem from="1743693232279" duration="35243000" />
       <workItem from="1743786465199" duration="39957000" />
       <workItem from="1743873884702" duration="41882000" />
-      <workItem from="1743956882419" duration="26611000" />
+      <workItem from="1743956882419" duration="31681000" />
     </task>
     <servers />
   </component>
