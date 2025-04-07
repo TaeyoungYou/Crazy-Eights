@@ -282,10 +282,10 @@ public class AnimationMenu {
 
         @Override
         public void handle(ActionEvent event) {
-            if(isSingle){
+            if (isSingle) {
                 SinglePlayGameController singlePlayGameController = new SinglePlayGameController(scene);
                 singlePlayGameController.selectCharacter(singlePlayGameController::startGame);
-            }else{
+            } else {
                 CharacterChooseController controller = new CharacterChooseController(scene);
                 controller.drawPane();
             }

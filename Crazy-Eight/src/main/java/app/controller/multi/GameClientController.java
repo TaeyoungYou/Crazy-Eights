@@ -21,14 +21,22 @@ import java.util.concurrent.ThreadLocalRandom;
 
 
 /**
- * The SinglePlayGameController class handles the main logic and state of a single-player game.
- * It manages the game flow, UI interactions, and game state updates for a turn-based card game.
+ * The GameClientController class manages the client-side game logic, including
+ * handling server messages, player actions, game state, and visual effects.
+ * It provides methods for updating the game view, managing turns, assigning
+ * scores, and implementing game rule logic.
+ * <p>
+ * This class integrates player and game state updates with animations
+ * and localized logging, ensuring a smooth and interactive user experience.
  */
 public class GameClientController extends BaseGameController implements CardObserver, DeckObserver, LogObserver, ChatObserver {
     private int stack = 1;
 
     /**
-     * Constructs a SinglePlayGameController
+     * Constructs a GameClientController instance for managing game views, game status,
+     * and other components associated with the game client.
+     *
+     * @param _scene the primary scene to which all views and game components will be added
      */
     public GameClientController(Scene _scene) {
         scene = _scene;
@@ -46,6 +54,13 @@ public class GameClientController extends BaseGameController implements CardObse
         statusManager = new GameStatusManager(playerNum);
     }
 
+    /**
+     * Handles server messages received by the client and processes them based on the message type.
+     * Each message type triggers specific actions or updates in the game state or UI.
+     *
+     * @param message the raw string message received from the server. This message is parsed into
+     *                a structured format and its type and data are used to execute corresponding game logic.
+     */
     public void handleServerMessage(String message) {
         try {
             MessageParser.ParsedMessage parsed = MessageParser.parse(message);
@@ -69,7 +84,6 @@ public class GameClientController extends BaseGameController implements CardObse
                     GameDTO.initPlayers(parsed.getData(), players, users);
                     break;
                 case CREATE_PLAYERS:
-                    players.clear();
                     GameDTO.createPlayers(parsed.getData(), players);
                     createPlayers();
                     System.out.println("플레이어 생성완료!");
@@ -226,13 +240,19 @@ public class GameClientController extends BaseGameController implements CardObse
                     }
                     break;
                 case LOG:
-                    Platform.runLater(() -> {log.setLogs(parsed.getData(), State.Log);});
+                    Platform.runLater(() -> {
+                        log.setLogs(parsed.getData(), State.Log);
+                    });
                     break;
                 case SYSTEM:
-                    Platform.runLater(() -> {log.setLogs(parsed.getData(), State.System);});
+                    Platform.runLater(() -> {
+                        log.setLogs(parsed.getData(), State.System);
+                    });
                     break;
                 case ERROR:
-                    Platform.runLater(() -> {log.setLogs(parsed.getData(), State.Error);});
+                    Platform.runLater(() -> {
+                        log.setLogs(parsed.getData(), State.Error);
+                    });
                     break;
                 default:
                     System.err.println("알 수 없는 메시지 타입: " + parsed.getMsgType());
@@ -243,6 +263,11 @@ public class GameClientController extends BaseGameController implements CardObse
         }
     }
 
+    /**
+     * Saves the information for a player by storing their ID.
+     *
+     * @param playerId The unique identifier of the player whose information is to be saved.
+     */
     public void saveInfo(int playerId) {
         this.playerId = playerId;
     }
@@ -343,6 +368,7 @@ public class GameClientController extends BaseGameController implements CardObse
         return scoreMap;
     }
 
+
     private class CardCountComparator implements Comparator<Player> {
         @Override
         public int compare(Player p1, Player p2) {
@@ -360,217 +386,6 @@ public class GameClientController extends BaseGameController implements CardObse
         @Override
         public int compare(Player p1, Player p2) {
             return Integer.compare(scoreMap.get(p1).getKey(), scoreMap.get(p2).getKey());
-        }
-    }
-
-
-    /**
-     * Handles the logic for a player putting down a card.
-     * It checks if the player can put down a card that matches the dummy card
-     * based on the rank or suit, and applies the necessary animations and logic.
-     *
-     * @param player The player attempting to put down a card.
-     */
-    private void playerPutCard(Player player) {
-        // If there are stacked cards (e.g., from a 2-card effect)
-        if (stackGetCard > 1) {
-            // If the dummy card is a 2
-            if (dummyCard.getCard().getRank() == 1) {
-                for (Card card : player.getHand()) {
-                    if (dummyCard.getCard().getRank() == card.getRank()) {
-                        Animation putCard = mainView.putCardAnimationWithPlayer();
-                        putCard.setOnFinished(new PutCardHandler(card, player, false));
-                        putCard.play();
-                        return;
-                    }
-                }
-                // If no matching card, the player must draw a card
-                drawCards(player);
-                return;
-            }
-        }
-
-        // Normal case: No stacking effect, check for valid moves
-        for (Card card : player.getHand()) {
-            if (dummyCard.getCard().getSuit() == card.getSuit() || dummyCard.getCard().getRank() == card.getRank()) {
-                Animation putCard = mainView.putCardAnimationWithPlayer();
-                putCard.setOnFinished(new PutCardHandler(card, player, false));
-                putCard.play();
-                return;
-            }
-        }
-
-        // If no valid card to play, the player must draw a card
-        drawCards(player);
-    }
-
-    private class PutCardHandler implements EventHandler<ActionEvent> {
-        private final Card card;
-        private final Player player;
-        private final boolean someFlag;
-
-        public PutCardHandler(Card card, Player player, boolean someFlag) {
-            this.card = card;
-            this.player = player;
-            this.someFlag = someFlag;
-        }
-
-        @Override
-        public void handle(ActionEvent e) {
-            putCardDummy(card, someFlag);
-            player.removeCard(card);
-        }
-    }
-
-    /**
-     * Executes the logic for drawing cards for the specified player.
-     * This includes animations, log updates, card addition to the player's hand, and turn management.
-     * The number of cards drawn is determined by the game's state and player eligibility.
-     *
-     * @param player The player instance for whom the cards are to be drawn.
-     */
-    private void drawCards(Player player) {
-        if (clamping(player)) return;
-
-        final Timeline drawMotion = new Timeline(new KeyFrame(Duration.seconds(1), new DrawCardEventHandler(player)));
-        drawMotion.setCycleCount(stackGetCard);
-        drawMotion.setOnFinished(new DrawMotionFinishedEventHandler(player));
-
-        drawMotion.play();
-    }
-
-    private class DrawCardEventHandler implements EventHandler<ActionEvent> {
-        private final Player player;
-
-        public DrawCardEventHandler(Player player) {
-            this.player = player;
-        }
-
-        @Override
-        public void handle(ActionEvent event) {
-            Animation getCard = mainView.getCardAnimationToPlayer();
-            getCard.setOnFinished(new EventHandler<ActionEvent>() {
-                @Override
-                public void handle(ActionEvent e) {
-                    if (DEBUG) System.out.println("Drawing card");
-                    if (Setting.isEnClicked()) log.setLogs("Drawing card!", State.Log);
-                    else log.setLogs("카드 드로우!", State.Log);
-
-                    player.setCard(deck, false);
-                }
-            });
-            getCard.play();
-        }
-    }
-
-    private class DrawMotionFinishedEventHandler implements EventHandler<ActionEvent> {
-        private final Player player;
-
-        public DrawMotionFinishedEventHandler(Player player) {
-            this.player = player;
-        }
-
-        @Override
-        public void handle(ActionEvent event) {
-            if (Setting.isEnClicked()) chat.addMessage(CPU_Msg.getEnglishBadDraw(), player);
-            else chat.addMessage(CPU_Msg.getKoreanBadDraw(), player);
-            delaySecond(new Runnable() {
-                @Override
-                public void run() {
-                    stackGetCard = 1;
-                    statusManager.doPassTurn();
-                    statusManager.resetFourTime();
-                }
-            });
-        }
-    }
-
-    /**
-     * Allows the user to draw a card by executing the following steps:
-     * - Verifies if the player is eligible to draw cards using the {@code clamping} method.
-     * - Updates the status to indicate the user's action.
-     * - Animates the card drawing process and adds the card to the player's hand.
-     * - Updates game logs based on the current language setting.
-     * - Handles turn passing and resets relevant game states upon animation completion.
-     *
-     * @param player The {@code Player} instance representing the user who is drawing a card.
-     */
-    private void userDrawCard(Player player) {
-        if (clamping(player)) return;
-
-        statusManager.doUserDid();  // 플래그 바꿈! Time out에 다시는 들어가지 않음
-
-        Timeline timeoutAnimation = new Timeline(new KeyFrame(Duration.seconds(1), new DrawCardAnimationEventHandler(player)));
-        timeoutAnimation.setCycleCount(stackGetCard);
-        timeoutAnimation.setOnFinished(new TimeoutAnimationFinishedEventHandler());
-        timeoutAnimation.play();
-    }
-
-    private class DrawCardAnimationEventHandler implements EventHandler<ActionEvent> {
-        private final Player player;
-
-        public DrawCardAnimationEventHandler(Player player) {
-            this.player = player;
-        }
-
-        @Override
-        public void handle(ActionEvent event) {
-            Animation getCards = mainView.getCardAnimationToUser();
-            getCards.setOnFinished(new GetCardAnimationFinishedEventHandler(player));
-            getCards.play();
-        }
-    }
-
-    private class GetCardAnimationFinishedEventHandler implements EventHandler<ActionEvent> {
-        private final Player player;
-
-        public GetCardAnimationFinishedEventHandler(Player player) {
-            this.player = player;
-        }
-
-        @Override
-        public void handle(ActionEvent e) {
-            player.setCard(deck, false);
-            if (DEBUG) System.out.println("Drawing card");
-            if (Setting.isEnClicked()) log.setLogs("Drawing card!", State.Log);
-            else log.setLogs("카드 드로우!", State.Log);
-        }
-    }
-
-    private class TimeoutAnimationFinishedEventHandler implements EventHandler<ActionEvent> {
-        @Override
-        public void handle(ActionEvent e) {
-            delaySecond(new Runnable() {
-                @Override
-                public void run() {
-                    statusManager.doPassTurn();
-                    stackGetCard = 1;
-                    statusManager.resetFourTime();  // 4일 경우, 여기도 들어오니 초기화
-                }
-            });
-        }
-    }
-
-    /**
-     * Updates the turn state of the players and applies appropriate effects based on the game status.
-     * <p>
-     * The method performs the following steps:
-     * - Iterates through all players and resets their turn status to false.
-     * - Clears card and deck interaction effects using helper methods.
-     * - Sets the current player (determined by the status manager) as the active player.
-     * - If the game is in the four-time state and the current player is marked as self, additional card and deck effects are applied to the player.
-     */
-    private void updatePlayerTurn() {
-        for (Player player : players) {
-            player.setMyTurn(false);
-            removeCardEffects();
-            removeDeckEffects();
-        }
-        Player player = players.get(statusManager.getTurn());
-        player.setMyTurn(true);
-        if (statusManager.isFourTime() && player.isSelf()) {
-            addCardEffects(player);
-            addDeckEffects(player);
         }
     }
 
@@ -682,20 +497,6 @@ public class GameClientController extends BaseGameController implements CardObse
             log.setLogs(String.format("Put %s %s card", card.getImogeSuit(), card.getRankString()), State.Log);
         else log.setLogs(String.format("카드 %s %s 놓음", card.getKoreanSuit(), card.getRankString()), State.Log);
 
-        if (card.getRank() == 7) {
-//            whenCardEight();
-        } else if (card.getRank() == 0) {
-            whenCardAce();
-        } else if (card.getRank() == 1) {
-//            whenCardTwo();
-        } else if (card.getRank() == 3) {
-//            whenCardFour();
-        } else if (card.getRank() == 11) {
-            whenCardQueen();
-        } else {
-            statusManager.doPassTurn();
-        }
-
         removeDeckEffects();
         removeCardEffects();
     }
@@ -711,162 +512,6 @@ public class GameClientController extends BaseGameController implements CardObse
         deck.add(card);
     }
 
-    private void whenCardAce() {
-        statusManager.setReverseOrder();
-        if (DEBUG) System.out.println("Turn is reversed..!");
-        if (Setting.isEnClicked()) log.setLogs("Turn is reversed..!", State.System);
-        else log.setLogs("순서가 바뀜..!", State.System);
-        statusManager.doPassTurn();
-    }
-
-    /**
-     * Handles the game logic when a Queen card is played.
-     * <p>
-     * This method updates the game state and player turns, applies
-     * relevant effects, logs the action in the selected language,
-     * and schedules a delayed operation for passing the turn.
-     * <p>
-     * The following operations are performed sequentially:
-     * - Sets the queen time using the `statusManager`.
-     * - Advances the game to the next turn.
-     * - Updates the current player's turn and applies turn effects.
-     * - Logs the action in either English or Korean, based on the application's settings.
-     * - Schedules a delayed action to:
-     * - Pass the turn using the `statusManager`.
-     * - Reset the queen time to its default state.
-     * <p>
-     * If debugging mode is enabled, outputs the skipped player's turn
-     * to the console for verification.
-     */
-    private void whenCardQueen() {
-        statusManager.setQueenTime();
-        statusManager.nextTurn();
-        updatePlayerTurn();
-        setTurnEffect();
-
-        if (DEBUG) System.out.printf("Skip player %d\n", statusManager.getTurn());
-        if (Setting.isEnClicked()) log.setLogs("Skip next player!", State.System);
-        else log.setLogs("다음 플레이어 스킵!", State.System);
-        delayQueen(new Runnable() {
-            @Override
-            public void run() {
-                statusManager.doPassTurn();
-                statusManager.resetQueenTime();
-            }
-        });
-    }
-
-    /**
-     * Executes the logic associated with playing a card of rank 4 in the game.
-     * <p>
-     * The method performs the following actions:
-     * - Checks if the current player has only one card left. If so, it removes that card,
-     * ends the game, and exits the method.
-     * - Activates "Four Time" mode in the game's status manager.
-     * - Increases the card stack count by 3, which will affect the cards drawn by the next player.
-     * - Sends an attack message to the in-game chat, based on the selected language setting.
-     * - Updates the game state by advancing the turn to the next player.
-     * - Creates logs to document the effect of the card, showing the number of cards the next player must draw.
-     * - If the next turn belongs to the user, it triggers the user's card draw logic.
-     * - If the turn belongs to a CPU player, it triggers the CPU player's card draw logic.
-     */
-    private void whenCardFour() {
-        if (DEBUG) System.out.printf("Card Left %d\n", players.get(statusManager.getTurn()).getCardLeft());
-        if (players.get(statusManager.getTurn()).getCardLeft() == 1) {
-            players.get(statusManager.getTurn()).removeCard(0);
-            endGame();
-            return;
-        }
-        statusManager.setFourTime();
-        stackGetCard += 3;
-
-        if (!players.get(statusManager.getTurn()).isSelf()) {
-            if (Setting.isEnClicked())
-                chat.addMessage(CPU_Msg.getEnglishAttack(), players.get(statusManager.getTurn()));
-            else chat.addMessage(CPU_Msg.getKoreanAttack(), players.get(statusManager.getTurn()));
-        }
-
-        statusManager.nextTurn();
-        updatePlayerTurn();
-        setTurnEffect();
-        Player player = players.get(statusManager.getTurn());
-        if (Setting.isEnClicked())
-            log.setLogs(String.format("Player %d gets 4 cards!", player.getNetworkId()), State.System);
-        else log.setLogs(String.format("플레이어 %d 4장 카드 드로우!", player.getNetworkId()), State.System);
-        if (player.isSelf()) {
-            userDrawCard(player);   // 여기서 cardTimeDid를 호출
-            return;
-        }
-        drawCards(player);  // 여기서 cardTieDid를 호출
-    }
-
-    /**
-     * Handles the logic to be executed when the card "two" is played in the game.
-     * <p>
-     * This method updates the stack of cards to draw based on the current value
-     * of `stackGetCard`. It increments by 1 if the stack is currently at 1;
-     * otherwise, it increments by 2.
-     * <p>
-     * The method also proceeds to the next player's turn using the `statusManager.doPassTurn()`.
-     * <p>
-     * Depending on the language setting in `Setting.isEnClicked()`, it adds a corresponding
-     * attack message to the chat for the current player.
-     * <p>
-     * If debugging is enabled (`DEBUG`), it logs the current stack value to the console.
-     * Additionally, it logs the current stack of cards in a system log, with messages
-     * adjusted according to the language setting.
-     */
-    private void whenCardTwo() {
-        if (stackGetCard == 1) stackGetCard += 1;
-        else stackGetCard += 2;
-
-        statusManager.doPassTurn();    // 여기가 마지막 초기화함!
-
-        if (!players.get(statusManager.getTurn()).isSelf()) {
-            if (Setting.isEnClicked())
-                chat.addMessage(CPU_Msg.getEnglishAttack(), players.get(statusManager.getTurn()));
-            else chat.addMessage(CPU_Msg.getKoreanAttack(), players.get(statusManager.getTurn()));
-        }
-
-        if (DEBUG) System.out.println("Current stack: " + stackGetCard);
-        if (Setting.isEnClicked())
-            log.setLogs(String.format("Current %d cards are stacked", stackGetCard), State.System);
-        else log.setLogs(String.format("현재 %d개 카드 쌓임", stackGetCard), State.System);
-    }
-
-    private void whenCardEight() {
-        if (players.get(statusManager.getTurn()).isSelf()) {
-            log.setLogs("Crazy Eight Time!", State.System);
-            chooseEightView.generate();
-
-            chooseEightView.getSpace().setOnMouseClicked(new SpaceClickHandler());
-            chooseEightView.getHeart().setOnMouseClicked(new HeartClickHandler());
-            chooseEightView.getDiamond().setOnMouseClicked(new DiamondClickHandler());
-            chooseEightView.getClub().setOnMouseClicked(new ClubClickHandler());
-        } else {
-            int shape = players.get(statusManager.getTurn()).getMostShape();
-            switch (shape) {
-                case 0:
-                    if (Setting.isEnClicked()) log.setLogs("Change to Space!", State.System);
-                    else log.setLogs("스페이드로 바꿈!", State.System);
-                    break;
-                case 1:
-                    if (Setting.isEnClicked()) log.setLogs("Change to Heart!", State.System);
-                    else log.setLogs("하트로 바꿈!", State.System);
-                    break;
-                case 2:
-                    if (Setting.isEnClicked()) log.setLogs("Change to Diamond!", State.System);
-                    else log.setLogs("다이아몬드로 바꿈!", State.System);
-                    break;
-                case 3:
-                    if (Setting.isEnClicked()) log.setLogs("Change to Club!", State.System);
-                    else log.setLogs("크로버로 바꿈!", State.System);
-            }
-            if (DEBUG) System.out.println("Changed the shape!");
-            putCardDummy(new Card(shape, 7), true);
-            statusManager.doPassTurn();
-        }
-    }
 
     private class SpaceClickHandler implements EventHandler<MouseEvent> {
         @Override
@@ -989,38 +634,6 @@ public class GameClientController extends BaseGameController implements CardObse
         });
     }
 
-    /**
-     * Creates and returns a Timeline object that handles the initialization sequence
-     * for starting a card game.
-     * A dummy card is drawn and a delay sequence is executed where players receive
-     * starter logging messages and random greeting messages upon game start.
-     *
-     * @return a Timeline object configured to initialize the start of the game
-     */
-    private Timeline putStartDummyCard() {
-        Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(1), event -> {
-            putCardDummy(deck.drawCard(), true);
-        }));
-
-        timeline.setOnFinished(e -> {
-            delaySecond(new Runnable() {
-                @Override
-                public void run() {
-                    if (Setting.isEnClicked()) log.setLogs("Start Game!", State.System);
-                    else log.setLogs("게임 시작!", State.System);
-                    for (Player player : players) {
-                        if (new Random().nextBoolean() && !player.isSelf()) {
-                            if (Setting.isEnClicked()) chat.addMessage(CPU_Msg.getEnglishGreeting(), player);
-                            else chat.addMessage(CPU_Msg.getKoreanGreeting(), player);
-                        }
-                    }
-                }
-            });
-        });
-
-        return timeline;
-    }
-
 
     /**
      * Transforms the list of previous players into a new list of players, initializes their states
@@ -1039,12 +652,12 @@ public class GameClientController extends BaseGameController implements CardObse
             player.copyPlayer(prevPlayer);
             if (prevPlayer.isSelf()) {
                 player.setSelf();
-                player.setNetworkId(scoreId++);
+                player.setScoreId(scoreId++);
                 player.setStatusId(3);
                 new PlayerHandView(player, mainView);
                 new PlayerScoreView(player, mainView);
             } else {
-                player.setNetworkId(scoreId++);
+                player.setScoreId(scoreId++);
                 player.setStatusId(statusId++);
                 new PlayerStatusView(player, mainView);
                 new PlayerScoreView(player, mainView);
@@ -1083,80 +696,6 @@ public class GameClientController extends BaseGameController implements CardObse
 
 
     /**
-     * Creates and returns a {@code ParallelTransition} animation that simulates
-     * dealing six cards to each player sequentially. The card dealing animation
-     * varies depending on whether the player is the user or another player.
-     *
-     * @return A {@code ParallelTransition} consisting of card animation timelines
-     * for each player.
-     */
-    private ParallelTransition getSixCards() {
-        ParallelTransition pt = new ParallelTransition();
-        for (Player player : players) {
-            Timeline giveCard;
-            if (player.isSelf()) {
-                giveCard = new Timeline(
-                        new KeyFrame(Duration.seconds(1), new UserCardEventHandler(player))
-                );
-            } else {
-                giveCard = new Timeline(
-                        new KeyFrame(Duration.seconds(1), new PlayerCardEventHandler(player))
-                );
-            }
-            giveCard.setCycleCount(6);
-            pt.getChildren().add(giveCard);
-        }
-        if (Setting.isEnClicked()) log.setLogs("Give 6 cards to players!", State.System);
-        else log.setLogs("플레이어들에게 6장의 카드 나눠 주는 중!", State.System);
-
-        return pt;
-    }
-
-    private class UserCardEventHandler implements EventHandler<ActionEvent> {
-        private final Player player;
-
-        public UserCardEventHandler(Player player) {
-            this.player = player;
-        }
-
-        @Override
-        public void handle(ActionEvent event) {
-            Animation animation = mainView.getCardAnimationToUser();
-            animation.setOnFinished(new EventHandler<ActionEvent>() {
-                @Override
-                public void handle(ActionEvent ev) {
-                    mainView.removeAnimationCard();
-                    player.setCard(deck, false);
-                }
-            });
-
-            animation.play();
-        }
-    }
-
-    private class PlayerCardEventHandler implements EventHandler<ActionEvent> {
-        private final Player player;
-
-        public PlayerCardEventHandler(Player player) {
-            this.player = player;
-        }
-
-        @Override
-        public void handle(ActionEvent event) {
-            Animation animation = mainView.getCardAnimationToPlayer();
-            animation.setOnFinished(new EventHandler<ActionEvent>() {
-                @Override
-                public void handle(ActionEvent ev) {
-                    mainView.removeAnimationCard();
-                    player.setCard(deck, false);
-                }
-            });
-
-            animation.play();
-        }
-    }
-
-    /**
      * Delays the execution of a given action by one second.
      *
      * @param action the action to be executed after the delay
@@ -1180,16 +719,6 @@ public class GameClientController extends BaseGameController implements CardObse
         }
     }
 
-    /**
-     * Executes the specified action after a delay of 500 milliseconds.
-     *
-     * @param action the Runnable action to be executed after the delay
-     */
-    private void delayQueen(Runnable action) {
-        PauseTransition delay = new PauseTransition(Duration.millis(500)); // 0.5초 딜레이
-        delay.setOnFinished(new DelayQueenHandler(action));
-        delay.play();
-    }
 
     private class DelayQueenHandler implements EventHandler<ActionEvent> {
         private final Runnable action;
@@ -1317,7 +846,7 @@ public class GameClientController extends BaseGameController implements CardObse
      * UI layout for the application.
      */
     private void initPage() {
-        if(!root.getChildren().contains(mainPane)) root.getChildren().add(mainPane);
+        if (!root.getChildren().contains(mainPane)) root.getChildren().add(mainPane);
         scene.setRoot(root);
 
 
@@ -1373,12 +902,13 @@ public class GameClientController extends BaseGameController implements CardObse
         mainView.getSetting().setDisable(disable);
     }
 
+    /**
+     * Retrieves the list of players.
+     *
+     * @return a list of Player objects.
+     */
     public List<Player> getPlayers() {
         return players;
-    }
-
-    public void addPlayer(Player player) {
-        players.add(player);
     }
 
 }

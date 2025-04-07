@@ -59,6 +59,11 @@ public class StyleCharacter {
                 "-fx-text-alignment: center;";
     }
 
+    /**
+     * Returns the style configuration for the countdown text in the UI.
+     *
+     * @return A CSS string defining the text color as a light gray shade.
+     */
     public String countDownStyle() {
         return "-fx-text-fill: #dddddd;";
     }

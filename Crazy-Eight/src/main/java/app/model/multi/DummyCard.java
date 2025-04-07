@@ -23,14 +23,16 @@ public class DummyCard {
      * for a Card object and associates it with the given SinglePlayGameController.
      *
      * @param controller the SinglePlayGameController instance responsible for
-     *                    managing the interactions and updates related to this DummyCard
+     *                   managing the interactions and updates related to this DummyCard
      */
     public DummyCard(GameController controller) {
         this.controller = controller;
     }
+
     public DummyCard(GameClientController controller) {
         this.controller = controller;
     }
+
     /**
      * Retrieves the image associated with this DummyCard.
      *
@@ -39,24 +41,26 @@ public class DummyCard {
     public Image getImage() {
         return image;
     }
+
     /**
      * Sets the image associated with this DummyCard by retrieving the external form
      * of the URL linked to the card's image. The URL is generated based on the card's
      * properties (suit and rank) via the card's `getCardURL` method.
-     *
+     * <p>
      * This method creates an instance of the Image class using the resource identifier
      * of the card's URL. The generated image is then assigned to the `image` property
      * of this DummyCard.
-     *
+     * <p>
      * The card's URL is expected to follow the format "/card/Card-{suit}-{rank}.png",
      * or "/card/Card-Empty.png" if the card is unassigned (both suit and rank are -1).
-     *
+     * <p>
      * Assumes that the `card` property has been initialized with a valid Card object
      * before calling this method.
      */
-    public void setImage(){
+    public void setImage() {
         image = new Image(getClass().getResource(card.getCardURL()).toExternalForm());
     }
+
     /**
      * Sets the image associated with this DummyCard.
      *
@@ -65,11 +69,12 @@ public class DummyCard {
     public void setImage(Image image) {
         this.image = image;
     }
+
     /**
      * Retrieves the card associated with this DummyCard.
      *
      * @return the Card object currently associated with this DummyCard,
-     *         or null if no card has been set.
+     * or null if no card has been set.
      */
     public Card getCard() {
         return card;
@@ -79,32 +84,33 @@ public class DummyCard {
      * Updates the card associated with this DummyCard and notifies relevant observers
      * about the change, unless explicitly instructed to skip notification.
      *
-     * @param card the new Card object to associate with this DummyCard
+     * @param card         the new Card object to associate with this DummyCard
      * @param skipObserver a boolean flag indicating whether to skip observer notifications
      *                     when updating the card. If false, observers will be notified.
      */
     public void setCard(Card card, boolean skipObserver) {
         Card prevCard = this.card;
         this.card = card;
-        if(!skipObserver) {
+        if (!skipObserver) {
             notifyObserver();
             notifyAddObserver(prevCard);
         }
     }
+
     /**
      * Notifies the associated observer about state changes in the DummyCard instance.
      * This method triggers the `update` method of the SinglePlayGameController associated
      * with the DummyCard, passing the current card instance as a parameter.
-     *
+     * <p>
      * The observer is generally responsible for handling the changes or actions resulting
      * from the card being played or interacted with in the game. The behavior implemented
      * in the `update` method can include logging the actions, applying specific card effects,
      * and updating the game state accordingly.
-     *
+     * <p>
      * This method assumes that a valid Card instance has been associated with the DummyCard
      * through the `setCard(Card card, boolean skipObserver)` method before calling.
      */
-    public void notifyObserver(){
+    public void notifyObserver() {
         controller.update(card);
     }
 
@@ -114,7 +120,7 @@ public class DummyCard {
      *
      * @param card the Card object being added to the deck and passed to the controller for updates
      */
-    public void notifyAddObserver(Card card){
+    public void notifyAddObserver(Card card) {
         controller.updateAddToDeck(card);
     }
 

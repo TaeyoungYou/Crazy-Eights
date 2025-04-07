@@ -21,13 +21,25 @@ import java.util.concurrent.ThreadLocalRandom;
 
 
 /**
- * The SinglePlayGameController class handles the main logic and state of a single-player game.
- * It manages the game flow, UI interactions, and game state updates for a turn-based card game.
+ * The GameController class is responsible for managing the main mechanics, rules, and flow of the game.
+ * It handles aspects such as player interactions, card effects, game state updates, and the overall
+ * execution of the game loop. It also manages the initialization and termination of gameplay.
+ * <p>
+ * Key Responsibilities:
+ * - Controlling the flow of the game, including the initialization, main loop, and end logic.
+ * - Managing player actions, such as playing cards, drawing cards, and updating the turn state.
+ * - Implementing the rules and effects associated with specific card ranks in the game.
+ * - Updating the visual and interactive components of the game, including the deck, dummy card,
+ * and player cards.
+ * - Logging actions and game states for debugging and user feedback purposes.
+ * - Ensuring proper sequencing of animations and transitions during gameplay activities.
  */
 public class GameController extends BaseGameController {
 
     /**
-     * Constructs a SinglePlayGameController
+     * Constructs a GameController object to manage the game's main components and views.
+     *
+     * @param _scene The primary Scene object in which the game is displayed and interacted with.
      */
     public GameController(Scene _scene) {
         scene = _scene;
@@ -45,6 +57,12 @@ public class GameController extends BaseGameController {
         statusManager = new GameStatusManager(4);
     }
 
+    /**
+     * Handles messages received from the server by parsing and executing the associated commands
+     * or actions based on the message type and content.
+     *
+     * @param message the raw message received from the server, which will be parsed and processed
+     */
     public void handleServerMessage(String message) {
         try {
             MessageParser.ParsedMessage parsed = MessageParser.parse(message);
@@ -154,6 +172,13 @@ public class GameController extends BaseGameController {
         }
     }
 
+    /**
+     * Saves player information including player ID and their associated character information.
+     *
+     * @param playerId            The unique identifier for the player.
+     * @param playerCharacterInfo A map containing character information where the key is the
+     *                            character ID and the value is the character's details.
+     */
     public void saveInfo(int playerId, Map<Integer, String> playerCharacterInfo) {
         this.playerId = playerId;
         for (Map.Entry<Integer, String> entry : playerCharacterInfo.entrySet()) {
@@ -167,19 +192,21 @@ public class GameController extends BaseGameController {
     }
 
     /**
-     * Initializes and starts the game.
+     * Starts the multiplayer game session and initializes necessary components.
      * <p>
-     * This method sets up the game environment, including drawing the game page,
-     * generating the deck, and creating players. It manages the sequential
-     * animations for dealing cards and placing the starting dummy card. Once the
-     * setup is complete, it begins the main game loop and enables user interaction.
+     * This method is responsible for initializing the game environment, creating players,
+     * sending initialization data to the client's server, and setting up the gameplay sequence.
+     * It also manages game state updates and logs system actions for the game.
      * <p>
-     * Key functionalities:
-     * - Draws the main game page on the interface.
-     * - Generates the deck and initializes player roles.
-     * - Logs the game setup process in the specified system language.
-     * - Executes a sequence of animations for dealing cards and placing a starting card.
-     * - Initiates the core game logic and enables gameplay actions.
+     * The method performs the following actions:
+     * 1. Logs the start of the game if debugging is enabled.
+     * 2. Initializes the user interface components for the game.
+     * 3. Sends initialization commands for the game page, deck, and player data to the client.
+     * 4. Creates the players required for the game.
+     * 5. Logs and communicates game setting status.
+     * 6. Sequentially executes animations and actions to prepare for gameplay, such as dealing cards
+     * and placing the starting dummy card.
+     * 7. Plays the sequential animations and sets a handler for when the sequence completes.
      */
     public void startGame() {
         if (DEBUG) System.out.println("Multi Play Game Start!");
@@ -227,7 +254,9 @@ public class GameController extends BaseGameController {
 
 
     /**
-     * Represents the main game loop
+     * Initializes and configures the main game loop using a Timeline object.
+     * The game loop is set to execute indefinitely with a cycle interval of one second.
+     * A GameLoopHandler is used to define the actions that occur during each frame of the loop.
      */
     private void gameLoop() {
         Timeline gameLoop = new Timeline(
@@ -1759,12 +1788,14 @@ public class GameController extends BaseGameController {
         mainView.getSetting().setDisable(disable);
     }
 
+    /**
+     * Retrieves the list of players.
+     *
+     * @return a list of Player objects
+     */
     public List<Player> getPlayers() {
         return players;
     }
 
-    public void addPlayer(Player player) {
-        players.add(player);
-    }
 
 }

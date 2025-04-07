@@ -34,7 +34,7 @@ public class CharacterChooseView {
     private AnimationCharacter animation;
 
     private List<Pair<ImageView, String>> characters;
-    
+
     private Label ready;
 
     /**
@@ -56,7 +56,7 @@ public class CharacterChooseView {
      * This method configures styles, layouts, and animations for the character
      * selection interface. It organizes character avatars into a user-friendly
      * display and applies associated animations.
-     *
+     * <p>
      * Details of the generate method functionality:
      * - Sets the style of the root pane and overlay using predefined styles.
      * - Binds the size of the overlay to match the dimensions of the root pane.
@@ -65,14 +65,14 @@ public class CharacterChooseView {
      * - Sets up a fade-in animation for the overlay.
      * - Configures hover animations for character selection elements.
      */
-    public void generate(){
+    public void generate() {
         pane.setStyle(style.gameRootStyle());
         overlay.setStyle(style.overlayStyle());
         overlay.prefWidthProperty().bind(pane.widthProperty());
         overlay.prefHeightProperty().bind(pane.heightProperty());
         overlay.setAlignment(Pos.TOP_CENTER);
 
-        for(int i=1; i<8; ++i){
+        for (int i = 1; i < 8; ++i) {
             String url = "/avatar/User-0" + i + ".png";
             characters.add(new Pair<>(new ImageView(getClass().getResource(url).toExternalForm()), url));
         }
@@ -88,10 +88,10 @@ public class CharacterChooseView {
         charactersLayer01.setAlignment(Pos.CENTER);
         charactersLayer02.setAlignment(Pos.CENTER);
 
-        for(int i=0; i<4; ++i){
+        for (int i = 0; i < 4; ++i) {
             charactersLayer01.getChildren().add(characters.get(i).getKey());
         }
-        for(int i=4; i<characters.size(); ++i){
+        for (int i = 4; i < characters.size(); ++i) {
             charactersLayer02.getChildren().add(characters.get(i).getKey());
         }
 
@@ -109,6 +109,7 @@ public class CharacterChooseView {
         animation.fadeInPane(overlay);
         setCharacterAnimation();
     }
+
     /**
      * Retrieves the fade-out animation for the overlay pane in the character selection view.
      * The animation transitions the overlay pane's opacity from fully visible (1.0)
@@ -119,6 +120,7 @@ public class CharacterChooseView {
     public Animation getFadeOutPaneAnimation() {
         return animation.fadeOutPane(overlay);
     }
+
     /**
      * Retrieves the main StackPane element associated with the CharacterChooseView.
      * This is the root container used to organize and display the character selection interface.
@@ -128,6 +130,7 @@ public class CharacterChooseView {
     public StackPane getPane() {
         return pane;
     }
+
     /**
      * Retrieves the overlay pane used in the character selection view.
      * The overlay is a StackPane designed to display UI elements, styles,
@@ -138,34 +141,36 @@ public class CharacterChooseView {
     public StackPane getOverlay() {
         return overlay;
     }
+
     /**
      * Configures hover animations for the character elements in the character selection view.
      * This method iterates over the list of character pairs, where each pair consists of an
      * ImageView representing a character and a corresponding identifier string. The hover
      * effect is applied to each ImageView, causing a visual scaling animation when hovered over.
-     *
+     * <p>
      * Utilizes the `characterHoverAnimation` method from the animation object to define the
      * scaling behavior. The hover animation enhances user interaction by providing feedback
      * when a character is selected.
      */
-    private void setCharacterAnimation(){
-        for(Pair<ImageView, String> pair: characters){
+    private void setCharacterAnimation() {
+        for (Pair<ImageView, String> pair : characters) {
             animation.characterHoverAnimation(pair.getKey());
         }
     }
+
     /**
      * Retrieves the list of characters available in the character selection view.
      * Each character is represented as a pair consisting of an ImageView (visual representation)
      * and a string identifier.
      *
      * @return A list of pairs, where each pair contains an ImageView and a corresponding
-     *         string identifier representing a character.
+     * string identifier representing a character.
      */
     public List<Pair<ImageView, String>> getCharacters() {
         return characters;
     }
 
-    public void setTempSelect(ImageView character){
+    public void setTempSelect(ImageView character) {
         DropShadow edgeGlow = new DropShadow();
         edgeGlow.setRadius(20);
         edgeGlow.setSpread(0.5);
@@ -175,7 +180,16 @@ public class CharacterChooseView {
         character.setEffect(edgeGlow);
     }
 
-    public void setSelect(ImageView character){
+    /**
+     * Applies a green glow effect to the specified character ImageView.
+     * This method enhances the visual appearance of the character by
+     * adding a DropShadow with specific properties, such as radius, spread,
+     * and color, to simulate a selection effect.
+     *
+     * @param character The ImageView representing the character to which
+     *                  the selection effect will be applied.
+     */
+    public void setSelect(ImageView character) {
         DropShadow edgeGlow = new DropShadow();
         edgeGlow.setRadius(20);
         edgeGlow.setSpread(0.5);
@@ -185,41 +199,88 @@ public class CharacterChooseView {
         character.setEffect(edgeGlow);
     }
 
-    public void removeEffect(ImageView character){
+    /**
+     * Removes the visual effect from the specified ImageView by setting its effect to null.
+     *
+     * @param character The ImageView object from which the visual effect should be removed.
+     */
+    public void removeEffect(ImageView character) {
         character.setEffect(null);
     }
 
+    /**
+     * Retrieves the Label object associated with the "ready" state in the character selection view.
+     * The "ready" Label typically indicates whether the character selection is ready to be confirmed.
+     *
+     * @return The Label instance representing the "ready" state in the character selection interface.
+     */
     public Label getReady() {
         return ready;
     }
 
-    public void setReadyStyle(){
+    /**
+     * Applies the "ready" style to the `ready` button element within the character selection view.
+     * <p>
+     * This method updates the visual appearance of the `ready` button to reflect the "ready" state
+     * by setting its style to the value returned by the `readyPressedStyle` method in the `style` object.
+     * The style includes specific configurations for background color, text color, font, border, alignment,
+     * and other visual properties, ensuring a consistent design for the "ready" state.
+     */
+    public void setReadyStyle() {
         ready.setStyle(style.readyPressedStyle());
     }
-    public void setUnReadyStyle(){
+
+    /**
+     * Applies the "unready" style to the ready button element within the character selection view.
+     * <p>
+     * This method sets the visual appearance of the `ready` button to indicate that the character
+     * selection is not yet confirmed. The style applied is defined by the `setButtonStyle` method
+     * in the `style` object, which configures the button with specific background, text, and
+     * alignment properties.
+     */
+    public void setUnReadyStyle() {
         ready.setStyle(style.setButtonStyle());
     }
 
-    public void startGameCountDown(Runnable function){
+    /**
+     * Initiates a game countdown starting from 3 and progressively going down to 0.
+     * Each number in the countdown is animated sequentially and displayed as part
+     * of the overlay pane. When the countdown finishes, a fade-out animation is
+     * applied to the overlay pane, and the provided function is executed.
+     *
+     * @param function A Runnable to be executed after the countdown completes
+     *                 and the fade-out animation of the overlay is finished.
+     */
+    public void startGameCountDown(Runnable function) {
         SequentialTransition seq = new SequentialTransition();
         // 3부터 0까지 순차적으로 진행
         for (int i = 3; i >= 0; i--) {
             seq.getChildren().add(createNumberTransition(i));
         }
         seq.play();
-        seq.setOnFinished(e->{
+        seq.setOnFinished(e -> {
             animation.fadeOutPane(overlay);
             function.run();
         });
     }
 
+    /**
+     * Creates a sequential transition for a countdown animation displayed as a Label.
+     * Depending on the input number, the Label will display either the number or "Start".
+     * The method initializes the Label, applies an animation, and manages its lifecycle
+     * within the transition by adding it to and removing it from the overlay pane.
+     *
+     * @param number The number to be displayed in the countdown Label. If the number
+     *               is 0, the Label will display "Start".
+     * @return A SequentialTransition object that animates the countdown for the given number.
+     */
     // 각 숫자 하나에 대한 Transition을 만드는 헬퍼 메서드
     private SequentialTransition createNumberTransition(int number) {
         // 새로운 Label을 생성하고, 해당 숫자로 설정
         Label countDown = createCountLabel();
-        if(number == 0){
+        if (number == 0) {
             countDown.setText("Start");
-        }else {
+        } else {
             countDown.setText(String.valueOf(number));
         }
 
@@ -241,9 +302,18 @@ public class CharacterChooseView {
     }
 
 
-    public Label createCountLabel(){
+    /**
+     * Creates and returns a Label configured to display a countdown. The Label
+     * is initialized with the number "3", set to use the "Lilita One" font, and
+     * styled using the defined countdown styles in the application.
+     * <p>
+     * The Label has its opacity initially set to 0 for further animations.
+     *
+     * @return A Label instance styled and configured for the countdown display.
+     */
+    public Label createCountLabel() {
         Label countDown = new Label("3");
-        countDown.setFont(Font.loadFont(style.getLilitaOneFont(),800));
+        countDown.setFont(Font.loadFont(style.getLilitaOneFont(), 800));
         countDown.setStyle(style.countDownStyle());
         countDown.setOpacity(0);
         return countDown;

@@ -74,7 +74,7 @@ public class Card {
      * these values, "Empty" is returned to indicate an unassigned or invalid state.
      *
      * @return a String representing the emoji for the suit of the card,
-     *         or "Empty" if the suit is invalid.
+     * or "Empty" if the suit is invalid.
      */
     public String getImogeSuit() {
         if (suit == 0) return "♠";
@@ -109,8 +109,8 @@ public class Card {
      * Otherwise, it constructs the URL using the format "/card/Card-{suit}-{rank}.png".
      *
      * @return a String representing the URL of the card image. If both suit and rank are -1,
-     *         the URL "/card/Card-Empty.png" is returned. For other cases, the URL is
-     *         "/card/Card-{suit}-{rank}.png".
+     * the URL "/card/Card-Empty.png" is returned. For other cases, the URL is
+     * "/card/Card-{suit}-{rank}.png".
      */
     public String getCardURL() {
         if (suit == -1 && rank == -1) {
@@ -134,6 +134,12 @@ public class Card {
         return this.suit == card.suit && this.rank == card.rank;
     }
 
+    /**
+     * Returns a string representation of the card, formatted as "suit:rank".
+     * The suit and rank values are retrieved from the card's internal state.
+     *
+     * @return a string combining the suit and rank of the card, separated by a colon.
+     */
     public String toString() {
         return String.format("%s:%s", getSuit(), getRank());
     }

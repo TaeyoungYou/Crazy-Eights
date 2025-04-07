@@ -26,20 +26,21 @@ public class Deck {
         this.controller = controller;
         deck = new ArrayList<>();
     }
+
     /**
      * Initializes a full deck of playing cards consisting of 52 unique cards,
      * using all combinations of suits and ranks. The deck is created by iterating through
      * four suits (0 to 3) and thirteen ranks (0 to 12). Each card is represented as a
      * combination of a suit and a rank, and they are added to the deck list.
-     *
+     * <p>
      * Once all cards have been added to the deck, the collection is shuffled randomly
      * to provide a randomized order of cards.
      */
     public void generateDeck() {
-        int[] suits = {0,1,2,3};
-        int[] ranks = {1,2,3,4,5,6,7,8,9,10,11,12};
-        for(int suit : suits) {
-            for(int rank : ranks) {
+        int[] suits = {0, 1, 2, 3};
+        int[] ranks = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12};
+        for (int suit : suits) {
+            for (int rank : ranks) {
                 deck.add(new Card(suit, rank));
             }
         }
@@ -58,6 +59,7 @@ public class Deck {
         notification();
         return card;
     }
+
     /**
      * Adds a card to the deck and shuffles the entire deck to introduce randomness.
      *
@@ -73,7 +75,7 @@ public class Deck {
      *
      * @return the total number of cards remaining in the deck.
      */
-    public int deckSize(){
+    public int deckSize() {
         return deck.size();
     }
 
@@ -83,13 +85,20 @@ public class Deck {
      * It is used internally within the Deck class to maintain synchronization between the deck
      * and the game controller.
      */
-    private void notification(){
+    private void notification() {
         controller.update();
     }
 
-    public String toString(){
+    /**
+     * Returns a string representation of the deck by concatenating the string representations
+     * of all cards in the deck, separated by a space.
+     *
+     * @return a string representing the cards in the deck, with each card's string representation
+     * separated by a space. If the deck is empty, an empty string is returned.
+     */
+    public String toString() {
         String str = "";
-        for(Card card : deck){
+        for (Card card : deck) {
             str += card.toString() + " ";
         }
         return str;

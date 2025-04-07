@@ -15,6 +15,7 @@ import java.util.List;
 public class Log {
     private List<String> logs = new ArrayList<>();
     private BaseGameController controller;
+
     /**
      * Constructs a Log instance with the given game controller.
      *
@@ -23,6 +24,7 @@ public class Log {
     public Log(GameController controller) {
         this.controller = controller;
     }
+
     public Log(GameClientController controller) {
         this.controller = controller;
     }
@@ -32,7 +34,7 @@ public class Log {
      * about the new log entry with the specified message and state.
      *
      * @param message the log message to be added
-     * @param state the state associated with the log message (e.g., System, Log, Error)
+     * @param state   the state associated with the log message (e.g., System, Log, Error)
      */
     public void setLogs(String message, State state) {
         logs.add(message);
@@ -44,7 +46,7 @@ public class Log {
      * Notifies the game controller about a new log entry with a specified message and state.
      *
      * @param message the log message to be sent to the controller
-     * @param state the state associated with the log message (e.g., System, Log, Error)
+     * @param state   the state associated with the log message (e.g., System, Log, Error)
      */
     private void notifyLog(String message, State state) {
         controller.updateLog(message, state);

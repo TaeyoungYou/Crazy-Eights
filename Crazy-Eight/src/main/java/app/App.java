@@ -46,9 +46,11 @@ public class App extends Application {    /**
     }
 
     /**
-     * Configures the primary stage settings such as title, fullscreen mode, and exit key.
+     * Configures the primary stage for the JavaFX application, including its title, icon,
+     * resizability, fullscreen settings, and shutdown behavior.
      *
-     * @param primaryStage The primary stage to configure.
+     * @param primaryStage The main window of the JavaFX application to be configured.
+     * @throws AWTException If an error occurs during configuration requiring AWT functionality.
      */
     private void configStage(Stage primaryStage) throws AWTException {
         primaryStage.setTitle("Crazy Eights");

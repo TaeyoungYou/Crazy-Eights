@@ -812,6 +812,13 @@ public class MultiPlayGameView {
     public void resetGame(Scene scene, BorderPane pane, List<Player> players){
         animation.resetFadeOutGame(scene, pane, players);
     }
+    /**
+     * Resets the game client by triggering the fade out animation.
+     *
+     * @param scene the current scene in the game
+     * @param pane the BorderPane of the game layout which will be affected
+     * @param players the list of players currently participating in the game
+     */
     public void resetGameClient(Scene scene, BorderPane pane, List<Player> players){
         animation.resetFadeOutClient(scene, pane, players);
     }

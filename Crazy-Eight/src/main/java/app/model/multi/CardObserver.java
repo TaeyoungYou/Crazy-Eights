@@ -11,6 +11,7 @@ public interface CardObserver {
      * @param card the Card object whose state or appearance needs to be updated.
      */
     void update(Card card);
+
     /**
      * Notifies the observer to update and handle the addition of the specified card to a deck.
      *

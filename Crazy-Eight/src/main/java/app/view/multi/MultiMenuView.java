@@ -25,6 +25,20 @@ import javafx.scene.input.Clipboard;
 
 import java.io.IOException;
 
+/**
+ * The MultiMenuView class is responsible for generating and managing the
+ * multi-player menu interface in a JavaFX application. It provides a
+ * graphical interface to create or join a multiplayer game, including
+ * form input validation, animations, and event handling.
+ *
+ * This menu consists of two sections: "Create" and "Join". The create
+ * section allows users to set up a game server with a specified port,
+ * while the join section enables users to connect to an existing server
+ * using an IP address and port number.
+ *
+ * The class also incorporates input validation for port numbers and IP
+ * addresses, as well as animations to enhance the user experience.
+ */
 public class MultiMenuView {
     private StackPane pane;
     private StackPane overlay;
@@ -50,12 +64,38 @@ public class MultiMenuView {
 
     private Runnable callGame;
 
+    /**
+     * Constructs an instance of the MultiMenuView class, initializing it with the provided
+     * StackPane and setting up the associated styles and animations for the multi-menu interface.
+     *
+     * @param _pane The StackPane used to contain and display the multi-menu components.
+     */
     public MultiMenuView(StackPane _pane) {
         pane = _pane;
         style = new StyleMultiMenu();
         animation = new AnimationMultiMenu();
     }
 
+    /**
+     * Configures and initializes the multi-menu interface for user interaction, including
+     * create and join sections, input fields, and buttons. This method creates the entire
+     * layout, sets styles, bindings, alignment, and event listeners, and incorporates animations.
+     *
+     * The method includes the following features:
+     * - A styled overlay background to display the menu.
+     * - Two main sections ("Create" and "Join") for interaction.
+     * - Input fields for setting a port number in the "Create" section, and an IP address
+     *   and port number in the "Join" section.
+     * - Dynamically adjustable spacers and separators for layout organization.
+     * - Styled labels and buttons for interaction, enhanced with cursor and hover effects.
+     * - Validations for input fields, ensuring entered values meet specified criteria.
+     * - Clipboard functionality for copying information from the "Create" section.
+     * - Event handling for the "CREATE" and "JOIN" buttons to respond to user actions.
+     * - Fade-in and fade-out animations for smooth transitions in the menu display.
+     *
+     * The method ensures user interaction is intuitive and visually cohesive, while also
+     * integrating server-client communication functionality.
+     */
     public void generate() {
         overlay = new StackPane();
         overlay.setStyle(style.loadingPaneStyle());
@@ -246,6 +286,12 @@ public class MultiMenuView {
         });
     }
 
+    /**
+     * Retrieves the local IP address of the machine. If the IP address cannot be determined,
+     * it returns a default fallback value of "127.0.0.1" (localhost).
+     *
+     * @return The local IP address as a String, or "127.0.0.1" if the address cannot be resolved.
+     */
     private String getLocalAddress() {
         try {
             return java.net.InetAddress.getLocalHost().getHostAddress();
@@ -254,11 +300,24 @@ public class MultiMenuView {
         }
     }
 
+    /**
+     * Determines if the provided string represents a numeric value.
+     * A string is considered numeric if it contains only digits (0-9).
+     *
+     * @param str the string to be evaluated
+     * @return true if the string is not null, not empty, and contains only digits; false otherwise
+     */
     private boolean isNumeric(String str) {
         if (str == null || str.isEmpty()) return false;
         return str.matches("\\d+");
     }
 
+    /**
+     * Sets the Runnable that will be executed for a specific action within the multi-menu interface.
+     *
+     * @param runnable the Runnable to be associated with the action. This allows the user to define
+     *                 custom behavior that will be executed when the action is triggered.
+     */
     public void setRunnable(Runnable runnable) {
         callGame = runnable;
     }

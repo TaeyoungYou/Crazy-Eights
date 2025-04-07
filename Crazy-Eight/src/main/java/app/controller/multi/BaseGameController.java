@@ -15,6 +15,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
+/**
+ * An abstract base class that serves as the controller for managing game logic in a multiplayer card game.
+ * This class implements various observer interfaces to handle updates and interactions with game components
+ * such as cards, decks, logs, and chat messages. It also manages the views, players, and game state.
+ */
 public abstract class BaseGameController implements CardObserver, DeckObserver, LogObserver, ChatObserver {
     protected Scene scene;
     protected StackPane root;
@@ -47,17 +52,30 @@ public abstract class BaseGameController implements CardObserver, DeckObserver, 
 
     protected Timeline game = null;
 
-    public String userToString(){
+    /**
+     * Converts the list of users into a single string representation.
+     * Each user's string representation is concatenated with a space separating them.
+     *
+     * @return a string containing the concatenated string representations of all users in the list.
+     */
+    public String userToString() {
         String str = "";
-        for(Player player: users){
-            str += player.toString()+" ";
+        for (Player player : users) {
+            str += player.toString() + " ";
         }
         return str;
     }
-    public String playerToString(){
+
+    /**
+     * Converts the list of players into a single string representation.
+     * Each player's string representation is concatenated with a space separating them.
+     *
+     * @return a string containing the concatenated string representations of all players in the list.
+     */
+    public String playerToString() {
         String str = "";
-        for(Player player: players){
-            str += player.toString()+" ";
+        for (Player player : players) {
+            str += player.toString() + " ";
         }
         return str;
     }

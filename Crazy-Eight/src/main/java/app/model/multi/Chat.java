@@ -36,7 +36,7 @@ public class Chat {
      *
      * @param message the message to be added to the chat
      */
-    public void addMessage(String message){
+    public void addMessage(String message) {
         messages.add(message);
         notifyMessage(message);
     }
@@ -46,9 +46,9 @@ public class Chat {
      * optionally associating the message with a specific player.
      *
      * @param message the message to be added to the chat
-     * @param player the player associated with the message
+     * @param player  the player associated with the message
      */
-    public void addMessage(String message, Player player){
+    public void addMessage(String message, Player player) {
         messages.add(message);
         notifyMessage(message, player);
     }
@@ -58,7 +58,7 @@ public class Chat {
      *
      * @param message the message to be sent to the game controller
      */
-    private  void notifyMessage(String message){
+    private void notifyMessage(String message) {
         controller.updateChat(message, null);
     }
 
@@ -66,9 +66,9 @@ public class Chat {
      * Notifies the game controller about a new chat message associated with a specific player.
      *
      * @param message the message to be sent to the game controller
-     * @param player the player associated with the chat message
+     * @param player  the player associated with the chat message
      */
-    private void notifyMessage(String message, Player player){
-        controller.updateChat(message,player);
+    private void notifyMessage(String message, Player player) {
+        controller.updateChat(message, player);
     }
 }

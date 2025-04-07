@@ -71,7 +71,7 @@ public class GameStatusManager {
      * state of the GameStatusManager to reflect the user's participation in the current
      * game state.
      */
-    public void doUserDid(){
+    public void doUserDid() {
         userDid = true;
     }
 
@@ -90,7 +90,7 @@ public class GameStatusManager {
      * indicating that a player has not chosen to pass their turn.
      * It is typically used to reset the game state before the start of a new turn or round.
      */
-    public void resetPassTurn(){
+    public void resetPassTurn() {
         this.passTurn = false;
     }
 
@@ -102,6 +102,7 @@ public class GameStatusManager {
     public void doPassTurn() {
         this.passTurn = true;
     }
+
     /**
      * Retrieves the current value of the time variable.
      *
@@ -116,7 +117,7 @@ public class GameStatusManager {
      * This method updates the internal `time` field, which represents
      * the current time within the game's state management, by increasing its value.
      */
-    public void addTime(){
+    public void addTime() {
         time++;
     }
 
@@ -126,7 +127,7 @@ public class GameStatusManager {
      * It is typically used to restart the time tracking at the beginning of a new game session
      * or round.
      */
-    public void resetTime(){
+    public void resetTime() {
         time = 0;
     }
 
@@ -144,21 +145,21 @@ public class GameStatusManager {
      * Determines the next player by applying the turn order, which can be positive
      * or negative, to the current turn, and adjusts for modular arithmetic to ensure
      * valid player indices.
-     *
+     * <p>
      * If the order is negative, the method computes the next turn by decrementing
      * the current turn and wrapping around in case of negative results.
      * If the order is positive, the method computes the next turn by incrementing
      * the current turn and applying modular arithmetic to ensure the turn index
      * remains within the range of valid players.
-     *
+     * <p>
      * The result is updated in the `turn` variable, ensuring it correctly points
      * to the next active player.
      */
-    public void nextTurn(){
-        if(order < 0){
+    public void nextTurn() {
+        if (order < 0) {
             turn = ((turn + order) % playerNumber + playerNumber) % playerNumber;
         } else {
-            turn = (turn+order)%playerNumber;
+            turn = (turn + order) % playerNumber;
         }
     }
 
@@ -188,7 +189,7 @@ public class GameStatusManager {
      * It is typically used to reset the "FourTime" state at the end of a
      * relevant game phase or when reinitializing the game state.
      */
-    public void resetFourTime(){
+    public void resetFourTime() {
         fourTime = false;
     }
 
@@ -215,52 +216,104 @@ public class GameStatusManager {
     /**
      * Resets the "QueenTime" condition in the game state by setting the
      * internal `queenTime` flag to false.
-     *
+     * <p>
      * This method is typically used to indicate that the "QueenTime"
      * condition is no longer active. It is intended to reset the state
      * at the end of a game phase or when initializing the game state
      * for a new round or session.
      */
-    public void resetQueenTime(){
+    public void resetQueenTime() {
         queenTime = false;
     }
 
     /**
-     * Reverses the game's turn order.
-     *
-     * This method changes the direction of the turn order by negating the
-     * current value of the `order` field. If the current turn order is
-     * positive, it will become negative, and if it's negative, it will
-     * become positive. This effectively switches the game's flow of turns
-     * between clockwise and counterclockwise directions.
+     * Reverses the current turn order in the game.
+     * <p>
+     * This method negates the value of the internal `order` variable,
+     * effectively reversing the direction in which turns progress in the game.
+     * If the turn order was previously moving in a positive direction,
+     * it will now move in a negative direction, and vice versa.
+     * <p>
+     * This is typically used to modify gameplay flow, such as in response to
+     * specific game events or conditions that require reversing the turn sequence.
      */
-    public void setReverseOrder(){
+    public void setReverseOrder() {
         order = order * -1;
     }
 
+    /**
+     * Sets the state of the "ClientEightTime" condition in the game.
+     * This method updates the internal `clientEightTime` flag to the specified value.
+     * It is used to control the activation or deactivation of the "ClientEightTime" condition
+     * based on the provided parameter.
+     *
+     * @param clientEightTime a boolean value indicating whether the "ClientEightTime"
+     *                        condition should be active (true) or inactive (false).
+     */
     public void setClientEightTime(boolean clientEightTime) {
         this.clientEightTime = clientEightTime;
     }
 
+    /**
+     * Checks if the "ClientEightTime" condition is active.
+     * This method evaluates the `clientEightTime` flag, which represents whether
+     * a specific condition associated with the "ClientEightTime" state is currently active.
+     *
+     * @return true if the "ClientEightTime" condition is active, false otherwise
+     */
     public boolean isClientEightTime() {
         return clientEightTime;
     }
 
+    /**
+     * Sets the state of the "CardTimeActive" condition in the game.
+     * This method updates the internal state of the `cardTimeActive` flag,
+     * which determines whether the "CardTimeActive" condition is currently active.
+     *
+     * @param cardTimeActive a boolean value indicating whether the "CardTimeActive"
+     *                       condition should be active (true) or inactive (false).
+     */
     public void setCardTimeActive(boolean cardTimeActive) {
         this.cardTimeActive = cardTimeActive;
     }
+
+    /**
+     * Checks whether the "CardTimeActive" condition is currently active.
+     * This method evaluates the internal `cardTimeActive` flag and
+     * returns its value, indicating the active state of the "CardTimeActive" condition.
+     *
+     * @return true if the "CardTimeActive" condition is active, false otherwise
+     */
     public boolean isCardTimeActive() {
         return cardTimeActive;
     }
 
-    public int getReadyPlayer(){
+    /**
+     * Returns the number of players that are ready.
+     *
+     * @return the count of players in the readyPlayer list
+     */
+    public int getReadyPlayer() {
         return readyPlayer.size();
     }
 
-    public void addReadyPlayer(int id){
+    /**
+     * Adds a player to the list of players who are ready in the game state.
+     * This method updates the internal list of ready players by appending the
+     * specified player ID, indicating that the player is ready to proceed.
+     *
+     * @param id the unique identifier of the player to add to the ready player list
+     */
+    public void addReadyPlayer(int id) {
         readyPlayer.add(id);
     }
-    public void resetReadyPlayer(){
+
+    /**
+     * Resets the list of ready players by clearing all entries from the `readyPlayer` collection.
+     * This method is typically used to reinitialize the game state or prepare the system
+     * for a new round or session, ensuring that the ready players list is empty.
+     */
+    public void resetReadyPlayer() {
         readyPlayer.clear();
     }
 

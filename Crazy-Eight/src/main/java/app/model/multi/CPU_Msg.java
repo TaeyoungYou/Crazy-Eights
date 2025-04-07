@@ -275,7 +275,7 @@ public class CPU_Msg {
         Random rand = new Random();
         return ENGLISH_CHAT_RESPONSES[rand.nextInt(ENGLISH_CHAT_RESPONSES.length)];
     }
-    
+
     private static final String[] KOREAN_CHAT_RESPONSES = {
             "오? 나를 방해하려는 수작인가?",
             "말한다고 게임에서 이길 순 없다고!",

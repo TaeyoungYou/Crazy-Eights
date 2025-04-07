@@ -87,6 +87,14 @@ public class AnimationCharacter {
         }
     }
 
+    /**
+     * Creates a countdown animation for the given Label instance.
+     * The animation involves a sequential transition consisting of a fade-in effect,
+     * scaling down, and a fade-out effect applied to the Label.
+     *
+     * @param count The Label to which the countdown animation will be applied.
+     * @return An Animation object representing the countdown animation sequence.
+     */
     public Animation countDownAnimation(Label count) {
         SequentialTransition seq = new SequentialTransition();
 

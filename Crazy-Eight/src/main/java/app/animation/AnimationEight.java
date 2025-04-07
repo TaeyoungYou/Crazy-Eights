@@ -20,7 +20,7 @@ public class AnimationEight {
      *
      * @param pane The StackPane to apply the fade-in effect to.
      */
-    public void fadeInPane(StackPane pane){
+    public void fadeInPane(StackPane pane) {
         FadeTransition fadeIn = new FadeTransition(Duration.seconds(0.5), pane);
         fadeIn.setFromValue(0.0);
         fadeIn.setToValue(1.0);
@@ -33,7 +33,7 @@ public class AnimationEight {
      * @param pane The StackPane to apply the fade-out effect to.
      * @return A {@code FadeTransition} animation that fades the pane out.
      */
-    public Animation fadeOutPane(StackPane pane){
+    public Animation fadeOutPane(StackPane pane) {
         FadeTransition fadeOut = new FadeTransition(Duration.seconds(0.5), pane);
         fadeOut.setFromValue(1.0);
         fadeOut.setToValue(0.0);

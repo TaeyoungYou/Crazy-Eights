@@ -486,19 +486,6 @@ public class AnimationGame {
         }
     }
 
-    private class StartGameRunnable implements Runnable {
-        private final GameController gameController;
-
-        public StartGameRunnable(GameController gameController) {
-            this.gameController = gameController;
-        }
-
-        @Override
-        public void run() {
-            gameController.startGame();
-        }
-    }
-
     private class ResetGameRunnable implements Runnable {
         private final GameController gameController;
         private final List<Player> players;
@@ -514,6 +501,14 @@ public class AnimationGame {
         }
     }
 
+    /**
+     * Plays a fade-out animation for all child nodes within the specified BorderPane.
+     * Once the animation is completed, it initializes a new `GameClientController` for the given scene.
+     *
+     * @param scene   The current Scene where the animation and client reset will take place.
+     * @param pane    The BorderPane containing the nodes to which the fade-out animation shall be applied.
+     * @param players The list of players participating in the context. May be used for custom client setup.
+     */
     public void resetFadeOutClient(Scene scene, BorderPane pane, List<Player> players) {
         ParallelTransition fadeOutParallel = new ParallelTransition();
         for (Node node : pane.getChildren()) {
@@ -524,10 +519,20 @@ public class AnimationGame {
         }
         fadeOutParallel.play();
 
-        // ResetFadeOutGameEventHandler를 람다로 대체
-        fadeOutParallel.setOnFinished(event -> {
+        fadeOutParallel.setOnFinished(new FadeOutFinishedHandler(scene));
+    }
+
+    private class FadeOutFinishedHandler implements EventHandler<ActionEvent> {
+        private final Scene scene;
+
+        public FadeOutFinishedHandler(Scene scene) {
+            this.scene = scene;
+        }
+
+        @Override
+        public void handle(ActionEvent event) {
             GameClientController gameClientController = new GameClientController(scene);
-        });
+        }
     }
 
 
