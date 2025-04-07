@@ -112,7 +112,7 @@ public class ScoringView {
         }
 
 
-        continueButton = new Label("Continue");
+        continueButton = new Label("Ready");
         exitButton = new Label("Exit");
 
         continueButton.setPrefSize(150, 50);

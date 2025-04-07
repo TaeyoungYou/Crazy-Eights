@@ -7,15 +7,20 @@
     <list default="true" id="359720e0-8497-48d6-9a4e-8ff9b1ede7bb" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/app/App.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/App.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/app/animation/multi/AnimationGame.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/animation/multi/AnimationGame.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/app/controller/multi/BaseGameController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/controller/multi/BaseGameController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/app/controller/multi/GameClientController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/controller/multi/GameClientController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/app/controller/multi/GameController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/controller/multi/GameController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/app/model/multi/Client.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/model/multi/Client.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/app/model/multi/ClientHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/model/multi/ClientHandler.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/app/model/multi/Deck.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/model/multi/Deck.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/app/model/multi/GameDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/model/multi/GameDTO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/app/model/multi/GameStatusManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/model/multi/GameStatusManager.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/app/model/multi/MsgType.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/model/multi/MsgType.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/app/model/multi/Music.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/model/multi/Music.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/app/model/multi/Player.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/model/multi/Player.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/app/model/multi/Server.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/model/multi/Server.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/app/view/multi/MultiMenuView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/view/multi/MultiMenuView.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/app/view/multi/MultiPlayGameView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/view/multi/MultiPlayGameView.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/app/view/multi/ScoringView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/view/multi/ScoringView.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../javafx-sdk-21.0.2/bin/api-ms-win-core-console-l1-1-0.dll" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/../javafx-sdk-21.0.2/bin/api-ms-win-core-console-l1-2-0.dll" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/../javafx-sdk-21.0.2/bin/api-ms-win-core-datetime-l1-1-0.dll" beforeDir="false" />
@@ -189,7 +194,7 @@
       <recent name="app.style" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.Client01">
+  <component name="RunManager" selected="Application.Server">
     <configuration name="Client01" type="Application" factoryName="Application">
       <option name="MAIN_CLASS_NAME" value="app.Generator" />
       <module name="Crazy-Eight" />
@@ -259,7 +264,8 @@
       <workItem from="1743635707352" duration="16278000" />
       <workItem from="1743693232279" duration="35243000" />
       <workItem from="1743786465199" duration="39957000" />
-      <workItem from="1743873884702" duration="23409000" />
+      <workItem from="1743873884702" duration="41882000" />
+      <workItem from="1743956882419" duration="24923000" />
     </task>
     <servers />
   </component>

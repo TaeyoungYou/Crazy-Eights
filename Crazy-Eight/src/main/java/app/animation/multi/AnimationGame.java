@@ -1,9 +1,13 @@
 package app.animation.multi;
 
 import app.controller.MenuController;
+import app.controller.multi.GameClientController;
 import app.controller.multi.GameController;
+import app.model.multi.Client;
 import app.model.multi.Player;
+import app.model.multi.Server;
 import javafx.animation.*;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Cursor;
@@ -16,6 +20,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
 import javafx.util.Duration;
 
 import java.util.List;
@@ -379,7 +384,7 @@ public class AnimationGame {
      * @param scene The current Scene where the animation and transition will take place.
      * @param pane  The Pane containing the nodes to which the fade-out animation will be applied.
      */
-    public void fadeOutSinglePlay(Scene scene, Pane pane) {
+    public void fadeOutGame(Scene scene, Pane pane) {
         ParallelTransition parallelFadeOut = new ParallelTransition();
         addFadeOut(pane, parallelFadeOut);
         parallelFadeOut.play();
@@ -395,9 +400,34 @@ public class AnimationGame {
 
         @Override
         public void handle(ActionEvent e) {
-            MenuController menuController = new MenuController(scene);
-            menuController.drawMenu();
+            System.out.println("[DEBUG] Fade-out animation finished");
+
+            new Thread(() -> {
+                try {
+                    Server serverInstance = Server.getInstance();
+                    if (serverInstance != null && serverInstance.getServerSocket() != null) {
+                        System.out.println("[DEBUG] Closing server....");
+                        serverInstance.stop();
+                        System.out.println("[DEBUG] Closing server done....");
+                    } else {
+                        System.out.println("[DEBUG] Closing client....");
+                        Client.close();
+                        System.out.println("[DEBUG] Closing client done....");
+                    }
+
+                    Platform.runLater(() -> {
+                        System.out.println("[DEBUG] Moving to menu");
+
+                        scene.setRoot(new StackPane());
+                        MenuController menuController = new MenuController(scene);
+                        menuController.drawMenu();
+                    });
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            }).start();
         }
+
     }
 
     /**
@@ -483,5 +513,23 @@ public class AnimationGame {
             gameController.resetGame(players);
         }
     }
+
+    public void resetFadeOutClient(Scene scene, BorderPane pane, List<Player> players) {
+        ParallelTransition fadeOutParallel = new ParallelTransition();
+        for (Node node : pane.getChildren()) {
+            FadeTransition fadeOut = new FadeTransition(Duration.seconds(1.5), node);
+            fadeOut.setFromValue(1.0);
+            fadeOut.setToValue(0.0);
+            fadeOutParallel.getChildren().add(fadeOut);
+        }
+        fadeOutParallel.play();
+
+        // ResetFadeOutGameEventHandler를 람다로 대체
+        fadeOutParallel.setOnFinished(event -> {
+            GameClientController gameClientController = new GameClientController(scene);
+        });
+    }
+
+
 
 }

@@ -237,7 +237,7 @@ public class MultiMenuView {
                                 callGame.run();
                             });
                         } catch (IOException e){
-                            e.printStackTrace();
+                            System.out.println("Can not find server at " + ip + ":" + port + " or server is not running.");
                         }
                     }).start();
 

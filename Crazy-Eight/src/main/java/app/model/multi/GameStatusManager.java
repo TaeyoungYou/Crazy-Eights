@@ -1,5 +1,8 @@
 package app.model.multi;
 
+import java.util.HashSet;
+import java.util.Set;
+
 /**
  * GameStatusManager is a class responsible for managing the state
  * of the game, including turn tracking, timing, and various
@@ -20,7 +23,11 @@ public class GameStatusManager {
     private boolean fourTime;
     private boolean queenTime;
 
+    private boolean clientEightTime;
+    private boolean cardTimeActive;
+
     private final int playerNumber;
+    private final Set<Integer> readyPlayer = new HashSet<>();
 
     /**
      * Constructs a new GameStatusManager instance to manage the state of
@@ -229,6 +236,32 @@ public class GameStatusManager {
      */
     public void setReverseOrder(){
         order = order * -1;
+    }
+
+    public void setClientEightTime(boolean clientEightTime) {
+        this.clientEightTime = clientEightTime;
+    }
+
+    public boolean isClientEightTime() {
+        return clientEightTime;
+    }
+
+    public void setCardTimeActive(boolean cardTimeActive) {
+        this.cardTimeActive = cardTimeActive;
+    }
+    public boolean isCardTimeActive() {
+        return cardTimeActive;
+    }
+
+    public int getReadyPlayer(){
+        return readyPlayer.size();
+    }
+
+    public void addReadyPlayer(int id){
+        readyPlayer.add(id);
+    }
+    public void resetReadyPlayer(){
+        readyPlayer.clear();
     }
 
     /**

@@ -39,7 +39,6 @@ public abstract class BaseGameController implements CardObserver, DeckObserver, 
     protected int playerChatTime = ThreadLocalRandom.current().nextInt(1, playerRanPutTime);
 
     protected int playerId;
-    protected String userCharacter;
     protected GameStatusManager statusManager;
 
     protected final boolean DEBUG = true;

@@ -70,4 +70,5 @@ public class GameDTO {
         String[] card = info[1].split(":");
         return new Pair<>(id, new Card(Integer.parseInt(card[0]), Integer.parseInt(card[1])));
     }
+
 }

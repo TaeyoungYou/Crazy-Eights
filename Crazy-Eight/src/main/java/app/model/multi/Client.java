@@ -12,6 +12,9 @@ public class Client {
     private static PrintWriter out;
     private static volatile boolean isConnected = false;
 
+    private static volatile boolean running = true;
+    private static Thread listenThread;
+
     private static volatile MessageHandler currentHandler;
 
     public static void connect(String ip, int port) throws IOException {
@@ -28,8 +31,10 @@ public class Client {
 
     public static void send(String msg){
         if(out == null) System.err.println("Not connected");
-        out.write(msg + "\n");
-        out.flush();
+        else{
+            out.write(msg + "\n");
+            out.flush();
+        }
     }
 
     public static void setHandler(MessageHandler handler){
@@ -38,7 +43,7 @@ public class Client {
 
     // Server > Client로 오는 메세지 계속 listen
     public static void listen() throws IOException {
-        new Thread(()->{
+        listenThread = new Thread(()->{
             if(!isConnected) return;
             try{
                 String line;
@@ -48,14 +53,29 @@ public class Client {
             }catch(IOException e){
                 e.printStackTrace();
             }
-        }).start();
+        });
+        listenThread.setDaemon(true);
+        listenThread.start();
     }
 
-    public static void close() throws IOException {
-        isConnected = false;
-        if(in != null) in.close();
-        if(out != null) out.close();
-        if(socket != null) socket.close();
+    public static void close() {
+        try{
+            isConnected = false;
+            if(in != null) in.close();
+            if(out != null) out.close();
+            if(socket != null && !socket.isClosed()) socket.close();
+            if(listenThread != null && listenThread.isAlive()){
+                listenThread.join(1000);
+                if(listenThread.isAlive()) {
+                    System.err.println("listenThread is alive");
+                    listenThread.interrupt();
+                }
+            }
+            System.out.println("Client closed");
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+
     }
 }
 

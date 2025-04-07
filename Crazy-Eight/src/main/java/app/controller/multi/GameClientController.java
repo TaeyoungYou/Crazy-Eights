@@ -25,7 +25,7 @@ import java.util.concurrent.ThreadLocalRandom;
  * It manages the game flow, UI interactions, and game state updates for a turn-based card game.
  */
 public class GameClientController extends BaseGameController implements CardObserver, DeckObserver, LogObserver, ChatObserver {
-    private int serverId;
+    private int stack = 1;
 
     /**
      * Constructs a SinglePlayGameController
@@ -56,11 +56,11 @@ public class GameClientController extends BaseGameController implements CardObse
                     Platform.runLater(() -> {
                         try {
                             initPage();
+                            disableButtons(false);
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
                     });
-                    serverId = parsed.getSenderPlayerId();
                     break;
                 case INIT_DECK:
                     GameDTO.initDeck(parsed.getData(), deck);
@@ -69,9 +69,15 @@ public class GameClientController extends BaseGameController implements CardObse
                     GameDTO.initPlayers(parsed.getData(), players, users);
                     break;
                 case CREATE_PLAYERS:
+                    players.clear();
                     GameDTO.createPlayers(parsed.getData(), players);
                     createPlayers();
                     System.out.println("플레이어 생성완료!");
+                    break;
+                case UPDATE_PLAYERS:
+                    List<Player> previewPlayers = new ArrayList<>(players);
+                    Collections.sort(previewPlayers, Collections.reverseOrder());
+                    transformPlayers(previewPlayers);
                     break;
                 case DRAW_CARD:
                     Pair<Integer, Card> info = GameDTO.drawCard(parsed.getData());
@@ -139,7 +145,7 @@ public class GameClientController extends BaseGameController implements CardObse
                     });
                     break;
                 case PUT_CARD:
-                    if(playerId == parsed.getSenderPlayerId()) break;
+                    if (playerId == parsed.getSenderPlayerId()) break;
 
                     Pair<Integer, Card> infoPut = GameDTO.putCard(parsed.getData());
                     Platform.runLater(() -> {
@@ -149,7 +155,7 @@ public class GameClientController extends BaseGameController implements CardObse
                             // server put card > do animation, update hand count
                             // CPU(server) put card > do animation, update hand count
                             players.get(infoPut.getKey()).removeCard(infoPut.getValue());
-                            putCardDummy(infoPut.getValue(), false);
+                            putCardDummy(infoPut.getValue(), true);
                         });
                     });
                     break;
@@ -157,9 +163,76 @@ public class GameClientController extends BaseGameController implements CardObse
                     break;
                 case TIME_OUT:
                     int id = Integer.parseInt(parsed.getData());
-                    if(id == playerId) {
-                        Client.send(playerId+"#REQUEST_DRAW_CARD#"+playerId);   // draw card request to server
+                    if (id == playerId) {
+                        Client.send(playerId + "#REQUEST_DRAW_CARD#" + playerId);   // draw card request to server
                     }
+                    break;
+                case STACK:
+                    stack = Integer.parseInt(parsed.getData());
+                    System.out.println("현재 스택 = " + stack);
+                    break;
+                case CRAZY_EIGHT:
+                    Platform.runLater(() -> {
+                        chooseEightView.generate();
+                        chooseEightView.getSpace().setOnMouseClicked(new SpaceClickHandler());
+                        chooseEightView.getHeart().setOnMouseClicked(new HeartClickHandler());
+                        chooseEightView.getDiamond().setOnMouseClicked(new DiamondClickHandler());
+                        chooseEightView.getClub().setOnMouseClicked(new ClubClickHandler());
+                    });
+                    break;
+                case CRAZY_EIGHT_DONE:
+                    break;
+                case SERVER_EIGHT:
+                    Pair<Integer, Card> card = GameDTO.putCard(parsed.getData());
+                    putCardDummy(card.getValue(), true);
+                    break;
+                case REVERSE_ORDER:
+                    System.out.println("reverse order");
+                    break;
+                case QUEEN:
+                    System.out.println("next player skip");
+                    break;
+                case END:
+                    Platform.runLater(() -> {
+                        endGame();
+                    });
+                    break;
+                case CONTINUE:
+                    scoringView.fadeOutPane();
+                    mainView.resetGameClient(scene, mainPane, players);
+                    break;
+                case EXIT:
+                    int exitId = Integer.parseInt(parsed.getData());
+                    if (exitId != playerId) {
+                        Platform.runLater(() -> {
+                            scoringView.fadeOutPane();
+                            mainView.setFadeOutGame(scene);
+                        });
+                    }
+                    break;
+                case FORCE_EXIT:
+                    int forceExitId = Integer.parseInt(parsed.getData());
+                    if (forceExitId != playerId) {
+                        System.out.println("다른 플레이어 종료");
+                        mainView.setFadeOutGame(scene);
+                    }
+                    break;
+                case READY:
+                    break;
+                case CHAT:
+                    int chatId = parsed.getSenderPlayerId();
+                    if (chatId != playerId) {
+                        chat.addMessage(parsed.getData(), players.get(chatId));
+                    }
+                    break;
+                case LOG:
+                    Platform.runLater(() -> {log.setLogs(parsed.getData(), State.Log);});
+                    break;
+                case SYSTEM:
+                    Platform.runLater(() -> {log.setLogs(parsed.getData(), State.System);});
+                    break;
+                case ERROR:
+                    Platform.runLater(() -> {log.setLogs(parsed.getData(), State.Error);});
                     break;
                 default:
                     System.err.println("알 수 없는 메시지 타입: " + parsed.getMsgType());
@@ -175,101 +248,6 @@ public class GameClientController extends BaseGameController implements CardObse
     }
 
 
-    private class GameLoopHandler implements EventHandler<ActionEvent> {
-        @Override
-        public void handle(ActionEvent event) {
-            if (statusManager.getTime() % 11 == 0) {
-                statusManager.nextTurn();
-                statusManager.resetPassTurn();
-                statusManager.resetUserDid();
-                statusManager.resetTime();
-                statusManager.resetFourTime();
-                statusManager.resetQueenTime();
-                if (DEBUG)
-                    System.out.printf("Turn changed : %d -> %d\n", statusManager.getTurn() - 1, statusManager.getTurn());
-                if (DEBUG) System.out.println("Current deck size: " + deck.deckSize());
-
-                updatePlayerTurn();
-
-                if (!players.get(statusManager.getTurn()).isSelf()) {
-                    if (Setting.isEnClicked()) {
-                        if (playerDoChat)
-                            chat.addMessage(CPU_Msg.getEnglishChatResponse(), players.get(statusManager.getTurn()));
-                        if (players.get(statusManager.getTurn()).getCardLeft() > 9)
-                            chat.addMessage(CPU_Msg.getEnglishTooManyCards(), players.get(statusManager.getTurn()));
-                        if (players.get(statusManager.getTurn()).getCardLeft() < 2)
-                            chat.addMessage(CPU_Msg.getEnglishFewCardsLeft(), players.get(statusManager.getTurn()));
-                    } else {
-                        if (playerDoChat)
-                            chat.addMessage(CPU_Msg.getKoreanChatResponse(), players.get(statusManager.getTurn()));
-                        if (players.get(statusManager.getTurn()).getCardLeft() > 9)
-                            chat.addMessage(CPU_Msg.getKoreanTooManyCards(), players.get(statusManager.getTurn()));
-                        if (players.get(statusManager.getTurn()).getCardLeft() < 2)
-                            chat.addMessage(CPU_Msg.getKoreanFewCardsLeft(), players.get(statusManager.getTurn()));
-                    }
-                }
-
-
-                setTurnEffect();
-
-                if (playerChatTime == 1) playerDoChat = false;
-
-                if (Setting.isEnClicked())
-                    log.setLogs(String.format("Player %d turn", statusManager.getTurn() + 1), State.Log);
-                else log.setLogs(String.format("플레이어 %d 차례", statusManager.getTurn() + 1), State.Log);
-            }
-            if (DEBUG) System.out.printf(statusManager.toString());
-
-            if (statusManager.isFourTime() && statusManager.isQueenTime()) {
-                Player player = players.get(statusManager.getTurn());
-                if (player.isSelf()) {
-                    if (statusManager.getTime() == 10 && !statusManager.isUserDid()) {    // 이 userDid의 플래그는 다르게 애니메이션이 시작되기 전에 플래그를 바꿔줘야함
-                        if (Setting.isEnClicked()) log.setLogs("Time out!", State.Error);
-                        else log.setLogs("시간 초과!", State.Error);
-
-                        userDrawCard(player);
-                    }
-                    // 유저는 3가지 상태가 있음.
-                    // 1. 핸드의 카드가 release될때
-                    // 2. 덱을 클릭을 했을때
-                    // 3. time out이 되어 강제로 카드를 먹어야 할때
-                } else if (statusManager.getTime() == playerRanPutTime) {
-                    // 플레이어는 항상 내가 낼 타임에 딱 한번 들어갈 수 있음
-                    playerPutCard(player);
-                    // 플레이어는 2가지 상태가 있음
-                    // 1. 내 덱에 내보낼카드가 있을 때
-                    // 2. 낼 카드가 없어 카드를 먹어야 할때
-                }
-                // 예외의 상태가 있음.
-                // 1. 전의 플레이어가 4를 냈을 때 여기가 아닌 다른 곳에서 턴이 바뀜
-                // 2....
-
-                // 시간은 10일때까지 흘러감
-                // 이 루프는 항상 infinity 흘러가기 때문에 유저나 플레이어가 cardTime이 false가 될때까지 끝나지 않음
-                mainView.setTimer(10 - statusManager.getTime());
-                if (statusManager.getTime() < 10) {
-                    statusManager.addTime();
-                }
-            }
-
-            // 이 플래그가 중요! 항상 carTime은 턴이 바뀔때 딱 한번 초기화를 시킴. 또한, 카드가 움직이고, 애니메이션이 끝날때 false로 끝남을 알림
-            // 이것이 false로 바뀔 때까지 그 플레이어의 턴은 끝나지 않음
-            if (statusManager.isPassTurn()) {
-                if (players.get(statusManager.getTurn()).getCardLeft() == 0) {
-                    endGame();
-                }
-
-
-                statusManager.resetTime();
-
-                playerRanPutTime = ThreadLocalRandom.current().nextInt(2, 10);
-                playerDoChat = Math.random() < 0.7;
-                playerChatTime = ThreadLocalRandom.current().nextInt(1, playerRanPutTime);
-            }
-        }
-    }
-
-
     /**
      * Handles the end of the game logic.
      * <p>
@@ -278,7 +256,6 @@ public class GameClientController extends BaseGameController implements CardObse
      * view, generates scores for
      */
     private void endGame() {
-        game.pause();
         if (DEBUG) System.out.println("Game is done..!");
         if (Setting.isEnClicked()) log.setLogs("Game Over!", State.System);
         else log.setLogs("게임 종료!", State.System);
@@ -292,18 +269,17 @@ public class GameClientController extends BaseGameController implements CardObse
     private class ContinueButtonHandler implements EventHandler<MouseEvent> {
         @Override
         public void handle(MouseEvent e) {
-            scoringView.fadeOutPane();
-            mainView.resetGame(scene, mainPane, players);
-            game.stop();
+            Client.send(playerId + "#READY#" + playerId);
+            scoringView.getContinueButton().setText("Waiting");
         }
     }
 
     private class ExitButtonHandler implements EventHandler<MouseEvent> {
         @Override
         public void handle(MouseEvent e) {
+            Client.send(playerId + "#EXIT#" + playerId);
             scoringView.fadeOutPane();
-            mainView.setFadeOutSinglePlay(scene);
-            game.stop();
+            mainView.setFadeOutGame(scene);
         }
     }
 
@@ -609,68 +585,11 @@ public class GameClientController extends BaseGameController implements CardObse
             @Override
             public void handle(MouseEvent event) {
                 mainView.getDeck().setDisable(true);
-                Client.send(playerId+"#REQUEST_DRAW_CARD#"+playerId);   // draw card request to server
-
-                if (GameClientController.this.clamping(player)) return;
-
-                statusManager.doUserDid();  // 플래그 바꿈! - Time out이 안됨
-
-                Timeline getCards = new Timeline(new KeyFrame(Duration.seconds(1), new GetCardsEventHandler(player)));
-                getCards.setOnFinished(new GetCardsFinishedEventHandler(player));
-                getCards.setCycleCount(stackGetCard);
-
-                getCards.play();
+                Client.send(playerId + "#REQUEST_DRAW_CARD#" + playerId);   // draw card request to server
+                removeDeckEffects();
+                mainView.getDeck().setDisable(false);
             }
         });
-    }
-
-    private class GetCardsEventHandler implements EventHandler<ActionEvent> {
-        private final Player player;
-
-        public GetCardsEventHandler(Player player) {
-            this.player = player;
-        }
-
-        @Override
-        public void handle(ActionEvent e) {
-            Animation getAnimation = mainView.setGetCardAnimation(player.getCardLeft());
-            getAnimation.setOnFinished(new GetAnimationFinishedEventHandler(player));
-            getAnimation.play();
-        }
-    }
-
-    private class GetCardsFinishedEventHandler implements EventHandler<ActionEvent> {
-        private final Player player;
-
-        public GetCardsFinishedEventHandler(Player player) {
-            this.player = player;
-        }
-
-        @Override
-        public void handle(ActionEvent e) {
-            delaySecond(new Runnable() {
-                @Override
-                public void run() {
-                    statusManager.doPassTurn();
-                    stackGetCard = 1;
-                }
-            });
-        }
-    }
-
-    private class GetAnimationFinishedEventHandler implements EventHandler<ActionEvent> {
-        private final Player player;
-
-        public GetAnimationFinishedEventHandler(Player player) {
-            this.player = player;
-        }
-
-        @Override
-        public void handle(ActionEvent ev) {
-            mainView.removeAnimationCard();
-            removeDeckEffects();
-            mainView.getDeck().setDisable(false);
-        }
     }
 
     /**
@@ -719,7 +638,7 @@ public class GameClientController extends BaseGameController implements CardObse
                     } else {
                         if (dummy.getSuit() == card.getSuit() || dummy.getRank() == card.getRank()) {
                             statusManager.doUserDid();
-                            if(mainView.setDragReleased(ev, cardImg, player, dummyCard, true)){
+                            if (mainView.setDragReleased(ev, cardImg, player, dummyCard, true)) {
                                 Client.send(playerId + "#PUT_CARD#" + player.getScoreId() + " " + card.toString());
                             }
                         } else {
@@ -764,13 +683,13 @@ public class GameClientController extends BaseGameController implements CardObse
         else log.setLogs(String.format("카드 %s %s 놓음", card.getKoreanSuit(), card.getRankString()), State.Log);
 
         if (card.getRank() == 7) {
-            whenCardEight();
+//            whenCardEight();
         } else if (card.getRank() == 0) {
             whenCardAce();
         } else if (card.getRank() == 1) {
-            whenCardTwo();
+//            whenCardTwo();
         } else if (card.getRank() == 3) {
-            whenCardFour();
+//            whenCardFour();
         } else if (card.getRank() == 11) {
             whenCardQueen();
         } else {
@@ -958,6 +877,7 @@ public class GameClientController extends BaseGameController implements CardObse
             if (DEBUG) System.out.println("Change to Space!");
             if (Setting.isEnClicked()) log.setLogs("Change to Space!", State.System);
             else log.setLogs("스페이드로 바꿈!", State.System);
+            Client.send(playerId + "#CRAZY_EIGHT_DONE#" + playerId + " " + "0:7");
         }
     }
 
@@ -970,6 +890,7 @@ public class GameClientController extends BaseGameController implements CardObse
             if (DEBUG) System.out.println("Change to Heart!!");
             if (Setting.isEnClicked()) log.setLogs("Change to Heart!", State.System);
             else log.setLogs("하트로 바꿈!", State.System);
+            Client.send(playerId + "#CRAZY_EIGHT_DONE#" + playerId + " " + "1:7");
         }
     }
 
@@ -982,6 +903,7 @@ public class GameClientController extends BaseGameController implements CardObse
             if (DEBUG) System.out.println("Change to Diamond!!");
             if (Setting.isEnClicked()) log.setLogs("Change to Diamond!", State.System);
             else log.setLogs("다이아몬드로 바꿈!", State.System);
+            Client.send(playerId + "#CRAZY_EIGHT_DONE#" + playerId + " " + "2:7");
         }
     }
 
@@ -994,6 +916,7 @@ public class GameClientController extends BaseGameController implements CardObse
             if (DEBUG) System.out.println("Change to Club!");
             if (Setting.isEnClicked()) log.setLogs("Change to Club!", State.System);
             else log.setLogs("크로버로 바꿈!", State.System);
+            Client.send(playerId + "#CRAZY_EIGHT_DONE#" + playerId + " " + "3:7");
         }
     }
 
@@ -1025,7 +948,6 @@ public class GameClientController extends BaseGameController implements CardObse
         @Override
         public void run() {
             chooseEightView.getPane().getChildren().remove(chooseEightView.getOverlay());
-            statusManager.doPassTurn();
         }
     }
 
@@ -1058,12 +980,13 @@ public class GameClientController extends BaseGameController implements CardObse
      */
     @Override
     public void updateChat(String message, Player player) {
-        if (player == null) {
-            mainView.addMsgFromUser(message);
-        } else {
-            mainView.addMsgFromPlayer(message, player);
-        }
-
+        Platform.runLater(() -> {
+            if (player == null) {
+                mainView.addMsgFromUser(message);
+            } else {
+                mainView.addMsgFromPlayer(message, player);
+            }
+        });
     }
 
     /**
@@ -1348,7 +1271,6 @@ public class GameClientController extends BaseGameController implements CardObse
 
         mainView.getBack().setOnMouseClicked(new BackButtonHandler());
         mainView.getSetting().setOnMouseClicked(new SettingButtonHandler());
-        mainView.getRestart().setOnMouseClicked(new RestartButtonHandler());
         mainView.getMessage().setOnAction(new MessageHandler());
 
         disableButtons(true);
@@ -1357,8 +1279,8 @@ public class GameClientController extends BaseGameController implements CardObse
     private class BackButtonHandler implements EventHandler<MouseEvent> {
         @Override
         public void handle(MouseEvent event) {
-            mainView.setFadeOutSinglePlay(scene);
-            game.stop();
+            Client.send(playerId + "#FORCE_EXIT#" + playerId);
+            mainView.setFadeOutGame(scene);
         }
     }
 
@@ -1384,6 +1306,7 @@ public class GameClientController extends BaseGameController implements CardObse
             if (!msg.isEmpty()) {
                 chat.addMessage(msg);
                 mainView.getMessage().clear();
+                Client.send(playerId + "#CHAT#" + msg);
             }
         }
     }
@@ -1394,8 +1317,9 @@ public class GameClientController extends BaseGameController implements CardObse
      * UI layout for the application.
      */
     private void initPage() {
-        root.getChildren().add(mainPane);
+        if(!root.getChildren().contains(mainPane)) root.getChildren().add(mainPane);
         scene.setRoot(root);
+
 
         drawGamePage();
     }
@@ -1447,7 +1371,6 @@ public class GameClientController extends BaseGameController implements CardObse
     private void disableButtons(boolean disable) {
         mainView.getBack().setDisable(disable);
         mainView.getSetting().setDisable(disable);
-        mainView.getRestart().setDisable(disable);
     }
 
     public List<Player> getPlayers() {

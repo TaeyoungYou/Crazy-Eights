@@ -90,7 +90,6 @@ public class MultiPlayGameView {
     private Label scoreTitle;
     private Label timer;
 
-    private ImageView restart;
     private ImageView setting;
     private ImageView back;
     private ImageView deck;
@@ -171,14 +170,12 @@ public class MultiPlayGameView {
         buttonBar = new HBox();
         buttonBar.setSpacing(40);
         buttonBar.setAlignment(Pos.CENTER);
-        restart = new ImageView(new Image(getClass().getResource("/button/restart.png").toExternalForm()));
         setting = new ImageView(new Image(getClass().getResource("/button/settings.png").toExternalForm()));
         back = new ImageView(new Image(getClass().getResource("/button/back.png").toExternalForm()));
 
         animation.buttonAnimation(setting);
-        animation.buttonAnimation(restart);
         animation.buttonAnimation(back);
-        buttonBar.getChildren().addAll(restart, setting, back);
+        buttonBar.getChildren().addAll(setting, back);
 
         sidebar.getChildren().add(buttonBar);
 
@@ -353,14 +350,7 @@ public class MultiPlayGameView {
     public ImageView getSetting(){
         return setting;
     }
-    /**
-     * Retrieves the ImageView instance representing the "Restart" button or icon in the game view.
-     *
-     * @return the ImageView object associated with the "Restart" button, used for restarting the game.
-     */
-    public ImageView getRestart(){
-        return restart;
-    }
+
     /**
      * Retrieves the ImageView instance representing the dummy card in the SinglePlayGameView.
      * This element is used as a placeholder or visual representation for certain card-related actions.
@@ -472,8 +462,8 @@ public class MultiPlayGameView {
      * @param _scene The current Scene in which the fade-out animation is performed
      *               and the transition occurs.
      */
-    public void setFadeOutSinglePlay(Scene _scene) {
-        animation.fadeOutSinglePlay(_scene, pane);
+    public void setFadeOutGame(Scene _scene) {
+        animation.fadeOutGame(_scene, pane);
     }
     /**
      * Applies a hover effect to the specified card by invoking the cardHoverEffectScaleUp
@@ -821,5 +811,8 @@ public class MultiPlayGameView {
      */
     public void resetGame(Scene scene, BorderPane pane, List<Player> players){
         animation.resetFadeOutGame(scene, pane, players);
+    }
+    public void resetGameClient(Scene scene, BorderPane pane, List<Player> players){
+        animation.resetFadeOutClient(scene, pane, players);
     }
 }

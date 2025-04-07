@@ -16,8 +16,6 @@ import javafx.scene.layout.StackPane;
 import javafx.util.Duration;
 import javafx.util.Pair;
 
-import javax.swing.*;
-import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -44,7 +42,7 @@ public class GameController extends BaseGameController {
         dummyCard = new DummyCard(this);
         log = new Log(this);
         chat = new Chat(this);
-        statusManager = new GameStatusManager(playerNum);
+        statusManager = new GameStatusManager(4);
     }
 
     public void handleServerMessage(String message) {
@@ -58,6 +56,17 @@ public class GameController extends BaseGameController {
                 case CREATE_PLAYERS:
                 case TIME_SET:
                 case TIME_OUT:
+                case STACK:
+                case CRAZY_EIGHT:
+                case SERVER_EIGHT:
+                case REVERSE_ORDER:
+                case QUEEN:
+                case END:
+                case CONTINUE:
+                case UPDATE_PLAYERS:
+                case LOG:
+                case SYSTEM:
+                case ERROR:
                     System.out.println("서버로부터 온 메시지 - 스킵");
                     break;
                 case DRAW_CARD:
@@ -79,7 +88,6 @@ public class GameController extends BaseGameController {
                 case UPDATE_TURN:
                     if (parsed.getSenderPlayerId() == playerId) {
                         System.out.println("서버로부터 온 메세지 - 턴 업데이트");
-                        ;
                         break;
                     }
                     break;
@@ -95,9 +103,47 @@ public class GameController extends BaseGameController {
                         animation.setOnFinished(e -> {
                             players.get(infoPut.getKey()).removeCard(infoPut.getValue());
                             putCardDummy(infoPut.getValue(), false);
-                            statusManager.doPassTurn();
+
+                            if (infoPut.getValue().getRank() != 3 && infoPut.getValue().getRank() != 7) {
+                                statusManager.doPassTurn();
+                            }
                         });
                     });
+                    break;
+                case CRAZY_EIGHT_DONE:
+                    Pair<Integer, Card> card = GameDTO.putCard(parsed.getData());
+                    putCardDummy(card.getValue(), true);
+                    statusManager.doPassTurn();
+                    break;
+                case READY:
+                    statusManager.addReadyPlayer(Integer.parseInt(parsed.getData()));
+                    System.out.println(users.size() - statusManager.getReadyPlayer() + " 플레이어 남음");
+                    break;
+                case EXIT:
+                    int exitId = Integer.parseInt(parsed.getData());
+                    if (exitId != playerId) {
+                        System.out.println("다른 플레이어 종료");
+                        Platform.runLater(() -> {
+                            scoringView.fadeOutPane();
+                            mainView.setFadeOutGame(scene);
+                            game.stop();
+                            Server.getInstance().stop();
+                        });
+                    }
+                    break;
+                case FORCE_EXIT:
+                    int forceExitId = Integer.parseInt(parsed.getData());
+                    if (forceExitId != playerId) {
+                        System.out.println("다른 플레이어 종료");
+                        mainView.setFadeOutGame(scene);
+                        game.stop();
+                    }
+                    break;
+                case CHAT:
+                    int chatId = parsed.getSenderPlayerId();
+                    if (chatId != playerId) {
+                        chat.addMessage(parsed.getData(), players.get(chatId));
+                    }
                     break;
                 default:
                     System.err.println("알 수 없는 메시지 타입: " + parsed.getMsgType());
@@ -148,8 +194,13 @@ public class GameController extends BaseGameController {
         createPlayers();
         System.out.println("플레이어 생성 완료!");
 
-        if (Setting.isEnClicked()) log.setLogs("Setting Game...", State.System);
-        else log.setLogs("게임 설정 중...", State.System);
+        if (Setting.isEnClicked()) {
+            log.setLogs("Setting Game...", State.System);
+            Client.send(playerId + "#SYSTEM#Setting Game...");
+        } else {
+            log.setLogs("게임 설정 중...", State.System);
+            Client.send(playerId + "#SYSTEM#Setting Game...");
+        }
 
 
         SequentialTransition sequence = new SequentialTransition();
@@ -197,38 +248,24 @@ public class GameController extends BaseGameController {
                 statusManager.resetTime();
                 statusManager.resetFourTime();
                 statusManager.resetQueenTime();
+                statusManager.setClientEightTime(false);
                 if (DEBUG)
                     System.out.printf("Turn changed : %d -> %d\n", statusManager.getTurn() - 1, statusManager.getTurn());
                 if (DEBUG) System.out.println("Current deck size: " + deck.deckSize());
 
                 updatePlayerTurn();
 
-//                if (!players.get(statusManager.getTurn()).isSelf()) {
-//                    if (Setting.isEnClicked()) {
-//                        if (playerDoChat)
-//                            chat.addMessage(CPU_Msg.getEnglishChatResponse(), players.get(statusManager.getTurn()));
-//                        if (players.get(statusManager.getTurn()).getCardLeft() > 9)
-//                            chat.addMessage(CPU_Msg.getEnglishTooManyCards(), players.get(statusManager.getTurn()));
-//                        if (players.get(statusManager.getTurn()).getCardLeft() < 2)
-//                            chat.addMessage(CPU_Msg.getEnglishFewCardsLeft(), players.get(statusManager.getTurn()));
-//                    } else {
-//                        if (playerDoChat)
-//                            chat.addMessage(CPU_Msg.getKoreanChatResponse(), players.get(statusManager.getTurn()));
-//                        if (players.get(statusManager.getTurn()).getCardLeft() > 9)
-//                            chat.addMessage(CPU_Msg.getKoreanTooManyCards(), players.get(statusManager.getTurn()));
-//                        if (players.get(statusManager.getTurn()).getCardLeft() < 2)
-//                            chat.addMessage(CPU_Msg.getKoreanFewCardsLeft(), players.get(statusManager.getTurn()));
-//                    }
-//                }
-
-
                 setTurnEffect();
 
                 if (playerChatTime == 1) playerDoChat = false;
 
-                if (Setting.isEnClicked())
+                if (Setting.isEnClicked()) {
                     log.setLogs(String.format("Player %d turn", statusManager.getTurn() + 1), State.Log);
-                else log.setLogs(String.format("플레이어 %d 차례", statusManager.getTurn() + 1), State.Log);
+                    Client.send(playerId + "#LOG#Player " + statusManager.getTurn() + " turn");
+                } else {
+                    log.setLogs(String.format("플레이어 %d 차례", statusManager.getTurn() + 1), State.Log);
+                    Client.send(playerId + "#LOG#플레이어 " + statusManager.getTurn() + " 차례");
+                }
             }
             if (DEBUG) System.out.printf(statusManager.toString());
 
@@ -236,24 +273,35 @@ public class GameController extends BaseGameController {
                 Player player = players.get(statusManager.getTurn());
                 if (player.isPlayer()) {
                     if (player.isSelf()) {
-                        System.out.println("내 차례");
                         if (statusManager.getTime() == 10 && !statusManager.isUserDid()) {    // 이 userDid의 플래그는 다르게 애니메이션이 시작되기 전에 플래그를 바꿔줘야함
-                            if (Setting.isEnClicked()) log.setLogs("Time out!", State.Error);
-                            else log.setLogs("시간 초과!", State.Error);
+                            if (Setting.isEnClicked()) {
+                                log.setLogs("Time out!", State.Error);
+                                Client.send(playerId + "#ERROR#Time out!");
+                            } else {
+                                log.setLogs("시간 초과!", State.Error);
+                                Client.send(playerId + "#ERROR#시간 초과!");
+                            }
 
                             userDrawCard(player);
                         }
                     } else {  // 다른 플레이어 일때
-                        if(statusManager.getTime() == 10){
-                            Client.send(playerId + "#TIME_OUT#"+player.getScoreId());
-                            statusManager.doPassTurn();
+                        if (statusManager.getTime() == 10 && !statusManager.isUserDid() && !statusManager.isClientEightTime()) {
+                            statusManager.doUserDid();
+                            Client.send(playerId + "#TIME_OUT#" + player.getScoreId());
+                            if (Setting.isEnClicked()) {
+                                log.setLogs("Time out!", State.Error);
+                                Client.send(playerId + "#ERROR#Time out!");
+                            } else {
+                                log.setLogs("시간 초과!", State.Error);
+                                Client.send(playerId + "#ERROR#시간 초과!");
+                            }
                         }
                     }
                     // 유저는 3가지 상태가 있음.
                     // 1. 핸드의 카드가 release될때
                     // 2. 덱을 클릭을 했을때
                     // 3. time out이 되어 강제로 카드를 먹어야 할때
-                } else if (statusManager.getTime() == playerRanPutTime) {
+                } else if (statusManager.getTime() == playerRanPutTime && !statusManager.isCardTimeActive()) {
                     // 플레이어는 항상 내가 낼 타임에 딱 한번 들어갈 수 있음
                     playerPutCard(player);
                     // 플레이어는 2가지 상태가 있음
@@ -286,6 +334,7 @@ public class GameController extends BaseGameController {
                 playerRanPutTime = ThreadLocalRandom.current().nextInt(3, 8);
                 playerDoChat = Math.random() < 0.7;
                 playerChatTime = ThreadLocalRandom.current().nextInt(1, playerRanPutTime);
+                statusManager.setCardTimeActive(false);
             }
         }
     }
@@ -299,10 +348,16 @@ public class GameController extends BaseGameController {
      * view, generates scores for
      */
     private void endGame() {
+        Client.send(playerId + "#END#NULL");
         game.pause();
         if (DEBUG) System.out.println("Game is done..!");
-        if (Setting.isEnClicked()) log.setLogs("Game Over!", State.System);
-        else log.setLogs("게임 종료!", State.System);
+        if (Setting.isEnClicked()) {
+            log.setLogs("Game Over!", State.System);
+            Client.send(playerId + "#SYSTEM#Game Over!");
+        } else {
+            log.setLogs("게임 종료!", State.System);
+            Client.send(playerId + "SYSTEM#게임 종료!");
+        }
 
         scoringView.generate(players, scoring());
         scoringView.buttonAnimation();
@@ -313,21 +368,30 @@ public class GameController extends BaseGameController {
     private class ContinueButtonHandler implements EventHandler<MouseEvent> {
         @Override
         public void handle(MouseEvent e) {
-            scoringView.fadeOutPane();
-            mainView.resetGame(scene, mainPane, players);
-            game.stop();
+            if (statusManager.getReadyPlayer() == users.size()) {
+                Client.send(playerId + "#CONTINUE#NULL");
+                scoringView.fadeOutPane();
+                mainView.resetGame(scene, mainPane, players);
+                game.stop();
+                statusManager.resetReadyPlayer();
+            } else {
+                statusManager.addReadyPlayer(playerId);
+                scoringView.getContinueButton().setText("Start");
+                log.setLogs("Waiting for " + statusManager.getReadyPlayer() + " player(s) to join..!", State.System);
+                Client.send(playerId + "#SYSTEM#Waiting for " + statusManager.getReadyPlayer() + " player(s) to join..!");
+            }
         }
     }
 
     private class ExitButtonHandler implements EventHandler<MouseEvent> {
         @Override
         public void handle(MouseEvent e) {
+            Client.send(playerId + "#EXIT#" + playerId);
             scoringView.fadeOutPane();
-            mainView.setFadeOutSinglePlay(scene);
+            mainView.setFadeOutGame(scene);
             game.stop();
         }
     }
-
 
     /**
      * Calculates and assigns ranks and scores to players based on the number of their remaining cards.
@@ -423,6 +487,7 @@ public class GameController extends BaseGameController {
             if (dummyCard.getCard().getRank() == 1) {
                 for (Card card : player.getHand()) {
                     if (dummyCard.getCard().getRank() == card.getRank()) {
+                        Client.send(playerId + "#PUT_CARD#" + statusManager.getTurn() + " " + card.toString());
                         Animation putCard = mainView.putCardAnimationWithPlayer();
                         putCard.setOnFinished(new PutCardHandler(card, player, false));
                         putCard.play();
@@ -478,6 +543,7 @@ public class GameController extends BaseGameController {
     private void drawCards(Player player) {
         if (clamping(player)) return;
 
+        System.out.println("서버에서 스택: " + stackGetCard);
         final Timeline drawMotion = new Timeline(new KeyFrame(Duration.seconds(1), new DrawCardEventHandler(player)));
         drawMotion.setCycleCount(stackGetCard);
         drawMotion.setOnFinished(new DrawMotionFinishedEventHandler(player));
@@ -499,8 +565,13 @@ public class GameController extends BaseGameController {
                 @Override
                 public void handle(ActionEvent e) {
                     if (DEBUG) System.out.println("Drawing card");
-                    if (Setting.isEnClicked()) log.setLogs("Drawing card!", State.Log);
-                    else log.setLogs("카드 드로우!", State.Log);
+                    if (Setting.isEnClicked()) {
+                        log.setLogs("Drawing card!", State.Log);
+                        Client.send(playerId + "#LOG#Drawing card!");
+                    } else {
+                        log.setLogs("카드 드로우!", State.Log);
+                        Client.send(playerId + "#LOG#카드 드로우!");
+                    }
 
                     Card card = player.setCard(deck, false);
                     // CPU draw > client
@@ -521,12 +592,15 @@ public class GameController extends BaseGameController {
 
         @Override
         public void handle(ActionEvent event) {
-            if (Setting.isEnClicked()) chat.addMessage(CPU_Msg.getEnglishBadDraw(), player);
-            else chat.addMessage(CPU_Msg.getKoreanBadDraw(), player);
+            if (!players.get(statusManager.getTurn()).isPlayer()) {
+                if (Setting.isEnClicked()) chat.addMessage(CPU_Msg.getEnglishBadDraw(), player);
+                else chat.addMessage(CPU_Msg.getKoreanBadDraw(), player);
+            }
             delaySecond(new Runnable() {
                 @Override
                 public void run() {
                     stackGetCard = 1;
+                    Client.send(playerId + "#STACK#" + stackGetCard);
                     statusManager.doPassTurn();
                     statusManager.resetFourTime();
                 }
@@ -591,10 +665,12 @@ public class GameController extends BaseGameController {
 
         @Override
         public void handle(ActionEvent e) {
-            player.setCard(deck, false);
+            Card card = player.setCard(deck, false);
             if (DEBUG) System.out.println("Drawing card");
             if (Setting.isEnClicked()) log.setLogs("Drawing card!", State.Log);
             else log.setLogs("카드 드로우!", State.Log);
+            // time out server draw card > client
+            Client.send(playerId + "#DRAW_CARD#" + playerId + " " + card.toString());
         }
     }
 
@@ -606,6 +682,7 @@ public class GameController extends BaseGameController {
                 public void run() {
                     statusManager.doPassTurn();
                     stackGetCard = 1;
+                    Client.send(playerId + "#STACK#" + stackGetCard);
                     statusManager.resetFourTime();  // 4일 경우, 여기도 들어오니 초기화
                 }
             });
@@ -693,6 +770,7 @@ public class GameController extends BaseGameController {
                 public void run() {
                     statusManager.doPassTurn();
                     stackGetCard = 1;
+                    Client.send(playerId + "#STACK#" + stackGetCard);
                 }
             });
         }
@@ -762,7 +840,7 @@ public class GameController extends BaseGameController {
                     } else {
                         if (dummy.getSuit() == card.getSuit() || dummy.getRank() == card.getRank()) {
                             statusManager.doUserDid();
-                            if(mainView.setDragReleased(ev, cardImg, player, dummyCard, true)){
+                            if (mainView.setDragReleased(ev, cardImg, player, dummyCard, true)) {
                                 Client.send(playerId + "#PUT_CARD#" + player.getScoreId() + " " + card.toString());
                             }
                         } else {
@@ -801,10 +879,21 @@ public class GameController extends BaseGameController {
      */
     @Override
     public void update(Card card) {
+        statusManager.setCardTimeActive(true);
         if (DEBUG) System.out.println(String.format(" - Put %s %d card", card.getImogeSuit(), card.getRank() + 1));
-        if (Setting.isEnClicked())
+        if (Setting.isEnClicked()) {
             log.setLogs(String.format("Put %s %s card", card.getImogeSuit(), card.getRankString()), State.Log);
-        else log.setLogs(String.format("카드 %s %s 놓음", card.getKoreanSuit(), card.getRankString()), State.Log);
+            Client.send(playerId + "#LOG#Put " + card.getImogeSuit() + " " + card.getRankString());
+        } else {
+            log.setLogs(String.format("카드 %s %s 놓음", card.getKoreanSuit(), card.getRankString()), State.Log);
+            Client.send(playerId + "#LOG#카드 " + card.getKoreanSuit() + " " + card.getRankString() + " 놓음");
+        }
+
+        if (players.get(statusManager.getTurn()).getCardLeft() == 1 && !players.get(statusManager.getTurn()).isSelf()) {
+            players.get(statusManager.getTurn()).removeCard(0);
+            endGame();
+            return;
+        }
 
         if (card.getRank() == 7) {
             whenCardEight();
@@ -827,8 +916,14 @@ public class GameController extends BaseGameController {
     private void whenCardAce() {
         statusManager.setReverseOrder();
         if (DEBUG) System.out.println("Turn is reversed..!");
-        if (Setting.isEnClicked()) log.setLogs("Turn is reversed..!", State.System);
-        else log.setLogs("순서가 바뀜..!", State.System);
+        if (Setting.isEnClicked()) {
+            log.setLogs("Turn is reversed..!", State.System);
+            Client.send(playerId + "#SYSTEM#Turn is reversed..!");
+        } else {
+            log.setLogs("순서가 바뀜..!", State.System);
+            Client.send(playerId + "#SYSTEM#순서가 바뀜..!");
+        }
+        Client.send(playerId + "#REVERSE_ORDER#NULL");
         statusManager.doPassTurn();
     }
 
@@ -856,10 +951,16 @@ public class GameController extends BaseGameController {
         statusManager.nextTurn();
         updatePlayerTurn();
         setTurnEffect();
+        Client.send(playerId + "#QUEEN#NULL");
 
         if (DEBUG) System.out.printf("Skip player %d\n", statusManager.getTurn());
-        if (Setting.isEnClicked()) log.setLogs("Skip next player!", State.System);
-        else log.setLogs("다음 플레이어 스킵!", State.System);
+        if (Setting.isEnClicked()) {
+            log.setLogs("Skip next player!", State.System);
+            Client.send(playerId + "#SYSTEM#Skip next player!");
+        } else {
+            log.setLogs("다음 플레이어 스킵!", State.System);
+            Client.send(playerId + "#SYSTEM#다음 플레이어 스킵!");
+        }
         delayQueen(new Runnable() {
             @Override
             public void run() {
@@ -885,15 +986,10 @@ public class GameController extends BaseGameController {
      */
     private void whenCardFour() {
         if (DEBUG) System.out.printf("Card Left %d\n", players.get(statusManager.getTurn()).getCardLeft());
-        if (players.get(statusManager.getTurn()).getCardLeft() == 1) {
-            players.get(statusManager.getTurn()).removeCard(0);
-            endGame();
-            return;
-        }
         statusManager.setFourTime();
         stackGetCard += 3;
 
-        if (!players.get(statusManager.getTurn()).isSelf()) {
+        if (!players.get(statusManager.getTurn()).isPlayer()) {
             if (Setting.isEnClicked())
                 chat.addMessage(CPU_Msg.getEnglishAttack(), players.get(statusManager.getTurn()));
             else chat.addMessage(CPU_Msg.getKoreanAttack(), players.get(statusManager.getTurn()));
@@ -903,14 +999,18 @@ public class GameController extends BaseGameController {
         updatePlayerTurn();
         setTurnEffect();
         Player player = players.get(statusManager.getTurn());
-        if (Setting.isEnClicked())
+        if (Setting.isEnClicked()) {
             log.setLogs(String.format("Player %d gets 4 cards!", player.getNetworkId()), State.System);
-        else log.setLogs(String.format("플레이어 %d 4장 카드 드로우!", player.getNetworkId()), State.System);
+            Client.send(playerId + "#SYSTEM#Player " + player.getNetworkId() + " gets 4 cards!");
+        } else {
+            log.setLogs(String.format("플레이어 %d 4장 카드 드로우!", player.getNetworkId()), State.System);
+            Client.send(playerId + "#SYSTEM#플레이어 " + player.getNetworkId() + " 4장 카드 드로우!");
+        }
         if (player.isSelf()) {
             userDrawCard(player);   // 여기서 cardTimeDid를 호출
             return;
         }
-        drawCards(player);  // 여기서 cardTieDid를 호출
+        drawCards(player);  // 여기서 cardTimeDid를 호출
     }
 
     /**
@@ -935,46 +1035,81 @@ public class GameController extends BaseGameController {
 
         statusManager.doPassTurn();    // 여기가 마지막 초기화함!
 
-        if (!players.get(statusManager.getTurn()).isSelf()) {
+        if (!players.get(statusManager.getTurn()).isPlayer()) {
             if (Setting.isEnClicked())
                 chat.addMessage(CPU_Msg.getEnglishAttack(), players.get(statusManager.getTurn()));
             else chat.addMessage(CPU_Msg.getKoreanAttack(), players.get(statusManager.getTurn()));
         }
 
         if (DEBUG) System.out.println("Current stack: " + stackGetCard);
-        if (Setting.isEnClicked())
+        if (Setting.isEnClicked()) {
             log.setLogs(String.format("Current %d cards are stacked", stackGetCard), State.System);
-        else log.setLogs(String.format("현재 %d개 카드 쌓임", stackGetCard), State.System);
+            Client.send(playerId + "#SYSTEM#Current " + stackGetCard + " cards are stacked");
+        } else {
+            log.setLogs(String.format("현재 %d개 카드 쌓임", stackGetCard), State.System);
+            Client.send(playerId + "#SYSTEM#현재 " + stackGetCard + " 개 카드 쌓임");
+        }
+        Client.send(playerId + "#STACK#" + stackGetCard);
     }
 
     private void whenCardEight() {
         if (players.get(statusManager.getTurn()).isSelf()) {
             log.setLogs("Crazy Eight Time!", State.System);
+            Client.send(playerId + "#SYSTEM#Crazy Eight Time!");
             chooseEightView.generate();
 
             chooseEightView.getSpace().setOnMouseClicked(new SpaceClickHandler());
             chooseEightView.getHeart().setOnMouseClicked(new HeartClickHandler());
             chooseEightView.getDiamond().setOnMouseClicked(new DiamondClickHandler());
             chooseEightView.getClub().setOnMouseClicked(new ClubClickHandler());
+        } else if (players.get(statusManager.getTurn()).isPlayer()) {
+            statusManager.setClientEightTime(true);
+            Client.send(playerId + "#CRAZY_EIGHT#" + players.get(statusManager.getTurn()).getScoreId());
         } else {
             int shape = players.get(statusManager.getTurn()).getMostShape();
             switch (shape) {
                 case 0:
-                    if (Setting.isEnClicked()) log.setLogs("Change to Space!", State.System);
-                    else log.setLogs("스페이드로 바꿈!", State.System);
+                    if (Setting.isEnClicked()) {
+                        log.setLogs("Change to Space!", State.System);
+                        Client.send(playerId + "#SYSTEM#Change to Space!");
+                    } else {
+                        log.setLogs("스페이드로 바꿈!", State.System);
+                        Client.send(playerId + "#SYSTEM#스페이드로 바꿈!");
+                    }
+                    Client.send(playerId + "#SERVER_EIGHT#" + playerId + " " + "0:7");
                     break;
                 case 1:
-                    if (Setting.isEnClicked()) log.setLogs("Change to Heart!", State.System);
-                    else log.setLogs("하트로 바꿈!", State.System);
+                    if (Setting.isEnClicked()) {
+                        log.setLogs("Change to Heart!", State.System);
+                        Client.send(playerId + "#SYSTEM#Change to Heart!");
+                    } else {
+                        log.setLogs("하트로 바꿈!", State.System);
+                        Client.send(playerId + "#SYSTEM#하트로 바꿈!");
+                    }
+                    Client.send(playerId + "#SERVER_EIGHT#" + playerId + " " + "1:7");
                     break;
                 case 2:
-                    if (Setting.isEnClicked()) log.setLogs("Change to Diamond!", State.System);
-                    else log.setLogs("다이아몬드로 바꿈!", State.System);
+                    if (Setting.isEnClicked()) {
+                        log.setLogs("Change to Diamond!", State.System);
+                        Client.send(playerId + "#SYSTEM#Change to Diamond!");
+                    } else {
+                        log.setLogs("다이아몬드로 바꿈!", State.System);
+                        Client.send(playerId + "#SYSTEM#다이아몬드로 바꿈!");
+                    }
+                    Client.send(playerId + "#SERVER_EIGHT#" + playerId + " " + "2:7");
                     break;
                 case 3:
-                    if (Setting.isEnClicked()) log.setLogs("Change to Club!", State.System);
-                    else log.setLogs("크로버로 바꿈!", State.System);
+                    if (Setting.isEnClicked()) {
+                        log.setLogs("Change to Club!", State.System);
+                        Client.send(playerId + "#SYSTEM#Change to Club!");
+                    } else {
+                        log.setLogs("크로버로 바꿈!", State.System);
+                        Client.send(playerId + "#SYSTEM#크로버로 바꿈!");
+                    }
+                    Client.send(playerId + "#SERVER_EIGHT#" + playerId + " " + "3:7");
+                    break;
             }
+
             if (DEBUG) System.out.println("Changed the shape!");
             putCardDummy(new Card(shape, 7), true);
             statusManager.doPassTurn();
@@ -988,8 +1123,14 @@ public class GameController extends BaseGameController {
             putCardDummy(new Card(0, 7), true);
             fadeOutPane();
             if (DEBUG) System.out.println("Change to Space!");
-            if (Setting.isEnClicked()) log.setLogs("Change to Space!", State.System);
-            else log.setLogs("스페이드로 바꿈!", State.System);
+            if (Setting.isEnClicked()) {
+                log.setLogs("Change to Space!", State.System);
+                Client.send(playerId + "#SYSTEM#Change to Space!");
+            } else {
+                log.setLogs("스페이드로 바꿈!", State.System);
+                Client.send(playerId + "#SYSTEM#스페이드로 바꿈!");
+            }
+            Client.send(playerId + "#SERVER_EIGHT#" + statusManager.getTurn() + " " + "0:7");
         }
     }
 
@@ -1000,8 +1141,14 @@ public class GameController extends BaseGameController {
             putCardDummy(new Card(1, 7), true);
             fadeOutPane();
             if (DEBUG) System.out.println("Change to Heart!!");
-            if (Setting.isEnClicked()) log.setLogs("Change to Heart!", State.System);
-            else log.setLogs("하트로 바꿈!", State.System);
+            if (Setting.isEnClicked()) {
+                log.setLogs("Change to Heart!", State.System);
+                Client.send(playerId + "#SYSTEM#Change to Heart!");
+            } else {
+                log.setLogs("하트로 바꿈!", State.System);
+                Client.send(playerId + "#SYSTEM#하트로 바꿈!");
+            }
+            Client.send(playerId + "#SERVER_EIGHT#" + statusManager.getTurn() + " " + "1:7");
         }
     }
 
@@ -1012,8 +1159,14 @@ public class GameController extends BaseGameController {
             putCardDummy(new Card(2, 7), true);
             fadeOutPane();
             if (DEBUG) System.out.println("Change to Diamond!!");
-            if (Setting.isEnClicked()) log.setLogs("Change to Diamond!", State.System);
-            else log.setLogs("다이아몬드로 바꿈!", State.System);
+            if (Setting.isEnClicked()) {
+                log.setLogs("Change to Diamond!", State.System);
+                Client.send(playerId + "#SYSTEM#Change to Diamond!");
+            } else {
+                log.setLogs("다이아몬드로 바꿈!", State.System);
+                Client.send(playerId + "#SYSTEM#다이아몬드로 바꿈!");
+            }
+            Client.send(playerId + "#SERVER_EIGHT#" + statusManager.getTurn() + " " + "2:7");
         }
     }
 
@@ -1024,10 +1177,17 @@ public class GameController extends BaseGameController {
             putCardDummy(new Card(3, 7), true);
             fadeOutPane();
             if (DEBUG) System.out.println("Change to Club!");
-            if (Setting.isEnClicked()) log.setLogs("Change to Club!", State.System);
-            else log.setLogs("크로버로 바꿈!", State.System);
+            if (Setting.isEnClicked()) {
+                log.setLogs("Change to Club!", State.System);
+                Client.send(playerId + "#SYSTEM#Change to Club!");
+            } else {
+                log.setLogs("크로버로 바꿈!", State.System);
+                Client.send(playerId + "#SYSTEM#크로버로 바꿈!");
+            }
+            Client.send(playerId + "#SERVER_EIGHT#" + statusManager.getTurn() + " " + "3:7");
         }
     }
+
 
     /**
      * Handles the fade-out animation for a pane and performs subsequent tasks upon animation completion.
@@ -1090,12 +1250,13 @@ public class GameController extends BaseGameController {
      */
     @Override
     public void updateChat(String message, Player player) {
-        if (player == null) {
-            mainView.addMsgFromUser(message);
-        } else {
-            mainView.addMsgFromPlayer(message, player);
-        }
-
+        Platform.runLater(() -> {
+            if (player == null) {
+                mainView.addMsgFromUser(message);
+            } else {
+                mainView.addMsgFromPlayer(message, player);
+            }
+        });
     }
 
     /**
@@ -1117,8 +1278,14 @@ public class GameController extends BaseGameController {
             delaySecond(new Runnable() {
                 @Override
                 public void run() {
-                    if (Setting.isEnClicked()) log.setLogs("Start Game!", State.System);
-                    else log.setLogs("게임 시작!", State.System);
+                    if (Setting.isEnClicked()) {
+                        log.setLogs("Start Game!", State.System);
+                        Client.send(playerId + "#SYSTEM#Start Game!");
+                    } else {
+                        log.setLogs("게임 시작!", State.System);
+                        Client.send(playerId + "#SYSTEM#게임 시작!");
+                    }
+
                 }
             });
         });
@@ -1138,17 +1305,26 @@ public class GameController extends BaseGameController {
      *                    sorted in descending order and transformed for the new game.
      */
     public void resetGame(List<Player> prevPlayers) {
+        Client.send(playerId + "#INIT_PAGE#NULL");
         initPage();
+        Client.send(playerId + "#INIT_PAGE#NULL");
         drawGamePage();
 
         deck.generateDeck();
+        Client.send(playerId + "#INIT_DECK#" + deck.toString());
         Collections.sort(prevPlayers, Collections.reverseOrder());
 
         transformPlayers(prevPlayers);
         for (Player player : players) System.out.println(player.getScore());
 
-        if (Setting.isEnClicked()) log.setLogs("Setting Game...!", State.System);
-        else log.setLogs("게임 설정 중...!", State.System);
+        if (Setting.isEnClicked()) {
+            log.setLogs("Setting Game...!", State.System);
+            Client.send(playerId + "#SYSTEM#Setting Game...!");
+        } else {
+            log.setLogs("게임 설정 중...!", State.System);
+            Client.send(playerId + "#SYSTEM#게임 설정 중...!");
+        }
+
 
         SequentialTransition sequence = new SequentialTransition();
 
@@ -1160,8 +1336,14 @@ public class GameController extends BaseGameController {
 
         sequence.setOnFinished(new SequenceFinishedHandler());
         System.out.println("New Game Start");
-        if (Setting.isEnClicked()) log.setLogs("New Game Start...!", State.System);
-        else log.setLogs("새로운 게임 시작...!", State.System);
+        if (Setting.isEnClicked()) {
+            log.setLogs("New Game Start...!", State.System);
+            Client.send(playerId + "#SYSTEM#New Game Start...!");
+        } else {
+            log.setLogs("새로운 게임 시작...!", State.System);
+            Client.send(playerId + "#SYSTEM#새로운 게임 시작...!");
+        }
+
     }
 
     private class SequenceFinishedHandler implements EventHandler<ActionEvent> {
@@ -1197,12 +1379,12 @@ public class GameController extends BaseGameController {
             player.copyPlayer(prevPlayer);
             if (prevPlayer.isSelf()) {
                 player.setSelf();
-                player.setNetworkId(scoreId++);
+                player.setScoreId(scoreId++);
                 player.setStatusId(3);
                 new PlayerHandView(player, mainView);
                 new PlayerScoreView(player, mainView);
             } else {
-                player.setNetworkId(scoreId++);
+                player.setScoreId(scoreId++);
                 player.setStatusId(statusId++);
                 new PlayerStatusView(player, mainView);
                 new PlayerScoreView(player, mainView);
@@ -1210,6 +1392,7 @@ public class GameController extends BaseGameController {
             player.resetHand();
             player.callNotify();
         }
+        Client.send(playerId + "#UPDATE_PLAYERS#NULL");
     }
 
     /**
@@ -1304,8 +1487,14 @@ public class GameController extends BaseGameController {
             giveCard.setCycleCount(6);
             pt.getChildren().add(giveCard);
         }
-        if (Setting.isEnClicked()) log.setLogs("Give 6 cards to players!", State.System);
-        else log.setLogs("플레이어들에게 6장의 카드 나눠 주는 중!", State.System);
+        if (Setting.isEnClicked()) {
+            log.setLogs("Give 6 cards to players!", State.System);
+            Client.send(playerId + "#SYSTEM#Give 6 cards to players!");
+        } else {
+            log.setLogs("플레이어들에게 6장의 카드 나눠 주는 중!", State.System);
+            Client.send(playerId + "#SYSTEM#플레이어들에게 6장의 카드 나눠 주는 중!");
+        }
+
 
         return pt;
     }
@@ -1471,7 +1660,6 @@ public class GameController extends BaseGameController {
 
         mainView.getBack().setOnMouseClicked(new BackButtonHandler());
         mainView.getSetting().setOnMouseClicked(new SettingButtonHandler());
-        mainView.getRestart().setOnMouseClicked(new RestartButtonHandler());
         mainView.getMessage().setOnAction(new MessageHandler());
 
         disableButtons(true);
@@ -1480,7 +1668,8 @@ public class GameController extends BaseGameController {
     private class BackButtonHandler implements EventHandler<MouseEvent> {
         @Override
         public void handle(MouseEvent event) {
-            mainView.setFadeOutSinglePlay(scene);
+            Client.send(playerId + "#FORCE_EXIT#" + playerId);
+            mainView.setFadeOutGame(scene);
             game.stop();
         }
     }
@@ -1492,14 +1681,6 @@ public class GameController extends BaseGameController {
         }
     }
 
-    private class RestartButtonHandler implements EventHandler<MouseEvent> {
-        @Override
-        public void handle(MouseEvent event) {
-            mainView.resetGame(scene, mainPane, null);
-            game.stop();
-        }
-    }
-
     private class MessageHandler implements EventHandler<ActionEvent> {
         @Override
         public void handle(ActionEvent event) {
@@ -1507,6 +1688,7 @@ public class GameController extends BaseGameController {
             if (!msg.isEmpty()) {
                 chat.addMessage(msg);
                 mainView.getMessage().clear();
+                Client.send(playerId + "#CHAT#" + msg);
             }
         }
     }
@@ -1551,9 +1733,16 @@ public class GameController extends BaseGameController {
 
         if (stackGetCard == 0) {
             if (DEBUG) System.out.println("Player has 12 cards");
-            if (Setting.isEnClicked()) log.setLogs("Player has 12 cards", State.System);
-            else log.setLogs("플레이어 12장의 카드를 가지고 있음", State.System);
+            if (Setting.isEnClicked()) {
+                log.setLogs("Player has 12 cards", State.System);
+                Client.send(playerId + "#SYSTEM#Player has 12 cards");
+            } else {
+                log.setLogs("플레이어 12장의 카드를 가지고 있음", State.System);
+                Client.send(playerId + "#SYSTEM#플레이어 12장의 카드를 가지고 있음");
+            }
+
             stackGetCard = 1;
+            Client.send(playerId + "#STACK#" + stackGetCard);
             statusManager.doPassTurn();
             return true;
         }
@@ -1568,7 +1757,6 @@ public class GameController extends BaseGameController {
     private void disableButtons(boolean disable) {
         mainView.getBack().setDisable(disable);
         mainView.getSetting().setDisable(disable);
-        mainView.getRestart().setDisable(disable);
     }
 
     public List<Player> getPlayers() {
