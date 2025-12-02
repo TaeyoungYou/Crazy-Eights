@@ -6,12 +6,6 @@
   <component name="ChangeListManager">
     <list default="true" id="359720e0-8497-48d6-9a4e-8ff9b1ede7bb" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/clear.bat" beforeDir="false" afterPath="$PROJECT_DIR$/clear.bat" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/copyright.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/patchnotes.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/run.bat" beforeDir="false" afterPath="$PROJECT_DIR$/run.bat" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/screenshot.docx" beforeDir="false" afterPath="$PROJECT_DIR$/screenshot.docx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/META-INF/MANIFEST.MF" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/../javafx-sdk-21.0.2/bin/api-ms-win-core-console-l1-1-0.dll" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/../javafx-sdk-21.0.2/bin/api-ms-win-core-console-l1-2-0.dll" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/../javafx-sdk-21.0.2/bin/api-ms-win-core-datetime-l1-1-0.dll" beforeDir="false" />
@@ -256,7 +250,12 @@
       <workItem from="1743693232279" duration="35243000" />
       <workItem from="1743786465199" duration="39957000" />
       <workItem from="1743873884702" duration="41882000" />
-      <workItem from="1743956882419" duration="31681000" />
+      <workItem from="1743956882419" duration="33368000" />
+      <workItem from="1743995762567" duration="782000" />
+      <workItem from="1744067366285" duration="361000" />
+      <workItem from="1744240102966" duration="1320000" />
+      <workItem from="1749475185506" duration="203000" />
+      <workItem from="1753713172528" duration="715000" />
     </task>
     <servers />
   </component>

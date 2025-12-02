@@ -1,0 +1,425 @@
+Loading source files for package app...
+Constructing Javadoc information...
+Creating destination directory: "doc\"
+Building index for all the packages and classes...
+Standard Doclet version 23.0.2+7-58
+Building tree for all the packages and classes...
+Generating doc\app\animation\AnimationCharacter.html...
+src\main\java\app\animation\AnimationCharacter.java:37: warning: no @param for pane
+    public Animation fadeOutPane(StackPane pane) {
+                     ^
+src\main\java\app\animation\AnimationCharacter.java:37: warning: no @return
+    public Animation fadeOutPane(StackPane pane) {
+                     ^
+src\main\java\app\animation\AnimationCharacter.java:16: warning: use of default constructor, which does not provide a comment
+public class AnimationCharacter {
+       ^
+Generating doc\app\animation\AnimationEight.html...
+src\main\java\app\animation\AnimationEight.java:16: warning: use of default constructor, which does not provide a comment
+public class AnimationEight {
+       ^
+Generating doc\app\animation\multi\AnimationGame.html...
+src\main\java\app\animation\multi\AnimationGame.java:32: warning: use of default constructor, which does not provide a comment
+public class AnimationGame {
+       ^
+Generating doc\app\animation\single\AnimationGame.html...
+src\main\java\app\animation\single\AnimationGame.java:27: warning: use of default constructor, which does not provide a comment
+public class AnimationGame {
+       ^
+Generating doc\app\animation\AnimationMenu.html...
+src\main\java\app\animation\AnimationMenu.java:262: warning: no @param for isSingle
+    public void fadeOutMainMenu(Scene scene, VBox pane, boolean isSingle) {
+                ^
+src\main\java\app\animation\AnimationMenu.java:22: warning: use of default constructor, which does not provide a comment
+public class AnimationMenu {
+       ^
+Generating doc\app\animation\AnimationMultiMenu.html...
+src\main\java\app\animation\AnimationMultiMenu.java:16: warning: use of default constructor, which does not provide a comment
+public class AnimationMultiMenu {
+       ^
+src\main\java\app\animation\AnimationMultiMenu.java:17: warning: no comment
+    public void fadeInMultiMenu(StackPane pane) {
+                ^
+Generating doc\app\animation\AnimationScoring.html...
+src\main\java\app\animation\AnimationScoring.java:16: warning: use of default constructor, which does not provide a comment
+public class AnimationScoring {
+       ^
+src\main\java\app\animation\AnimationScoring.java:17: warning: no comment
+    public void fadeInScoring(StackPane pane) {
+                ^
+Generating doc\app\animation\AnimationSetting.html...
+src\main\java\app\animation\AnimationSetting.java:14: warning: use of default constructor, which does not provide a comment
+public class AnimationSetting {
+       ^
+Generating doc\app\App.html...
+src\main\java\app\App.java:20: warning: use of default constructor, which does not provide a comment
+public class App extends Application {    /**
+       ^
+Generating doc\app\controller\multi\BaseGameController.html...
+src\main\java\app\controller\multi\BaseGameController.java:31: warning: no comment
+    protected CharacterChooseView characterChooseView;
+                                  ^
+src\main\java\app\controller\multi\BaseGameController.java:40: warning: no comment
+    protected Chat chat;
+                   ^
+src\main\java\app\controller\multi\BaseGameController.java:30: warning: no comment
+    protected ChooseEightView chooseEightView;
+                              ^
+src\main\java\app\controller\multi\BaseGameController.java:49: warning: no comment
+    protected final boolean DEBUG = true;
+                            ^
+src\main\java\app\controller\multi\BaseGameController.java:37: warning: no comment
+    protected Deck deck;
+                   ^
+src\main\java\app\controller\multi\BaseGameController.java:38: warning: no comment
+    protected DummyCard dummyCard;
+                        ^
+src\main\java\app\controller\multi\BaseGameController.java:53: warning: no comment
+    protected Timeline game = null;
+                       ^
+src\main\java\app\controller\multi\BaseGameController.java:39: warning: no comment
+    protected Log log;
+                  ^
+src\main\java\app\controller\multi\BaseGameController.java:26: warning: no comment
+    protected BorderPane mainPane;
+                         ^
+src\main\java\app\controller\multi\BaseGameController.java:28: warning: no comment
+    protected MultiPlayGameView mainView;
+                                ^
+src\main\java\app\controller\multi\BaseGameController.java:44: warning: no comment
+    protected int playerChatTime = ThreadLocalRandom.current().nextInt(1, playerRanPutTime);
+                  ^
+src\main\java\app\controller\multi\BaseGameController.java:43: warning: no comment
+    protected boolean playerDoChat = Math.random() < 0.7;
+                      ^
+src\main\java\app\controller\multi\BaseGameController.java:46: warning: no comment
+    protected int playerId;
+                  ^
+src\main\java\app\controller\multi\BaseGameController.java:36: warning: no comment
+    protected int playerNum = 4;
+                  ^
+src\main\java\app\controller\multi\BaseGameController.java:42: warning: no comment
+    protected int playerRanPutTime = ThreadLocalRandom.current().nextInt(3, 8);
+                  ^
+src\main\java\app\controller\multi\BaseGameController.java:34: warning: no comment
+    protected List<Player> players = new ArrayList<>();
+                           ^
+src\main\java\app\controller\multi\BaseGameController.java:25: warning: no comment
+    protected StackPane root;
+                        ^
+src\main\java\app\controller\multi\BaseGameController.java:24: warning: no comment
+    protected Scene scene;
+                    ^
+src\main\java\app\controller\multi\BaseGameController.java:32: warning: no comment
+    protected ScoringView scoringView;
+                          ^
+src\main\java\app\controller\multi\BaseGameController.java:29: warning: no comment
+    protected SettingView settingView;
+                          ^
+src\main\java\app\controller\multi\BaseGameController.java:51: warning: no comment
+    protected int stackGetCard = 1;
+                  ^
+src\main\java\app\controller\multi\BaseGameController.java:47: warning: no comment
+    protected GameStatusManager statusManager;
+                                ^
+src\main\java\app\controller\multi\BaseGameController.java:35: warning: no comment
+    protected List<Player> users = new ArrayList<>();
+                           ^
+src\main\java\app\controller\multi\BaseGameController.java:23: warning: use of default constructor, which does not provide a comment
+public abstract class BaseGameController implements CardObserver, DeckObserver, LogObserver, ChatObserver {
+                ^
+Generating doc\app\model\multi\Card.html...
+src\main\java\app\model\multi\Card.java:61: warning: no @return
+    public String getRankString() {
+                  ^
+Generating doc\app\model\single\Card.html...
+src\main\java\app\model\single\Card.java:61: warning: no @return
+    public String getRankString() {
+                  ^
+Generating doc\app\model\multi\CardObserver.html...
+Generating doc\app\model\single\CardObserver.html...
+Generating doc\app\controller\multi\CharacterChooseController.html...
+Generating doc\app\view\multi\CharacterChooseView.html...
+src\main\java\app\view\multi\CharacterChooseView.java:173: warning: no comment
+    public void setTempSelect(ImageView character) {
+                ^
+Generating doc\app\view\single\CharacterChooseView.html...
+Generating doc\app\model\multi\Chat.html...
+src\main\java\app\model\multi\Chat.java:28: warning: no comment
+    public Chat(GameClientController controller) {
+           ^
+Generating doc\app\model\single\Chat.html...
+Generating doc\app\model\multi\ChatObserver.html...
+Generating doc\app\model\single\ChatObserver.html...
+Generating doc\app\view\multi\ChooseEightView.html...
+Generating doc\app\view\single\ChooseEightView.html...
+Generating doc\app\model\multi\Client.html...
+src\main\java\app\model\multi\Client.java:13: warning: use of default constructor, which does not provide a comment
+public class Client {
+       ^
+Generating doc\app\model\multi\ClientHandler.html...
+Generating doc\app\model\multi\CPU_Msg.html...
+src\main\java\app\model\multi\CPU_Msg.java:10: warning: use of default constructor, which does not provide a comment
+public class CPU_Msg {
+       ^
+Generating doc\app\model\single\CPU_Msg.html...
+src\main\java\app\model\single\CPU_Msg.java:10: warning: use of default constructor, which does not provide a comment
+public class CPU_Msg {
+       ^
+Generating doc\app\model\multi\Deck.html...
+Generating doc\app\model\single\Deck.html...
+Generating doc\app\model\multi\DeckObserver.html...
+Generating doc\app\model\single\DeckObserver.html...
+Generating doc\app\model\multi\DummyCard.html...
+src\main\java\app\model\multi\DummyCard.java:32: warning: no comment
+    public DummyCard(GameClientController controller) {
+           ^
+Generating doc\app\model\single\DummyCard.html...
+Generating doc\app\controller\multi\GameClientController.html...
+Generating doc\app\controller\multi\GameController.html...
+Generating doc\app\model\multi\GameDTO.html...
+src\main\java\app\model\multi\GameDTO.java:12: warning: use of default constructor, which does not provide a comment
+public class GameDTO {
+       ^
+Generating doc\app\model\multi\GameStatusManager.html...
+Generating doc\app\model\single\GameStatusManager.html...
+Generating doc\app\Generator.html...
+src\main\java\app\Generator.java:7: warning: use of default constructor, which does not provide a comment
+public class Generator {
+       ^
+Generating doc\app\model\multi\Log.html...
+src\main\java\app\model\multi\Log.java:28: warning: no comment
+    public Log(GameClientController controller) {
+           ^
+Generating doc\app\model\single\Log.html...
+Generating doc\app\model\multi\LogObserver.html...
+Generating doc\app\model\single\LogObserver.html...
+Generating doc\app\controller\MenuController.html...
+Generating doc\app\view\MenuView.html...
+src\main\java\app\view\MenuView.java:134: warning: no @param for isSingle
+    public void fadeOutMenuAnimation(Scene scene, boolean isSingle){
+                ^
+src\main\java\app\view\MenuView.java:148: warning: no comment
+    public Label getMultiPlayButton(){
+                 ^
+Generating doc\app\model\multi\MessageHandler.html...
+Generating doc\app\model\multi\MessageParser.html...
+src\main\java\app\model\multi\MessageParser.java:8: warning: use of default constructor, which does not provide a comment
+public class MessageParser {
+       ^
+Generating doc\app\model\multi\MessageParser.InvalidMessageFormatException.html...
+Generating doc\app\model\multi\MessageParser.ParsedMessage.html...
+Generating doc\app\model\multi\MsgType.html...
+src\main\java\app\model\multi\MsgType.java:18: warning: no comment
+    ASSIGN_ID,
+    ^
+src\main\java\app\model\multi\MsgType.java:44: warning: no comment
+    CHAT,
+    ^
+src\main\java\app\model\multi\MsgType.java:41: warning: no comment
+    CONTINUE,
+    ^
+src\main\java\app\model\multi\MsgType.java:36: warning: no comment
+    CRAZY_EIGHT,
+    ^
+src\main\java\app\model\multi\MsgType.java:37: warning: no comment
+    CRAZY_EIGHT_DONE,
+    ^
+src\main\java\app\model\multi\MsgType.java:16: warning: no comment
+    CREATE_GAME,
+    ^
+src\main\java\app\model\multi\MsgType.java:25: warning: no comment
+    CREATE_PLAYERS,
+    ^
+src\main\java\app\model\multi\MsgType.java:27: warning: no comment
+    DRAW_CARD,
+    ^
+src\main\java\app\model\multi\MsgType.java:40: warning: no comment
+    END,
+    ^
+src\main\java\app\model\multi\MsgType.java:47: warning: no comment
+    ERROR,
+    ^
+src\main\java\app\model\multi\MsgType.java:42: warning: no comment
+    EXIT,
+    ^
+src\main\java\app\model\multi\MsgType.java:43: warning: no comment
+    FORCE_EXIT,
+    ^
+src\main\java\app\model\multi\MsgType.java:23: warning: no comment
+    INIT_DECK,
+    ^
+src\main\java\app\model\multi\MsgType.java:22: warning: no comment
+    INIT_PAGE,
+    ^
+src\main\java\app\model\multi\MsgType.java:24: warning: no comment
+    INIT_PLAYERS,
+    ^
+src\main\java\app\model\multi\MsgType.java:17: warning: no comment
+    JOIN_GAME,
+    ^
+src\main\java\app\model\multi\MsgType.java:45: warning: no comment
+    LOG,
+    ^
+src\main\java\app\model\multi\MsgType.java:31: warning: no comment
+    PUT_CARD,
+    ^
+src\main\java\app\model\multi\MsgType.java:28: warning: no comment
+    PUT_DUMMY,
+    ^
+src\main\java\app\model\multi\MsgType.java:39: warning: no comment
+    QUEEN,
+    ^
+src\main\java\app\model\multi\MsgType.java:20: warning: no comment
+    READY,
+    ^
+src\main\java\app\model\multi\MsgType.java:32: warning: no comment
+    REQUEST_DRAW_CARD,
+    ^
+src\main\java\app\model\multi\MsgType.java:38: warning: no comment
+    REVERSE_ORDER,
+    ^
+src\main\java\app\model\multi\MsgType.java:19: warning: no comment
+    SELECT_CHARACTER,
+    ^
+src\main\java\app\model\multi\MsgType.java:35: warning: no comment
+    SERVER_EIGHT,
+    ^
+src\main\java\app\model\multi\MsgType.java:34: warning: no comment
+    STACK,
+    ^
+src\main\java\app\model\multi\MsgType.java:46: warning: no comment
+    SYSTEM,
+    ^
+src\main\java\app\model\multi\MsgType.java:33: warning: no comment
+    TIME_OUT,
+    ^
+src\main\java\app\model\multi\MsgType.java:30: warning: no comment
+    TIME_SET,
+    ^
+src\main\java\app\model\multi\MsgType.java:21: warning: no comment
+    UNREADY,
+    ^
+src\main\java\app\model\multi\MsgType.java:26: warning: no comment
+    UPDATE_PLAYERS,
+    ^
+src\main\java\app\model\multi\MsgType.java:29: warning: no comment
+    UPDATE_TURN,
+    ^
+Generating doc\app\view\multi\MultiMenuView.html...
+Generating doc\app\view\multi\MultiPlayGameView.html...
+src\main\java\app\view\multi\MultiPlayGameView.java:523: warning: no @return
+    public boolean setDragReleased(MouseEvent event, ImageView card, Player player, DummyCard dummyCard, boolean correct) {
+                   ^
+Generating doc\app\model\multi\Music.html...
+Generating doc\app\model\single\Music.html...
+Generating doc\app\model\multi\Player.html...
+src\main\java\app\model\multi\Player.java:125: warning: no @param for skipObserver
+    public void setIcon(String url, boolean skipObserver) {
+                ^
+src\main\java\app\model\multi\Player.java:199: warning: no @return
+    public Card setCard(Deck deck, boolean skipObserver) {
+                ^
+Generating doc\app\model\single\Player.html...
+Generating doc\app\view\multi\PlayerHandView.html...
+Generating doc\app\view\single\PlayerHandView.html...
+Generating doc\app\model\multi\PlayerObserver.html...
+Generating doc\app\model\single\PlayerObserver.html...
+Generating doc\app\view\multi\PlayerScoreView.html...
+Generating doc\app\view\single\PlayerScoreView.html...
+Generating doc\app\view\multi\PlayerStatusView.html...
+Generating doc\app\view\single\PlayerStatusView.html...
+Generating doc\app\view\multi\ScoringView.html...
+Generating doc\app\view\single\ScoringView.html...
+Generating doc\app\model\multi\Server.html...
+Generating doc\app\model\multi\Setting.html...
+src\main\java\app\model\multi\Setting.java:8: warning: use of default constructor, which does not provide a comment
+public class Setting {
+       ^
+Generating doc\app\model\single\Setting.html...
+src\main\java\app\model\single\Setting.java:8: warning: use of default constructor, which does not provide a comment
+public class Setting {
+       ^
+Generating doc\app\view\SettingView.html...
+Generating doc\app\controller\single\SinglePlayGameController.html...
+src\main\java\app\controller\single\SinglePlayGameController.java:62: warning: no @param for _scene
+    public SinglePlayGameController(Scene _scene) {
+           ^
+src\main\java\app\controller\single\SinglePlayGameController.java:82: warning: no @param for function
+    public void selectCharacter(Runnable function) {
+                ^
+Generating doc\app\view\single\SinglePlayGameView.html...
+Generating doc\app\model\multi\State.html...
+src\main\java\app\model\multi\State.java:15: warning: no comment
+    Error,
+    ^
+src\main\java\app\model\multi\State.java:14: warning: no comment
+    Log,
+    ^
+src\main\java\app\model\multi\State.java:13: warning: no comment
+    System,
+    ^
+Generating doc\app\model\single\State.html...
+src\main\java\app\model\single\State.java:15: warning: no comment
+    Error,
+    ^
+src\main\java\app\model\single\State.java:14: warning: no comment
+    Log,
+    ^
+src\main\java\app\model\single\State.java:13: warning: no comment
+    System,
+    ^
+Generating doc\app\style\StyleCharacter.html...
+src\main\java\app\style\StyleCharacter.java:8: warning: use of default constructor, which does not provide a comment
+public class StyleCharacter {
+       ^
+src\main\java\app\style\StyleCharacter.java:48: warning: no comment
+    public String readyPressedStyle() {
+                  ^
+src\main\java\app\style\StyleCharacter.java:36: warning: no comment
+    public String setButtonStyle() {
+                  ^
+Generating doc\app\style\StyleEight.html...
+Generating doc\app\style\StyleGame.html...
+Generating doc\app\style\StyleMenu.html...
+Generating doc\app\style\StyleMultiMenu.html...
+Generating doc\app\style\StyleScoring.html...
+Generating doc\app\style\StyleSetting.html...
+Generating doc\app\package-summary.html...
+Generating doc\app\package-tree.html...
+Generating doc\app\animation\package-summary.html...
+Generating doc\app\animation\package-tree.html...
+Generating doc\app\animation\multi\package-summary.html...
+Generating doc\app\animation\multi\package-tree.html...
+Generating doc\app\animation\single\package-summary.html...
+Generating doc\app\animation\single\package-tree.html...
+Generating doc\app\controller\package-summary.html...
+Generating doc\app\controller\package-tree.html...
+Generating doc\app\controller\multi\package-summary.html...
+Generating doc\app\controller\multi\package-tree.html...
+Generating doc\app\controller\single\package-summary.html...
+Generating doc\app\controller\single\package-tree.html...
+Generating doc\app\model\multi\package-summary.html...
+Generating doc\app\model\multi\package-tree.html...
+Generating doc\app\model\single\package-summary.html...
+Generating doc\app\model\single\package-tree.html...
+Generating doc\app\style\package-summary.html...
+Generating doc\app\style\package-tree.html...
+Generating doc\app\view\package-summary.html...
+Generating doc\app\view\package-tree.html...
+Generating doc\app\view\multi\package-summary.html...
+Generating doc\app\view\multi\package-tree.html...
+Generating doc\app\view\single\package-summary.html...
+Generating doc\app\view\single\package-tree.html...
+Generating doc\constant-values.html...
+Generating doc\serialized-form.html...
+Generating doc\overview-tree.html...
+Generating doc\index.html...
+Generating doc\allclasses-index.html...
+Building index for all classes...
+Generating doc\allpackages-index.html...
+Generating doc\index-all.html...
+Generating doc\search.html...
+Generating doc\overview-summary.html...
+Generating doc\help-doc.html...
+100 warnings
